@@ -546,14 +546,14 @@ class MovieContainer(object):
 
 
     def importDOM(self, fname):
-        dom = QDomDocument()
+        dom = QDomDocument() #创建Dom对象
         error = None
         fh = None
         try:
-            fh = QFile(fname)
-            if not fh.open(QIODevice.ReadOnly):
+            fh = QFile(fname) #创建文件对象
+            if not fh.open(QIODevice.ReadOnly): #设置只读
                 raise IOError(fh.errorString())
-            if not dom.setContent(fh):
+            if not dom.setContent(fh): #设置dom内容为fh
                 raise ValueError("could not parse XML")
         except (IOError, OSError, ValueError) as e:
             error = "Failed to import: {}".format(e)
@@ -573,15 +573,30 @@ class MovieContainer(object):
 
 
     def populateFromDOM(self, dom):
-        root = dom.documentElement()
-        if root.tagName() != "MOVIES":
+        '''
+        xml文件结构
+        <MOVIES>
+            <MOVIE>
+                YEAR
+                MINUTES
+                ACQUIRED
+                <TITLE></TITLE>
+                <NOTES></NOTES>
+            </MOVIE>
+            <MOVIE>
+                ......
+            </MOVIE>
+        </MOVIES>
+        '''
+        root = dom.documentElement() #引用内容元素
+        if root.tagName() != "MOVIES": #根.标签名!='MOVIES'时
             raise ValueError("not a Movies XML file")
         self.clear(False)
-        node = root.firstChild()
+        node = root.firstChild() # 第一孩子
         while not node.isNull():
-            if node.toElement().tagName() == "MOVIE":
+            if node.toElement().tagName() == "MOVIE":  #toElement：to元素
                 self.readMovieNode(node.toElement())
-            node = node.nextSibling()
+            node = node.nextSibling() #下一兄弟
 
 
     def readMovieNode(self, element):
@@ -589,7 +604,7 @@ class MovieContainer(object):
             child = node.firstChild()
             text = ""
             while not child.isNull():
-                if child.nodeType() == QDomNode.TextNode:
+                if child.nodeType() == QDomNode.TextNode: #判断节点类型。
                     text += child.toText().data()
                 child = child.nextSibling()
             return text.strip()
@@ -621,12 +636,12 @@ class MovieContainer(object):
         error = None
         fh = None
         try:
-            handler = SaxMovieHandler(self)
-            parser = QXmlSimpleReader()
-            parser.setContentHandler(handler)
-            parser.setErrorHandler(handler)
+            handler = SaxMovieHandler(self) #Sax_电影_处理器
+            parser = QXmlSimpleReader()     #parser-解析器，QXmlSimpleReader-xml_简单_读取器
+            parser.setContentHandler(handler) #设置内容处理器
+            parser.setErrorHandler(handler) #设置错误处理器
             fh = QFile(fname)
-            input = QXmlInputSource(fh)
+            input = QXmlInputSource(fh) #xml输入源
             self.clear(False)
             if not parser.parse(input):
                 raise ValueError(handler.error)
@@ -660,7 +675,7 @@ class SaxMovieHandler(QXmlDefaultHandler):
         self.notes = None
 
 
-    def startElement(self, namespaceURI, localName, qName, attributes):
+    def startElement(self, namespaceURI, localName, qName, attributes): #遇到开始元素时执行.如:<MOVIE>,<TITLE>,<NOTES>等
         if qName == "MOVIE":
             self.clear()
             self.year = int(attributes.value("YEAR"))
@@ -680,7 +695,7 @@ class SaxMovieHandler(QXmlDefaultHandler):
         return True
 
 
-    def endElement(self, namespaceURI, localName, qName):
+    def endElement(self, namespaceURI, localName, qName): #遇到关闭元素时执行.如：</MOVIE>,</TITLE>,</NOTES>等
         if qName == "MOVIE":
             if (self.year is None or self.minutes is None or
                 self.acquired is None or self.title is None or
@@ -697,7 +712,7 @@ class SaxMovieHandler(QXmlDefaultHandler):
         return True
 
 
-    def fatalError(self, exception):
+    def fatalError(self, exception): #致命错误
         self.error = "parse error at line {} column {}: {}".format(
                 exception.lineNumber(), exception.columnNumber(),
                 exception.message())
