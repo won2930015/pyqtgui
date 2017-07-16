@@ -525,7 +525,7 @@ class MovieContainer(object):
                            "ACQUIRED='{}'>\n".format(movie.year,
                            movie.minutes,
                            movie.acquired.toString(Qt.ISODate))) \
-                       << "<TITLE>" << Qt.escape(movie.title) \
+                       << "<TITLE>" << Qt.escape(movie.title) \ #Qt.escape(movie.title)转义为适合的xml字符。
                        << "</TITLE>\n<NOTES>"
                 if movie.notes:
                     stream << "\n" << Qt.escape(
