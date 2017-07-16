@@ -446,7 +446,7 @@ class MovieContainer(object):
         error = None
         fh = None
         try:
-            fh = open(self.__fname, "rU", encoding=CODEC)
+            fh = open(self.__fname, "rU", encoding=CODEC) #'rU'U=utf8????
             self.clear(False)
             lino = 0
             while True:
