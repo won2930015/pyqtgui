@@ -40,22 +40,22 @@ class VehicleRentalDlg(QDialog):
         self.weightSpinBox.setRange(1, 8)
         self.weightSpinBox.setValue(1)
         self.weightSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
-        self.weightSpinBox.setSuffix(" tons")
+        self.weightSpinBox.setSuffix(" tons")   #设置后缀为：tons
         volumeLabel = QLabel("Volu&me")
         self.volumeSpinBox = QSpinBox()
         volumeLabel.setBuddy(self.volumeSpinBox)
         self.volumeSpinBox.setRange(4, 22)
         self.volumeSpinBox.setValue(10)
         self.volumeSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
-        self.volumeSpinBox.setSuffix(" cu m")
+        self.volumeSpinBox.setSuffix(" cu m")   #设置后缀为： cu m
         mileageLabel = QLabel("Max. Mileage")
         self.mileageLabel = QLabel("1000 miles")
         self.mileageLabel.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
-        self.mileageLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
+        self.mileageLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   ### setFrameStyle：设置_框架_样式||QFrame.StyledPanel:样式_面板||QFrame.Sunken:凹陷
         self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|
                                           QDialogButtonBox.Cancel)
 
-        self.stackedWidget = QStackedWidget()
+        self.stackedWidget = QStackedWidget()       #创建堆叠窗口。
         carWidget = QWidget()
         carLayout = QGridLayout()
         carLayout.addWidget(colorLabel, 0, 0)
@@ -76,7 +76,7 @@ class VehicleRentalDlg(QDialog):
         topLayout = QHBoxLayout()
         topLayout.addWidget(vehicleLabel)
         topLayout.addWidget(self.vehicleComboBox)
-        bottomLayout = QHBoxLayout()
+        bottomLayout = QHBoxLayout()    #bottomLayout：低部布局
         bottomLayout.addWidget(mileageLabel)
         bottomLayout.addWidget(self.mileageLabel)
         layout = QVBoxLayout()
@@ -90,7 +90,7 @@ class VehicleRentalDlg(QDialog):
         self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject)
         self.connect(self.vehicleComboBox,
                      SIGNAL("currentIndexChanged(QString)"),
-                     self.setWidgetStack)
+                     self.setWidgetStack)   #自定义函数->100
         self.connect(self.weightSpinBox, SIGNAL("valueChanged(int)"),
                      self.weightChanged)
 

@@ -35,7 +35,7 @@ class PaymentDlg(QDialog):
         self.amountSpinBox = QDoubleSpinBox()
         amountLabel.setBuddy(self.amountSpinBox)
         self.amountSpinBox.setRange(0, 5000.0)
-        self.amountSpinBox.setPrefix("$ ")
+        self.amountSpinBox.setPrefix("$ ")       #前缀用$填充.
         self.amountSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
         self.paidCheckBox = QCheckBox("&Paid")
         checkNumLabel = QLabel("Check &No.:")
@@ -68,12 +68,12 @@ class PaymentDlg(QDialog):
 
         tabWidget = QTabWidget()
         cashWidget = QWidget()
-        cashLayout = QHBoxLayout()
+        cashLayout = QHBoxLayout()      #横向布局
         cashLayout.addWidget(self.paidCheckBox)
         cashWidget.setLayout(cashLayout)
         tabWidget.addTab(cashWidget, "Cas&h")
         checkWidget = QWidget()
-        checkLayout = QGridLayout()
+        checkLayout = QGridLayout()     #网格布局
         checkLayout.addWidget(checkNumLabel, 0, 0)
         checkLayout.addWidget(self.checkNumLineEdit, 0, 1)
         checkLayout.addWidget(bankLabel, 0, 2)
@@ -85,7 +85,7 @@ class PaymentDlg(QDialog):
         checkWidget.setLayout(checkLayout)
         tabWidget.addTab(checkWidget, "Chec&k")
         creditWidget = QWidget()
-        creditLayout = QGridLayout()
+        creditLayout = QGridLayout()        #网格布局
         creditLayout.addWidget(creditCardLabel, 0, 0)
         creditLayout.addWidget(self.creditCardLineEdit, 0, 1, 1, 3)
         creditLayout.addWidget(validFromLabel, 1, 0)
@@ -95,7 +95,7 @@ class PaymentDlg(QDialog):
         creditWidget.setLayout(creditLayout)
         tabWidget.addTab(creditWidget, "Credit Car&d")
 
-        gridLayout = QGridLayout()
+        gridLayout = QGridLayout()      #网格布局
         gridLayout.addWidget(forenameLabel, 0, 0)
         gridLayout.addWidget(self.forenameLineEdit, 0, 1)
         gridLayout.addWidget(surnameLabel, 0, 2)
@@ -104,7 +104,7 @@ class PaymentDlg(QDialog):
         gridLayout.addWidget(self.invoiceSpinBox, 1, 1)
         gridLayout.addWidget(amountLabel, 1, 2)
         gridLayout.addWidget(self.amountSpinBox, 1, 3)
-        layout = QVBoxLayout()
+        layout = QVBoxLayout()      #纵向布局
         layout.addLayout(gridLayout)
         layout.addWidget(tabWidget)
         layout.addWidget(self.buttonBox)
@@ -121,9 +121,9 @@ class PaymentDlg(QDialog):
                          self.updateUi)
         self.connect(self.paidCheckBox, SIGNAL("clicked()"),
                      self.updateUi)
-        self.connect(self.buttonBox, SIGNAL("accepted()"),
+        self.connect(self.buttonBox, SIGNAL("accepted()"),  #accepted:按受
                      self.accept)
-        self.connect(self.buttonBox, SIGNAL("rejected()"),
+        self.connect(self.buttonBox, SIGNAL("rejected()"),  #rejected：拒绝
                      self.reject)
 
         self.updateUi()
