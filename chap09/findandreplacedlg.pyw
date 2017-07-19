@@ -15,7 +15,7 @@ from PyQt4.QtGui import *
 
 MAC = True
 try:
-    from PyQt4.QtGui import qt_mac_set_native_menubar
+    from PyQt4.QtGui import qt_mac_set_native_menubar #判断是否在MAC环境！！！
 except ImportError:
     MAC = False
 
@@ -41,12 +41,12 @@ class FindAndReplaceDlg(QDialog):
         self.ignoreNotesCheckBox = QCheckBox("Ignore foot&notes "
                                                    "and endnotes")
         line = QFrame()
-        line.setFrameStyle(QFrame.VLine|QFrame.Sunken)
+        line.setFrameStyle(QFrame.VLine|QFrame.Sunken)  #QFrame.VLine：纵线
         self.findButton = QPushButton("&Find")
         self.replaceButton = QPushButton("&Replace")
         closeButton = QPushButton("Close")
         moreButton = QPushButton("&More")
-        moreButton.setCheckable(True)
+        moreButton.setCheckable(True)    #设置为开关
         if not MAC:
             self.findButton.setFocusPolicy(Qt.NoFocus)
             self.replaceButton.setFocusPolicy(Qt.NoFocus)
