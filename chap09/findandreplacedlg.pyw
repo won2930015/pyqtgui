@@ -33,9 +33,9 @@ class FindAndReplaceDlg(QDialog):
         replaceLabel.setBuddy(self.replaceLineEdit)
         self.caseCheckBox = QCheckBox("&Case sensitive")
         self.wholeCheckBox = QCheckBox("Wh&ole words")
-        self.wholeCheckBox.setChecked(True)
+        self.wholeCheckBox.setChecked(True)             
         moreFrame = QFrame()
-        moreFrame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
+        moreFrame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   #框架样式(面板|凹陷)
         self.backwardsCheckBox = QCheckBox("Search &Backwards")
         self.regexCheckBox = QCheckBox("Regular E&xpression")
         self.ignoreNotesCheckBox = QCheckBox("Ignore foot&notes "
@@ -81,7 +81,7 @@ class FindAndReplaceDlg(QDialog):
         self.setLayout(mainLayout)
 
         moreFrame.hide()
-        mainLayout.setSizeConstraint(QLayout.SetFixedSize)
+        mainLayout.setSizeConstraint(QLayout.SetFixedSize)  #SizeConstraint:大小约束
 
         self.connect(moreButton, SIGNAL("toggled(bool)"),
                      moreFrame, SLOT("setVisible(bool)"))
@@ -97,7 +97,7 @@ class FindAndReplaceDlg(QDialog):
 
 
     def findClicked(self):
-        self.emit(SIGNAL("find"), self.findLineEdit.text(),
+        self.emit(SIGNAL("find"), self.findLineEdit.text(), #发身自定义信号 及 附带的多个参数
                 self.caseCheckBox.isChecked(),
                 self.wholeCheckBox.isChecked(),
                 self.backwardsCheckBox.isChecked(),
@@ -123,10 +123,10 @@ class FindAndReplaceDlg(QDialog):
 
 if __name__ == "__main__":
 
-    def find(what, *args):
+    def find(what, *args):  #测试 find键 函数
         print("Find {} {}".format(what, [x for x in args]))
 
-    def replace(old, new, *args):
+    def replace(old, new, *args):   #测试 replace键 函数
         print("Replace {} with {} {}".format(
               old, new, [x for x in args]))
 
