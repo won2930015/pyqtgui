@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
                 QKeySequence.Paste, "editpaste",
                 "Paste in the clipboard's text")
 
-        QShortcut(QKeySequence.PreviousChild, self, self.prevTab)
+        QShortcut(QKeySequence.PreviousChild, self, self.prevTab)   #QShortcut:快捷方式，PreviousChild：前一个孩子
         QShortcut(QKeySequence.NextChild, self, self.nextTab)
 
         fileMenu = self.menuBar().addMenu("&File")
@@ -170,7 +170,7 @@ class MainWindow(QMainWindow):
             for filename in sys.argv[1:]:
                 if QFileInfo(filename).isFile():
                     self.loadFile(filename)
-                    QApplication.processEvents()
+                    QApplication.processEvents()    #处理事件：返还控权给事件循环。
                     count += 1
                     if count >= 10: # Load at most 10 files
                         break

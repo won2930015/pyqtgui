@@ -21,7 +21,7 @@ class FindAndReplaceDlg(QDialog,
         super(FindAndReplaceDlg, self).__init__(parent)
         self.setupUi(self)
         self.moreFrame.hide()
-        self.layout().setSizeConstraint(QLayout.SetFixedSize)
+        self.layout().setSizeConstraint(QLayout.SetFixedSize)   #setSizeConstraint:设置大小约束
         self.updateUi()
 
 
