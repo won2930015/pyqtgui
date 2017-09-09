@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#coding=utf-8
 # Copyright (c) 2008-10 Qtrac Ltd. All rights reserved.
 # This program or module is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
@@ -30,8 +31,7 @@ class Widget(QWidget):
 
     def giveHelp(self):
         self.text = "Click to toggle mouse tracking"
-        self.update()
-
+        self.update()   #调用update()会间接调用 paintEvent(self, event):事件.
 
     def closeEvent(self, event):
         print("Closed")
@@ -74,7 +74,7 @@ class Widget(QWidget):
         if self.key:
             text += "\n\nYou pressed: {}".format(self.key)
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.TextAntialiasing)
+        painter.setRenderHint(QPainter.TextAntialiasing)    #设置渲染提示
         painter.drawText(self.rect(), Qt.AlignCenter, text)
         if self.message:
             painter.drawText(self.rect(), Qt.AlignBottom|Qt.AlignHCenter,
@@ -128,7 +128,7 @@ class Widget(QWidget):
         elif event.key() == Qt.Key_End:
             self.key = "End"
         elif event.key() == Qt.Key_PageUp:
-            if event.modifiers() & Qt.ControlModifier:
+            if event.modifiers() & Qt.ControlModifier:  #event.modifiers()=1 & Qt.ControlModifier=1 时.
                 self.key = "Ctrl+PageUp"
             else:
                 self.key = "PageUp"
