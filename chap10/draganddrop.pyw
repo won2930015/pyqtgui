@@ -33,15 +33,15 @@ class Form(QDialog):
         iconListWidget = QListWidget()
         iconListWidget.setAcceptDrops(True)
         iconListWidget.setDragEnabled(True)
-        iconListWidget.setViewMode(QListWidget.IconMode)
+        iconListWidget.setViewMode(QListWidget.IconMode)    #setViewMode：设置视图模式
         tableWidget = QTableWidget()
         tableWidget.setRowCount(5)
         tableWidget.setColumnCount(2)
-        tableWidget.setHorizontalHeaderLabels(["Column #1", "Column #2"])
+        tableWidget.setHorizontalHeaderLabels(["Column #1", "Column #2"])   #水平信头标签
         tableWidget.setAcceptDrops(True)
         tableWidget.setDragEnabled(True)
 
-        splitter = QSplitter(Qt.Horizontal)
+        splitter = QSplitter(Qt.Horizontal) #创建水平分裂器
         splitter.addWidget(listWidget)
         splitter.addWidget(iconListWidget)
         splitter.addWidget(tableWidget)
