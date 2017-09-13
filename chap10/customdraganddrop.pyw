@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # Copyright (c) 2008-10 Qtrac Ltd. All rights reserved.
 # This program or module is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
@@ -19,31 +20,31 @@ class DropLineEdit(QLineEdit):
     
     def __init__(self, parent=None):
         super(DropLineEdit, self).__init__(parent)
-        self.setAcceptDrops(True)
+        self.setAcceptDrops(True)   #接受放下
 
 
-    def dragEnterEvent(self, event):
+    def dragEnterEvent(self, event): #当拖拽进入到控件范围时发生。
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             event.accept()
         else:
             event.ignore()
 
 
-    def dragMoveEvent(self, event):
+    def dragMoveEvent(self, event): #在控件上拖拽移动时发生。
         if event.mimeData().hasFormat("application/x-icon-and-text"):
-            event.setDropAction(Qt.CopyAction)
+            event.setDropAction(Qt.CopyAction) #拖拽动作：复制
             event.accept()
         else:
             event.ignore()
 
 
-    def dropEvent(self, event):
+    def dropEvent(self, event): ##在控件上拖动时发生。
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             data = event.mimeData().data("application/x-icon-and-text")
             stream = QDataStream(data, QIODevice.ReadOnly)
             text = stream.readQString()
             self.setText(text)
-            event.setDropAction(Qt.CopyAction)
+            event.setDropAction(Qt.CopyAction) #拖拽动作：复制
             event.accept()
         else:
             event.ignore()
@@ -53,26 +54,26 @@ class DnDListWidget(QListWidget):
 
     def __init__(self, parent=None):
         super(DnDListWidget, self).__init__(parent)
-        self.setAcceptDrops(True)
-        self.setDragEnabled(True)
+        self.setAcceptDrops(True)   #接受放下。
+        self.setDragEnabled(True)   #接受拖动。
         
 
-    def dragEnterEvent(self, event):
+    def dragEnterEvent(self, event):    #当拖拽进入到控件范围时发生。
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             event.accept()
         else:
             event.ignore()
 
 
-    def dragMoveEvent(self, event):
+    def dragMoveEvent(self, event): #在控件上拖拽移动时发生。
         if event.mimeData().hasFormat("application/x-icon-and-text"):
-            event.setDropAction(Qt.MoveAction)
+            event.setDropAction(Qt.MoveAction)  #拖拽动作：移动
             event.accept()
         else:
             event.ignore()
 
 
-    def dropEvent(self, event):
+    def dropEvent(self, event):  #在控件上拖动时发生
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             data = event.mimeData().data("application/x-icon-and-text")
             stream = QDataStream(data, QIODevice.ReadOnly)
@@ -87,7 +88,7 @@ class DnDListWidget(QListWidget):
             event.ignore()
 
 
-    def startDrag(self, dropActions):
+    def startDrag(self, dropActions):   #有元素被拖动时执行此时件。
         item = self.currentItem()
         icon = item.icon()
         data = QByteArray()
@@ -99,23 +100,23 @@ class DnDListWidget(QListWidget):
         drag = QDrag(self)
         drag.setMimeData(mimeData)
         pixmap = icon.pixmap(24, 24)
-        drag.setHotSpot(QPoint(12, 12))
+        drag.setHotSpot(QPoint(12, 12)) #设置热点（设置为drag的中点）
         drag.setPixmap(pixmap)
-        if drag.start(Qt.MoveAction) == Qt.MoveAction:
-            self.takeItem(self.row(item))
+        if drag.start(Qt.MoveAction) == Qt.MoveAction: #从QT4.3开如应当使用drag.exec_()而不是drag.start().
+            self.takeItem(self.row(item))   #takeItem():拿走项
 
 
 class DnDWidget(QWidget):
     
     def __init__(self, text, icon=QIcon(), parent=None):
         super(DnDWidget, self).__init__(parent)
-        self.setAcceptDrops(True)
+        self.setAcceptDrops(True)   #同意拖拽=
         self.text = text
         self.icon = icon
 
 
     def minimumSizeHint(self):
-        fm = QFontMetricsF(self.font())
+        fm = QFontMetricsF(self.font()) #FontMetrics:字体度量
         if self.icon.isNull():
             return QSize(fm.width(self.text), fm.height() * 1.5)
         return QSize(34 + fm.width(self.text), max(34, fm.height() * 1.5))
@@ -124,8 +125,8 @@ class DnDWidget(QWidget):
     def paintEvent(self, event):
         height = QFontMetricsF(self.font()).height()
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setRenderHint(QPainter.TextAntialiasing)
+        painter.setRenderHint(QPainter.Antialiasing)    #setRenderHint:设置渲染提示,Antialiasing:反锯齿
+        painter.setRenderHint(QPainter.TextAntialiasing)    #setRenderHint:设置渲染提示,TextAntialiasing:文字反锯齿
         painter.fillRect(self.rect(), QColor(Qt.yellow).light())
         if self.icon.isNull():
             painter.drawText(10, height, self.text)
