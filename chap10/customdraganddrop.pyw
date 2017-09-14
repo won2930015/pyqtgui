@@ -110,7 +110,7 @@ class DnDWidget(QWidget):
     
     def __init__(self, text, icon=QIcon(), parent=None):
         super(DnDWidget, self).__init__(parent)
-        self.setAcceptDrops(True)   #同意拖拽=
+        self.setAcceptDrops(True)   #同意拖拽=True
         self.text = text
         self.icon = icon
 
@@ -137,14 +137,14 @@ class DnDWidget(QWidget):
                              self.text + " (Drag to or from me!)")
 
 
-    def dragEnterEvent(self, event):
+    def dragEnterEvent(self, event):    #当拖拽进入到控件范围时发生。
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             event.accept()
         else:
             event.ignore()
 
 
-    def dragMoveEvent(self, event):
+    def dragMoveEvent(self, event): #在控件上拖拽移动时发生。
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             event.setDropAction(Qt.CopyAction)
             event.accept()
@@ -152,7 +152,7 @@ class DnDWidget(QWidget):
             event.ignore()
 
 
-    def dropEvent(self, event):
+    def dropEvent(self, event): #在控件上拖动时发生。
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             data = event.mimeData().data("application/x-icon-and-text")
             stream = QDataStream(data, QIODevice.ReadOnly)
@@ -172,7 +172,7 @@ class DnDWidget(QWidget):
         QWidget.mouseMoveEvent(self, event)
 
 
-    def startDrag(self):
+    def startDrag(self):    #有元素被拖动时执行此时件。
         icon = self.icon
         if icon.isNull():
             return
@@ -188,6 +188,7 @@ class DnDWidget(QWidget):
         drag.setHotSpot(QPoint(12, 12))
         drag.setPixmap(pixmap)
         drag.start(Qt.CopyAction)
+        # drag.start(Qt.MoveAction)
 
 
 class Form(QDialog):
