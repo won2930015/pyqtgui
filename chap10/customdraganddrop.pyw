@@ -73,7 +73,7 @@ class DnDListWidget(QListWidget):
             event.ignore()
 
 
-    def dropEvent(self, event):  #在控件上拖动时发生
+    def dropEvent(self, event):  #在控件上发生拖动时
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             data = event.mimeData().data("application/x-icon-and-text")
             stream = QDataStream(data, QIODevice.ReadOnly)
