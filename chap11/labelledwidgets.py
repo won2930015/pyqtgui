@@ -13,7 +13,7 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-LEFT, ABOVE = range(2)
+LEFT, ABOVE = range(2)  #分别赋值 LEFT=0, ABOVE=1
 
 class LabelledLineEdit(QWidget):
 
@@ -24,7 +24,7 @@ class LabelledLineEdit(QWidget):
         self.lineEdit = QLineEdit()
         self.label.setBuddy(self.lineEdit)
         layout = QBoxLayout(QBoxLayout.LeftToRight
-                if position == LEFT else QBoxLayout.TopToBottom)
+                if position == LEFT else QBoxLayout.TopToBottom)    #创建布局(QBoxLayout):如果==LEFT,从左至右排列,否则从上至下排列.
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
         self.setLayout(layout)
@@ -54,25 +54,25 @@ class Dialog(QDialog):
         self.city = LabelledLineEdit("&City:")
         self.state = LabelledLineEdit("St&ate:")
         self.zipcode = LabelledLineEdit("&Zipcode:")
-        self.notes = LabelledTextEdit("&Notes:", ABOVE)
+        self.notes = LabelledTextEdit("&Notes:", ABOVE) #ABOVE:在上方.
         if address is not None:
             self.street.lineEdit.setText(address.get("street", ""))
             self.city.lineEdit.setText(address.get("city", ""))
             self.state.lineEdit.setText(address.get("state", ""))
             self.zipcode.lineEdit.setText(address.get("zipcode", ""))
-            self.notes.textEdit.setPlainText(address.get("notes", ""))
+            self.notes.textEdit.setPlainText(address.get("notes", ""))  #PlainText::纯文本.
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|
                                      QDialogButtonBox.Cancel)
 
-        grid = QGridLayout()
+        grid = QGridLayout()    #栅格布局
         grid.addWidget(self.street, 0, 0)
         grid.addWidget(self.city, 0, 1)
         grid.addWidget(self.state, 1, 0)
         grid.addWidget(self.zipcode, 1, 1)
         grid.addWidget(self.notes, 2, 0, 1, 2)
-        layout = QVBoxLayout()
-        layout.addLayout(grid)
-        layout.addWidget(buttonBox)
+        layout = QVBoxLayout()  #垂直布局
+        layout.addLayout(grid)  #addLayout:加入布局
+        layout.addWidget(buttonBox) #addWidget:加入饰件
         self.setLayout(layout)
         
         self.connect(buttonBox, SIGNAL("accepted()"), self.accept)
