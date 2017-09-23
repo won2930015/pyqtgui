@@ -15,7 +15,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-def romanFromInt(integer):
+def romanFromInt(integer):  #从十进制整数转换到罗马数字
     """
     Code taken from Raymond Hettinger's code in Victor Yang's "Decimal
     to Roman Numerals" recipe in the Python Cookbook.
@@ -32,14 +32,14 @@ def romanFromInt(integer):
     if integer <= 0 or integer >= 4000 or int(integer) != integer:
         raise ValueError("expecting an integer between 1 and 3999")
     result = []
-    for decimal, roman in coding:
+    for decimal, roman in coding:   #decimal:十进制数, roman：罗马数字
         while integer >= decimal:
             result.append(roman)
             integer -= decimal
     return "".join(result)
 
 
-def intFromRoman(roman):
+def intFromRoman(roman):    #从罗马数字转换到十进制整数
     """
     Code taken from Paul Winkler's "Roman Numerals" recipe in the Python
     Cookbook.
