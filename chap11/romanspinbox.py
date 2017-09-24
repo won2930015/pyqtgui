@@ -52,7 +52,7 @@ def intFromRoman(roman):    #从罗马数字转换到十进制整数
     integer, index = 0, 0
     for numeral, value, maxrepeat in coding:
         count = 0
-        while roman[index: index +len(numeral)] == numeral:
+        while roman[index: index +len(numeral)] == numeral: # roman[index: index +len(numeral)] :切片(提取字符).
             count += 1
             if count > maxrepeat:
                 raise ValueError("not a valid roman number: {}".format(
@@ -70,9 +70,9 @@ class RomanSpinBox(QSpinBox):
     def __init__(self, parent=None):
         super(RomanSpinBox, self).__init__(parent)
         regex = QRegExp(r"^M?M?M?(?:CM|CD|D?C?C?C?)"
-                        r"(?:XC|XL|L?X?X?X?)(?:IX|IV|V?I?I?I?)$")
-        regex.setCaseSensitivity(Qt.CaseInsensitive)
-        self.validator = QRegExpValidator(regex, self)
+                        r"(?:XC|XL|L?X?X?X?)(?:IX|IV|V?I?I?I?)$")    #例M?:适配0或1个M
+        regex.setCaseSensitivity(Qt.CaseInsensitive)    #设置正则表达式模式为 非贪婪匹配
+        self.validator = QRegExpValidator(regex, self)  #validator：验证器
         self.setRange(1, 3999)
         self.connect(self.lineEdit(), SIGNAL("textEdited(QString)"),
                      self.fixCase)
@@ -82,15 +82,15 @@ class RomanSpinBox(QSpinBox):
         self.lineEdit().setText(text.upper())
 
 
-    def validate(self, text, pos):
+    def validate(self, text, pos):  #验证:用于防止在微调框中输入无效数据。这个方法会在用户修改文本时被自动调用
         return self.validator.validate(text, pos)
 
 
-    def valueFromText(self, text):
+    def valueFromText(self, text):  #罗马数字转换为整数,内置方法当调节数值时会被自动调用
         return intFromRoman(text)
 
 
-    def textFromValue(self, value):
+    def textFromValue(self, value): #整数转换为罗马数字,内置方法当调节数值时会被自动调用
         return romanFromInt(value)
 
 
