@@ -9,7 +9,7 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import platform
+import platform  #platform::平台：获取系统及python一些信息.
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -20,43 +20,43 @@ except ImportError:
     X11 = False
 
 
-class FractionSlider(QWidget):
+class FractionSlider(QWidget):#分数滑动器.
 
-    XMARGIN = 12.0
-    YMARGIN = 5.0
-    WSTRING = "999"
+    XMARGIN = 12.0  #X边缘
+    YMARGIN = 5.0   #边缘
+    WSTRING = "999" #字符串 宽
 
-    def __init__(self, numerator=0, denominator=10, parent=None):
+    def __init__(self, numerator=0, denominator=10, parent=None):   #numerator=分子, denominator=分母。
         super(FractionSlider, self).__init__(parent)
         self.__numerator = numerator
         self.__denominator = denominator
-        self.setFocusPolicy(Qt.WheelFocus)
+        self.setFocusPolicy(Qt.WheelFocus)  #setFocusPolicy:设焦点策略,Qt.WheelFocus:滚轮焦点.
         self.setSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding,
-                                       QSizePolicy.Fixed))
+                                       QSizePolicy.Fixed))  #setSizePolicy:设置尺寸策略（最小扩展，固定）
 
 
-    def decimal(self):
+    def decimal(self):  #小数：分数/分母=小数.
         return self.__numerator / float(self.__denominator)
 
 
-    def fraction(self):
+    def fraction(self): #return(分数,分母)
         return self.__numerator, self.__denominator
 
 
-    def sizeHint(self):
+    def sizeHint(self): #尺寸提示
         return self.minimumSizeHint()
 
 
-    def minimumSizeHint(self):
+    def minimumSizeHint(self):  #最小尺寸提示
         font = QFont(self.font())
-        font.setPointSize(font.pointSize() - 1)
-        fm = QFontMetricsF(font)
+        font.setPointSize(font.pointSize() - 1) #setPointSize:设置字体节点尺寸(字号大小).
+        fm = QFontMetricsF(font)    #获得字体度量对象(字体的宽/高).
         return QSize(fm.width(FractionSlider.WSTRING) *
                      self.__denominator,
                      (fm.height() * 4) + FractionSlider.YMARGIN)
 
 
-    def setFraction(self, numerator, denominator=None):
+    def setFraction(self, numerator, denominator=None): #设置分数
         if denominator is not None:
             if 3 <= denominator <= 60:
                 self.__denominator = denominator
@@ -66,11 +66,11 @@ class FractionSlider(QWidget):
             self.__numerator = numerator
         else:
             raise ValueError("numerator out of range")
-        self.update()
-        self.updateGeometry()
+        self.update()   #执行update()方法,会自动触发paintEvent事件
+        self.updateGeometry() #刷新控件几何位置.
 
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event):   #鼠标按下事件
         if event.button() == Qt.LeftButton:
             self.moveSlider(event.x())
             event.accept()
@@ -78,15 +78,15 @@ class FractionSlider(QWidget):
             QWidget.mousePressEvent(self, event)
 
 
-    def mouseMoveEvent(self, event):
+    def mouseMoveEvent(self, event):    #鼠标移动事件
         self.moveSlider(event.x())
 
 
-    def moveSlider(self, x):
+    def moveSlider(self, x):    #移动滑块
         span = self.width() - (FractionSlider.XMARGIN * 2)
         offset = span - x + FractionSlider.XMARGIN
         numerator = int(round(self.__denominator *
-                        (1.0 - (offset / span))))
+                        (1.0 - (offset / span))))   #计算分子的值,round:圆正(四舍五入)
         numerator = max(0, min(numerator, self.__denominator))
         if numerator != self.__numerator:
             self.__numerator = numerator
@@ -95,7 +95,7 @@ class FractionSlider(QWidget):
             self.update()
 
 
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event): #键按下事件
         change = 0
         if event.key() == Qt.Key_Home:
             change = -self.__denominator
@@ -123,7 +123,7 @@ class FractionSlider(QWidget):
             QWidget.keyPressEvent(self, event)
 
 
-    def paintEvent(self, event=None):
+    def paintEvent(self, event=None):   #绘画事件
         font = QFont(self.font())
         font.setPointSize(font.pointSize() - 1)
         fm = QFontMetricsF(font)
@@ -205,7 +205,7 @@ if __name__ == "__main__":
     layout.addWidget(denominatorSpinBox, 1, 3)
     form.setLayout(layout)
 
-    def valueChanged(denominator):
+    def valueChanged(denominator):  #值改变
         numerator = int(slider.decimal() * denominator)
         slider.setFraction(numerator, denominator)
         numeratorLCD.display(numerator)
