@@ -50,7 +50,7 @@ class FractionSlider(QWidget):#分数滑动器.
     def minimumSizeHint(self):  #最小尺寸提示
         font = QFont(self.font())
         font.setPointSize(font.pointSize() - 1) #setPointSize:设置字体节点尺寸(字号大小).
-        fm = QFontMetricsF(font)    #获得字体度量对象(字体的宽/高).
+        fm = QFontMetricsF(font)    #获得字体度量对象(用于设置字体的宽/高).
         return QSize(fm.width(FractionSlider.WSTRING) *
                      self.__denominator,
                      (fm.height() * 4) + FractionSlider.YMARGIN)
@@ -125,8 +125,8 @@ class FractionSlider(QWidget):#分数滑动器.
 
     def paintEvent(self, event=None):   #绘画事件
         font = QFont(self.font())
-        font.setPointSize(font.pointSize() - 1)
-        fm = QFontMetricsF(font)
+        font.setPointSize(font.pointSize() - 1) # #setPointSize:设置字体节点尺寸(字号大小).
+        fm = QFontMetricsF(font)    #获得字体度量对象(用于设置字体的宽/高)
         fracWidth = fm.width(FractionSlider.WSTRING)
         indent = fm.boundingRect("9").width() / 2.0
         if not X11:
@@ -211,9 +211,9 @@ if __name__ == "__main__":
         numeratorLCD.display(numerator)
         
     form.connect(slider, SIGNAL("valueChanged(int,int)"),
-                 numeratorLCD, SLOT("display(int)"))
+                 numeratorLCD, SLOT("display(int)"))    #触发slider的valueChanged信号时触发.
     form.connect(denominatorSpinBox, SIGNAL("valueChanged(int)"),
-                 valueChanged)
+                 valueChanged)  #触发denominatorSpinBox的valueChanged信号时触发.
     form.setWindowTitle("Fraction Slider")
     form.show()
     app.exec_()
