@@ -30,12 +30,12 @@ class FractionSlider(QWidget):#分数滑动器.
         super(FractionSlider, self).__init__(parent)
         self.__numerator = numerator
         self.__denominator = denominator
-        self.setFocusPolicy(Qt.WheelFocus)  #setFocusPolicy:设焦点策略,Qt.WheelFocus:滚轮焦点.
+        self.setFocusPolicy(Qt.WheelFocus)  #setFocusPolicy:设焦点策略,Qt.WheelFocus:切换到,点击,使用滚轮,多能获得焦点.
         self.setSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding,
-                                       QSizePolicy.Fixed))  #setSizePolicy:设置尺寸策略（最小扩展，固定）
+                                       QSizePolicy.Fixed))  #setSizePolicy:设置尺寸策略（X:最小可扩展，Y:固定）
 
 
-    def decimal(self):  #小数：分数/分母=小数.
+    def decimal(self):  #小数：分数/分母 == 3/10 = 0.3.
         return self.__numerator / float(self.__denominator)
 
 
@@ -66,7 +66,7 @@ class FractionSlider(QWidget):#分数滑动器.
             self.__numerator = numerator
         else:
             raise ValueError("numerator out of range")
-        self.update()   #执行update()方法,会自动触发paintEvent事件
+        self.update()   #执行update()方法,触发paintEvent事件
         self.updateGeometry() #刷新控件几何位置.
 
 
@@ -125,7 +125,7 @@ class FractionSlider(QWidget):#分数滑动器.
 
     def paintEvent(self, event=None):   #绘画事件
         font = QFont(self.font())
-        font.setPointSize(font.pointSize() - 1) # #setPointSize:设置字体节点尺寸(字号大小).
+        font.setPointSize(font.pointSize() - 1)  #setPointSize:设置字体(节点)尺寸:字号大小.
         fm = QFontMetricsF(font)    #获得字体度量对象(用于设置字体的宽/高)
         fracWidth = fm.width(FractionSlider.WSTRING)
         indent = fm.boundingRect("9").width() / 2.0
