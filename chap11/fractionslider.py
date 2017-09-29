@@ -134,24 +134,24 @@ class FractionSlider(QWidget):#分数滑动器.
         span = self.width() - (FractionSlider.XMARGIN * 2)
         value = self.__numerator / float(self.__denominator)
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setRenderHint(QPainter.TextAntialiasing)
-        painter.setPen(self.palette().color(QPalette.Mid))
+        painter.setRenderHint(QPainter.Antialiasing)    #setRenderHint:设置渲染提示,Antialiasing:反锯齿
+        painter.setRenderHint(QPainter.TextAntialiasing)    #TextAntialiasing:文本反锯齿
+        painter.setPen(self.palette().color(QPalette.Mid))  #设置Pen画笔,用于形状轮廓和文本绘制.
         painter.setBrush(self.palette().brush(
-                QPalette.AlternateBase))
-        painter.drawRect(self.rect())
-        segColor = QColor(Qt.green).dark(120)
+                QPalette.AlternateBase))#设置Brush画刷为填充底色.
+        painter.drawRect(self.rect())   #绘制矩形.
+        segColor = QColor(Qt.green).dark(120)   #创建颜色对象 绿色 色深120
         segLineColor = segColor.dark()
-        painter.setPen(segLineColor)
-        painter.setBrush(segColor)
+        painter.setPen(segLineColor)    #设置画笔
+        painter.setBrush(segColor)  #设置画刷,用于填充.
         painter.drawRect(FractionSlider.XMARGIN,
-                         FractionSlider.YMARGIN, span, fm.height())
-        textColor = self.palette().color(QPalette.Text)
-        segWidth = span / self.__denominator
-        segHeight = fm.height() * 2
-        nRect = fm.boundingRect(FractionSlider.WSTRING)
+                         FractionSlider.YMARGIN, span, fm.height()) #创建一字高绿底色矩形.
+        textColor = self.palette().color(QPalette.Text) #用调色板创建文体颜色对象.
+        segWidth = span / self.__denominator    #求出间隔宽
+        segHeight = fm.height() * 2 #间隔条高度
+        nRect = fm.boundingRect(FractionSlider.WSTRING) #单个间隔边框矩形
         x = FractionSlider.XMARGIN
-        yOffset = segHeight + fm.height()
+        yOffset = segHeight + fm.height()   # y轴偏移
         for i in range(self.__denominator + 1):
             painter.setPen(segLineColor)
             painter.drawLine(x, FractionSlider.YMARGIN, x, segHeight)
@@ -173,10 +173,10 @@ class FractionSlider(QWidget):#分数滑动器.
                     QPointF((value * span) +
                             (2 * FractionSlider.XMARGIN), y),
                     QPointF((value * span) +
-                            FractionSlider.XMARGIN, fm.height())]
-        painter.setPen(Qt.yellow)
-        painter.setBrush(Qt.darkYellow)
-        painter.drawPolygon(QPolygonF(triangle))
+                            FractionSlider.XMARGIN, fm.height())]   #创建三角形
+        painter.setPen(Qt.yellow)   #Pen设置为标准黄
+        painter.setBrush(Qt.darkYellow) #Brush设置为深黄
+        painter.drawPolygon(QPolygonF(triangle))    #画多边形.
 
 
 if __name__ == "__main__":
