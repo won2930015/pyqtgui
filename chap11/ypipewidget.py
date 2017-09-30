@@ -101,7 +101,7 @@ class YPipeWidget(QWidget):
         ix, iy = hx, fy
 
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.Antialiasing)    #设置渲染提示:反锯齿
         side = min(self.width(), self.height())
         painter.setViewport((self.width() - side) / 2,
                             (self.height() - side) / 2, side, side)
