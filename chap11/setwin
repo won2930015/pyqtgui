@@ -1,0 +1,16 @@
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+class dialog(QDialog):
+
+    def paintEvent(self, *args, **kwargs):
+        self.setWindow
+        painter=QPainter()
+        side=min(self.height(),self.width())
+        painter.setViewport((self.height()-side)/2,(self.width()-side)/2,side,side)
+
+form=dialog()
+
+app = QApplication(sys.argv)
+form.show()
+app.exec_()
