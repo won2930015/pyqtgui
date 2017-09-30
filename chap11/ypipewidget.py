@@ -17,13 +17,13 @@ from PyQt4.QtGui import *
 class YPipeWidget(QWidget):
 
     def __init__(self, leftFlow=0, rightFlow=0, maxFlow=100,
-                 parent=None):
+                 parent=None):  #Flow:流量.
         super(YPipeWidget, self).__init__(parent)
 
         self.leftSpinBox = QSpinBox(self)
         self.leftSpinBox.setRange(0, maxFlow)
         self.leftSpinBox.setValue(leftFlow)
-        self.leftSpinBox.setSuffix(" l/s")
+        self.leftSpinBox.setSuffix(" l/s")  #setSuffix:设置后缀
         self.leftSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
         self.connect(self.leftSpinBox, SIGNAL("valueChanged(int)"),
                      self.valueChanged)
@@ -37,13 +37,13 @@ class YPipeWidget(QWidget):
                      self.valueChanged)
 
         self.label = QLabel(self)
-        self.label.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
+        self.label.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)  #设置边框样式.
         self.label.setAlignment(Qt.AlignCenter)
         fm = QFontMetricsF(self.font())
-        self.label.setMinimumWidth(fm.width(" 999 l/s "))
+        self.label.setMinimumWidth(fm.width(" 999 l/s "))   #setMinimumWidth:设置最小宽度
 
         self.setSizePolicy(QSizePolicy(QSizePolicy.Expanding,
-                                       QSizePolicy.Expanding))
+                                       QSizePolicy.Expanding))  #setSizePolicy:设置尺寸策略(x:扩展,y:扩展)
         self.setMinimumSize(self.minimumSizeHint())
         self.valueChanged()
 
@@ -65,20 +65,20 @@ class YPipeWidget(QWidget):
                      self.leftSpinBox.height() * 5)
 
 
-    def resizeEvent(self, event=None):
+    def resizeEvent(self, event=None):  # resizeEvent:调整尺寸事件.
         fm = QFontMetricsF(self.font())
         x = (self.width() - self.label.width()) / 2
         y = self.height() - (fm.height() * 1.5)
-        self.label.move(x, y)
+        self.label.move(x, y)   #定位label到窗口底部中间.
         y = self.height() / 60.0
-        x = (self.width() / 4.0) - self.leftSpinBox.width()
+        x = (self.width() / 4.0) - self.leftSpinBox.width() #定位左则:leftSpinBox
         self.leftSpinBox.move(x, y)
-        x = self.width() - (self.width() / 4.0)
+        x = self.width() - (self.width() / 4.0) #定位右则:rightSpinBox
         self.rightSpinBox.move(x, y)
 
 
     def paintEvent(self, event=None):
-        LogicalSize = 100.0
+        LogicalSize = 100.0 #罗辑尺寸.
 
         def logicalFromPhysical(length, side):
             return (length / side) * LogicalSize
@@ -86,7 +86,7 @@ class YPipeWidget(QWidget):
         fm = QFontMetricsF(self.font())
         ymargin = ((LogicalSize / 30.0) +
                    logicalFromPhysical(self.leftSpinBox.height(),
-                                       self.height()))
+                                       self.height()))  #ymargin: y边界
         ymax = (LogicalSize -
                 logicalFromPhysical(fm.height() * 2, self.height()))
         width = LogicalSize / 4.0
