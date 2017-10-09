@@ -39,7 +39,7 @@ class YPipeWidget(QWidget):
         self.label = QLabel(self)
         self.label.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)  #设置边框样式.
         self.label.setAlignment(Qt.AlignCenter)
-        fm = QFontMetricsF(self.font())
+        fm = QFontMetricsF(self.font())#QFontMetricsF:返回'字符串'字体度量对象.尾缀F代表返回的是浮点数.无尾缀返回的是整数.
         self.label.setMinimumWidth(fm.width(" 999 l/s "))   #setMinimumWidth:设置最小宽度
 
         self.setSizePolicy(QSizePolicy(QSizePolicy.Expanding,
@@ -86,9 +86,9 @@ class YPipeWidget(QWidget):
         fm = QFontMetricsF(self.font())
         ymargin = ((LogicalSize / 30.0) +
                    logicalFromPhysical(self.leftSpinBox.height(),
-                                       self.height()))  #ymargin: y边界
+                                       self.height()))  #ymargin: y边界(y轴上边界值)
         ymax = (LogicalSize -
-                logicalFromPhysical(fm.height() * 2, self.height()))
+                logicalFromPhysical(fm.height() * 2, self.height()))#y轴下边界值.
         width = LogicalSize / 4.0
         cx, cy = LogicalSize / 2.0, LogicalSize / 3.0
         ax, ay = cx - (2 * width), ymargin
@@ -109,14 +109,16 @@ class YPipeWidget(QWidget):
 
         painter.setPen(Qt.NoPen)
 
+        #上左通道颜色填充.
         gradient = QLinearGradient(QPointF(0, 0),
-                                         QPointF(0, 100))
-        gradient.setColorAt(0, Qt.white)
+                                         QPointF(0, 100))   #LinearGradient:线性渐变
+        gradient.setColorAt(0, Qt.white)    # Qt.white:白色
         a = self.leftSpinBox.value()
         gradient.setColorAt(1, (Qt.red if a != 0 else Qt.white))
         painter.setBrush(QBrush(gradient))
-        painter.drawPolygon(QPolygon([ax, ay, bx, by, cx, cy, ix, iy]))
+        painter.drawPolygon(QPolygon([ax, ay, bx, by, cx, cy, ix, iy])) #drawPolygon:绘制_多边形.
 
+        #上右通道颜色填充.
         gradient = QLinearGradient(QPointF(0, 0), QPointF(0, 100))
         gradient.setColorAt(0, Qt.white)
         b = self.rightSpinBox.value()
@@ -125,6 +127,7 @@ class YPipeWidget(QWidget):
         painter.setBrush(QBrush(gradient))
         painter.drawPolygon(QPolygon([cx, cy, dx, dy, ex, ey, fx, fy]))
 
+        #下中通道颜色填充.
         if (a + b) == 0:
             color = QColor(Qt.white)
         else:
@@ -138,6 +141,8 @@ class YPipeWidget(QWidget):
         painter.drawPolygon(QPolygon(
                 [cx, cy, fx, fy, gx, gy, hx, hy, ix, iy]))
 
+
+        #画左中右三条黑色边线.
         painter.setPen(Qt.black)
         painter.drawPolyline(QPolygon([ax, ay, ix, iy, hx, hy]))
         painter.drawPolyline(QPolygon([gx, gy, fx, fy, ex, ey]))
