@@ -78,11 +78,11 @@ class FractionSlider(QWidget):#分数滑动器.
             QWidget.mousePressEvent(self, event)
 
 
-    def mouseMoveEvent(self, event):    #鼠标移动事件
+    def mouseMoveEvent(self, event):    #鼠标移动事件(鼠标跟踪为:False时拖动鼠标才执行该事件.)
         self.moveSlider(event.x())
 
 
-    def moveSlider(self, x):    #移动滑块
+    def moveSlider(self, x):    #移动△滑块
         span = self.width() - (FractionSlider.XMARGIN * 2)
         offset = span - x + FractionSlider.XMARGIN
         numerator = int(round(self.__denominator *
@@ -128,7 +128,7 @@ class FractionSlider(QWidget):#分数滑动器.
         font.setPointSize(font.pointSize() - 1)  #setPointSize:设置字体(节点)尺寸:字号大小.
         fm = QFontMetricsF(font)    #获得字体度量对象(用于设置字体的宽/高)
         fracWidth = fm.width(FractionSlider.WSTRING)
-        indent = fm.boundingRect("9").width() / 2.0
+        indent = fm.boundingRect("9").width() / 2.0 #.boundingRect:边界框
         if not X11:
             fracWidth *= 1.5
         span = self.width() - (FractionSlider.XMARGIN * 2)
@@ -195,7 +195,8 @@ if __name__ == "__main__":
     denominatorSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
     numeratorLabel = QLabel("Numerator")
     numeratorLCD = QLCDNumber()
-    numeratorLCD.setSegmentStyle(QLCDNumber.Flat)
+    numeratorLCD.setSegmentStyle(QLCDNumber.Flat)   #setSegmentStyle:线段 样式
+    numeratorLabel. setBuddy(numeratorLCD)
     layout = QGridLayout()
     layout.addWidget(sliderLabel, 0, 0)
     layout.addWidget(slider, 0, 1, 1, 5)
