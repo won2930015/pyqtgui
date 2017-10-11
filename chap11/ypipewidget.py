@@ -80,8 +80,8 @@ class YPipeWidget(QWidget):
     def paintEvent(self, event=None):
         LogicalSize = 100.0 #罗辑尺寸.
 
-        def logicalFromPhysical(length, side):
-            return (length / side) * LogicalSize
+        def logicalFromPhysical(length, side):  #逻辑尺寸 from 物理尺寸
+            return (length / side) * LogicalSize    #根据物理尺寸转换到相应的逻辑尺寸.
         
         fm = QFontMetricsF(self.font())
         ymargin = ((LogicalSize / 30.0) +
