@@ -125,7 +125,7 @@ class CountersWidget(QWidget):
                 painter.drawRect(rect)
 
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event):   # mousePressEvent:鼠标按下事件
         self.x = self._xFromEventX(event)
         self.y = self._yFromEventY(event)
         cell = self.grid[self.x][self.y]
@@ -139,7 +139,7 @@ class CountersWidget(QWidget):
         self.setCursor(QCursor(pixmap))
 
 
-    def mouseReleaseEvent(self, event):
+    def mouseReleaseEvent(self, event): # mouseReleaseEvent:鼠标释放事件
         x = self._xFromEventX(event)
         y = self._yFromEventY(event)
         if self.x != x or self.y != y:
