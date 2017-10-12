@@ -112,9 +112,9 @@ class YPipeWidget(QWidget):
         #上左通道颜色填充.
         gradient = QLinearGradient(QPointF(0, 0),
                                          QPointF(0, 100))   #LinearGradient:线性渐变
-        gradient.setColorAt(0, Qt.white)    # Qt.white:白色
+        gradient.setColorAt(0, Qt.white)    # 线性渐变:0 = Qt.white:白色
         a = self.leftSpinBox.value()
-        gradient.setColorAt(1, (Qt.red if a != 0 else Qt.white))
+        gradient.setColorAt(1, (Qt.red if a != 0 else Qt.white))    # 线性渐变:1 = Qt.white or Qt.red
         painter.setBrush(QBrush(gradient))
         painter.drawPolygon(QPolygon([ax, ay, bx, by, cx, cy, ix, iy])) #drawPolygon:绘制_多边形.
 

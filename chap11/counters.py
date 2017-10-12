@@ -12,7 +12,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-BLANK, RED, YELLOW = range(3)
+BLANK, RED, YELLOW = range(3)   # 0,1,2
 
 
 class CountersWidget(QWidget):
@@ -21,7 +21,7 @@ class CountersWidget(QWidget):
         super(CountersWidget, self).__init__(parent)
         self.setSizePolicy(QSizePolicy(QSizePolicy.Expanding,
                                        QSizePolicy.Expanding))
-        self.grid = [[BLANK] * 3 for i in range(3)]
+        self.grid = [[BLANK] * 3 for i in range(3)] # grid = [[0,0,0],[0,0,0],[0,0,0]]
         self.selected = [0, 0]
         self.setMinimumSize(self.minimumSizeHint())
 
@@ -37,17 +37,17 @@ class CountersWidget(QWidget):
     def mousePressEvent(self, event):
         xOffset = self.width() / 3
         yOffset = self.height() / 3
-        if event.x() < xOffset:
+        if event.x() < xOffset:     # 小于xOffset(x偏移),鼠标位于0列.
             x = 0
-        elif event.x() < 2 * xOffset:
+        elif event.x() < 2 * xOffset:   # 小于2*xOffset(x偏移),鼠标位于1列.
             x = 1
-        else:
+        else:   # 鼠标位于2列
             x = 2
-        if event.y() < yOffset:
+        if event.y() < yOffset:     # 小于yOffset(y轴偏移),鼠标位于0行.
             y = 0
-        elif event.y() < 2 * yOffset:
+        elif event.y() < 2 * yOffset:   # 小于2*yOffset(y轴偏移),鼠标位于1行
             y = 1
-        else:
+        else:   # 鼠标位于2行.
             y = 2
         cell = self.grid[x][y]
         if cell == BLANK:
@@ -96,7 +96,7 @@ class CountersWidget(QWidget):
             for y in range(3):
                 cell = self.grid[x][y]
                 rect = (QRectF(x * xOffset, y * yOffset,
-                        xOffset, yOffset).adjusted(0.5, 0.5, -0.5, -0.5))
+                        xOffset, yOffset).adjusted(0.5, 0.5, -0.5, -0.5))   # adjusted:调整
                 color = None
                 if cell == RED:
                     color = Qt.red
