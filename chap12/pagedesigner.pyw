@@ -37,8 +37,8 @@ class TextItemDlg(QDialog):
         self.scene = scene
 
         self.editor = QTextEdit()
-        self.editor.setAcceptRichText(False)
-        self.editor.setTabChangesFocus(True)
+        self.editor.setAcceptRichText(False)    #设置_接受_富文本
+        self.editor.setTabChangesFocus(True)    #设置_Tab_改变_焦点
         editorLabel = QLabel("&Text:")
         editorLabel.setBuddy(self.editor)
         self.fontComboBox = QFontComboBox()
@@ -46,7 +46,7 @@ class TextItemDlg(QDialog):
         fontLabel = QLabel("&Font:")
         fontLabel.setBuddy(self.fontComboBox)
         self.fontSpinBox = QSpinBox()
-        self.fontSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
+        self.fontSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)    #.setAlignment:设置对齐
         self.fontSpinBox.setRange(6, 280)
         self.fontSpinBox.setValue(PointSize)
         fontSizeLabel = QLabel("&Size:")
@@ -56,7 +56,7 @@ class TextItemDlg(QDialog):
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
         if self.item is not None:
-            self.editor.setPlainText(self.item.toPlainText())
+            self.editor.setPlainText(self.item.toPlainText())   #setPlainText:设置_纯_文本
             self.fontComboBox.setCurrentFont(self.item.font())
             self.fontSpinBox.setValue(self.item.font().pointSize())
 
@@ -108,7 +108,7 @@ class TextItemDlg(QDialog):
 class TextItem(QGraphicsTextItem):
 
     def __init__(self, text, position, scene,
-                font=QFont("Times", PointSize), matrix=QMatrix()):
+                font=QFont("Times", PointSize), matrix=QMatrix()):  # matrix:矩阵
         super(TextItem, self).__init__(text)
         self.setFlags(QGraphicsItem.ItemIsSelectable|
                       QGraphicsItem.ItemIsMovable)
