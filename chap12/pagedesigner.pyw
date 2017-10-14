@@ -27,7 +27,7 @@ FileVersion = 1
 Dirty = False
 
 
-class TextItemDlg(QDialog):
+class TextItemDlg(QDialog):     #自定义的文本编辑窗口控件...
 
     def __init__(self, item=None, position=None, scene=None, parent=None):
         super(QDialog, self).__init__(parent)
@@ -37,11 +37,11 @@ class TextItemDlg(QDialog):
         self.scene = scene
 
         self.editor = QTextEdit()
-        self.editor.setAcceptRichText(False)    #设置_接受_富文本
-        self.editor.setTabChangesFocus(True)    #设置_Tab_改变_焦点
+        self.editor.setAcceptRichText(False)    # 设置_接受_富文本
+        self.editor.setTabChangesFocus(True)    # 设置_Tab_改变_焦点
         editorLabel = QLabel("&Text:")
         editorLabel.setBuddy(self.editor)
-        self.fontComboBox = QFontComboBox()
+        self.fontComboBox = QFontComboBox()     # 创建字体复合选择框实例.
         self.fontComboBox.setCurrentFont(QFont("Times", PointSize))
         fontLabel = QLabel("&Font:")
         fontLabel.setBuddy(self.fontComboBox)
@@ -71,13 +71,13 @@ class TextItemDlg(QDialog):
         self.setLayout(layout)
 
         self.connect(self.fontComboBox,
-                SIGNAL("currentFontChanged(QFont)"), self.updateUi)
+                SIGNAL("currentFontChanged(QFont)"), self.updateUi) # 字体复合框字体改变时...
         self.connect(self.fontSpinBox,
-                SIGNAL("valueChanged(int)"), self.updateUi)
+                SIGNAL("valueChanged(int)"), self.updateUi) #字号改变时...
         self.connect(self.editor, SIGNAL("textChanged()"),
-                     self.updateUi)
-        self.connect(self.buttonBox, SIGNAL("accepted()"), self.accept)
-        self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject)
+                     self.updateUi) #文本编辑框,文本改变时...
+        self.connect(self.buttonBox, SIGNAL("accepted()"), self.accept) # OK按钮被单击时...
+        self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject) # Cancel按钮被单击时...
 
         self.setWindowTitle("Page Designer - {} Text Item".format(
                 "Add" if self.item is None else "Edit"))
@@ -100,7 +100,7 @@ class TextItemDlg(QDialog):
         self.item.setFont(font)
         self.item.setPlainText(self.editor.toPlainText())   
         self.item.update()
-        global Dirty
+        global Dirty    #Dirty:脏的(本文修改标志)
         Dirty = True
         QDialog.accept(self)
 
@@ -111,18 +111,18 @@ class TextItem(QGraphicsTextItem):
                 font=QFont("Times", PointSize), matrix=QMatrix()):  # matrix:矩阵
         super(TextItem, self).__init__(text)
         self.setFlags(QGraphicsItem.ItemIsSelectable|
-                      QGraphicsItem.ItemIsMovable)
+                      QGraphicsItem.ItemIsMovable)  #   setFlags:设置标志, .ItemIsSelectable:项是可选择的...,.ItemIsMovable:项是可移动的...
         self.setFont(font)
         self.setPos(position)
         self.setMatrix(matrix)
-        scene.clearSelection()
+        scene.clearSelection()  # 清除_选择.
         scene.addItem(self)
         self.setSelected(True)
         global Dirty
         Dirty = True
 
 
-    def parentWidget(self):
+    def parentWidget(self): # 返回父窗口控件
         return self.scene().views()[0]
 
 
@@ -236,7 +236,7 @@ class GraphicsView(QGraphicsView):
 
     def __init__(self, parent=None):
         super(GraphicsView, self).__init__(parent)
-        self.setDragMode(QGraphicsView.RubberBandDrag)
+        self.setDragMode(QGraphicsView.RubberBandDrag)  #.RubberBandDrag:拖动时显示 橡皮筋边框
         self.setRenderHint(QPainter.Antialiasing)
         self.setRenderHint(QPainter.TextAntialiasing)
 
@@ -252,19 +252,19 @@ class MainForm(QDialog):
         super(MainForm, self).__init__(parent)
 
         self.filename = ""
-        self.copiedItem = QByteArray()
-        self.pasteOffset = 5
-        self.prevPoint = QPoint()
-        self.addOffset = 5
+        self.copiedItem = QByteArray()  #copiedItem:复制_项
+        self.pasteOffset = 5    #粘贴偏移
+        self.prevPoint = QPoint()   #上一个_节点
+        self.addOffset = 5  #偏移add???
         self.borders = []
 
-        self.printer = QPrinter(QPrinter.HighResolution)
+        self.printer = QPrinter(QPrinter.HighResolution)    #.HighResolution:高分辨率
         self.printer.setPageSize(QPrinter.Letter)
 
         self.view = GraphicsView()
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0, PageSize[0], PageSize[1])
-        self.addBorders()
+        self.addBorders()   #加入边界
         self.view.setScene(self.scene)
 
         buttonLayout = QVBoxLayout()
@@ -286,9 +286,9 @@ class MainForm(QDialog):
                 button.setFocusPolicy(Qt.NoFocus)
             self.connect(button, SIGNAL("clicked()"), slot)
             if text == "Pri&nt...":
-                buttonLayout.addStretch(5)
+                buttonLayout.addStretch(5)  #加入长度5的拉伸.
             if text == "&Quit":
-                buttonLayout.addStretch(1)
+                buttonLayout.addStretch(1)  ##加入长度1的拉伸.
             buttonLayout.addWidget(button)
         buttonLayout.addStretch()
 
@@ -303,14 +303,14 @@ class MainForm(QDialog):
         self.setWindowTitle("Page Designer")
 
 
-    def addBorders(self):
+    def addBorders(self):   # 边界指示线
         self.borders = []
         rect = QRectF(0, 0, PageSize[0], PageSize[1])
-        self.borders.append(self.scene.addRect(rect, Qt.yellow))
+        self.borders.append(self.scene.addRect(rect, Qt.yellow))    # 页面大小指示线
         margin = 5.25 * PointSize
         self.borders.append(self.scene.addRect(
                 rect.adjusted(margin, margin, -margin, -margin),
-                Qt.yellow))
+                Qt.yellow))     # 边距指示线
 
 
     def removeBorders(self):
