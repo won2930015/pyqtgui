@@ -577,7 +577,7 @@ class MainForm(QDialog):
 
 app = QApplication(sys.argv)
 form = MainForm()
-rect = QApplication.desktop().availableGeometry()
+rect = QApplication.desktop().availableGeometry()   #.availableGeometry:获取桌面可用_几何图形.
 form.resize(int(rect.width() * 0.6), int(rect.height() * 0.9))
 form.show()
 app.exec_()
