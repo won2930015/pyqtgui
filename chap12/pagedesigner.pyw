@@ -254,7 +254,7 @@ class MainForm(QDialog):
         self.filename = ""
         self.copiedItem = QByteArray()  #copiedItem:复制_项
         self.pasteOffset = 5    #粘贴偏移
-        self.prevPoint = QPoint()   #上一个_节点
+        self.prevPoint = QPoint()   # 前一个_节点
         self.addOffset = 5  #偏移add???
         self.borders = []
 
@@ -293,7 +293,7 @@ class MainForm(QDialog):
         buttonLayout.addStretch()
 
         layout = QHBoxLayout()
-        layout.addWidget(self.view, 1)
+        layout.addWidget(self.view, 1)  # 1 :代表可扩展的.
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
@@ -340,7 +340,7 @@ class MainForm(QDialog):
 
     def position(self):
         point = self.mapFromGlobal(QCursor.pos())
-        if not self.view.geometry().contains(point):
+        if not self.view.geometry().contains(point):    # if not  view.geometry(几何图形).contains(包含)point 时.
             coord = random.randint(36, 144)
             point = QPoint(coord, coord)
         else:
@@ -370,10 +370,20 @@ class MainForm(QDialog):
                 "Pixmap Files (*.bmp *.jpg *.png *.xpm)")
         if not fname:
             return
+
         self.createPixmapItem(QPixmap(fname), self.position())
+
+        # self.image=QImage()
+        # self.image.load(fname)
+        # self.createPixmapItem(QPixmap.fromImage(self.image), self.position())
+
+
 
 
     def createPixmapItem(self, pixmap, position, matrix=QMatrix()):
+
+        # matrix.scale(0.8,0.8) #缩放图片http://www.voidcn.com/article/p-cwldonxv-er.html
+
         item = QGraphicsPixmapItem(pixmap)
         item.setFlags(QGraphicsItem.ItemIsSelectable|
                       QGraphicsItem.ItemIsMovable)
