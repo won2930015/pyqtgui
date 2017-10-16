@@ -165,7 +165,7 @@ class BoxItem(QGraphicsItem):
         return self.scene().views()[0]
 
 
-    def boundingRect(self):
+    def boundingRect(self):     # 边界框矩形.
         return self.rect.adjusted(-2, -2, 2, 2)
 
 
@@ -186,7 +186,7 @@ class BoxItem(QGraphicsItem):
         return QGraphicsItem.itemChange(self, change, variant)
 
 
-    def contextMenuEvent(self, event):
+    def contextMenuEvent(self, event):  #上下文菜单.
         wrapped = []
         menu = QMenu(self.parentWidget())
         for text, param in (
@@ -253,9 +253,9 @@ class MainForm(QDialog):
 
         self.filename = ""
         self.copiedItem = QByteArray()  #copiedItem:复制_项
-        self.pasteOffset = 5    #粘贴偏移
+        self.pasteOffset = 5    #粘贴_偏移
         self.prevPoint = QPoint()   # 前一个_节点
-        self.addOffset = 5  #偏移add???
+        self.addOffset = 5  #加入_偏移
         self.borders = []
 
         self.printer = QPrinter(QPrinter.HighResolution)    #.HighResolution:高分辨率
@@ -288,7 +288,7 @@ class MainForm(QDialog):
             if text == "Pri&nt...":
                 buttonLayout.addStretch(5)  #加入长度5的拉伸.
             if text == "&Quit":
-                buttonLayout.addStretch(1)  ##加入长度1的拉伸.
+                buttonLayout.addStretch(1)  #加入长度1的拉伸.
             buttonLayout.addWidget(button)
         buttonLayout.addStretch()
 
@@ -339,7 +339,7 @@ class MainForm(QDialog):
 
 
     def position(self):
-        point = self.mapFromGlobal(QCursor.pos())
+        point = self.mapFromGlobal(QCursor.pos())   #将光标当前位置坐标转换成物理坐标point.
         if not self.view.geometry().contains(point):    # if not  view.geometry(几何图形).contains(包含)point 时.
             coord = random.randint(36, 144)
             point = QPoint(coord, coord)
@@ -350,7 +350,7 @@ class MainForm(QDialog):
             else:
                 self.addOffset = 5
                 self.prevPoint = point
-        return self.view.mapToScene(point)
+        return self.view.mapToScene(point)  #   将point物理坐标转换成Scene的逻辑坐标.
 
 
     def addText(self):
