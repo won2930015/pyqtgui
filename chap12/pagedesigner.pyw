@@ -42,7 +42,7 @@ class TextItemDlg(QDialog):     #自定义的文本编辑窗口控件...
         editorLabel = QLabel("&Text:")
         editorLabel.setBuddy(self.editor)
         self.fontComboBox = QFontComboBox()     # 创建字体复合选择框实例.
-        self.fontComboBox.setCurrentFont(QFont("Times", PointSize))
+        self.fontComboBox.setCurrentFont(QFont("宋体", PointSize))
         fontLabel = QLabel("&Font:")
         fontLabel.setBuddy(self.fontComboBox)
         self.fontSpinBox = QSpinBox()
@@ -108,7 +108,7 @@ class TextItemDlg(QDialog):     #自定义的文本编辑窗口控件...
 class TextItem(QGraphicsTextItem):
 
     def __init__(self, text, position, scene,
-                font=QFont("Times", PointSize), matrix=QMatrix()):  # matrix:矩阵
+                font=QFont("宋体", PointSize), matrix=QMatrix()):  # matrix:矩阵
         super(TextItem, self).__init__(text)
         self.setFlags(QGraphicsItem.ItemIsSelectable|
                       QGraphicsItem.ItemIsMovable)  #   setFlags:设置标志, .ItemIsSelectable:项是可选择的...,.ItemIsMovable:项是可移动的...
@@ -173,7 +173,7 @@ class BoxItem(QGraphicsItem):
         pen = QPen(self.style)
         pen.setColor(Qt.black)
         pen.setWidth(1)
-        if option.state & QStyle.State_Selected:
+        if option.state & QStyle.State_Selected:    #当是选中状态时...
             pen.setColor(Qt.blue)
         painter.setPen(pen)
         painter.drawRect(self.rect)
@@ -195,7 +195,7 @@ class BoxItem(QGraphicsItem):
                 ("D&otted", Qt.DotLine),
                 ("D&ashDotted", Qt.DashDotLine),
                 ("DashDo&tDotted", Qt.DashDotDotLine)):
-            wrapper = functools.partial(self.setStyle, param)
+            wrapper = functools.partial(self.setStyle, param)   #偏函数:.partial(函数(), 参数1,参数2,...)
             wrapped.append(wrapper)
             menu.addAction(text, wrapper)
         menu.exec_(event.screenPos())
@@ -242,7 +242,7 @@ class GraphicsView(QGraphicsView):
 
 
     def wheelEvent(self, event):
-        factor = 1.41 ** (-event.delta() / 240.0)
+        factor = 1.41 ** (-event.delta() / 240.0)   #delta:增量
         self.scale(factor, factor)
 
 
