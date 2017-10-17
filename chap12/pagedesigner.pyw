@@ -388,7 +388,7 @@ class MainForm(QDialog):
         item.setFlags(QGraphicsItem.ItemIsSelectable|
                       QGraphicsItem.ItemIsMovable)
         item.setPos(position)
-        item.setMatrix(matrix)
+        item.setMatrix(matrix)  # QT4.3以后QMatrix()更名为QTranstform() http://blog.csdn.net/founderznd/article/details/51533777
         self.scene.clearSelection()
         self.scene.addItem(item)
         item.setSelected(True)
