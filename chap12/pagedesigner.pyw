@@ -459,7 +459,7 @@ class MainForm(QDialog):
             painter.setRenderHint(QPainter.TextAntialiasing)
             self.scene.clearSelection()
             self.removeBorders()
-            self.scene.render(painter)
+            self.scene.render(painter)      # render::渲染.(PS打印屏幕内容?)
             self.addBorders()
 
 
