@@ -161,7 +161,7 @@ class BoxItem(QGraphicsItem):
         Dirty = True
 
 
-    def parentWidget(self):
+    def parentWidget(self): #上级控件
         return self.scene().views()[0]
 
 
@@ -211,7 +211,7 @@ class BoxItem(QGraphicsItem):
     def keyPressEvent(self, event):
         factor = PointSize / 4
         changed = False
-        if event.modifiers() & Qt.ShiftModifier:
+        if event.modifiers() & Qt.ShiftModifier:    #event.modifiers():功能键被按下时->True,   Qt.ShiftModifier:Shift键被按下时->True
             if event.key() == Qt.Key_Left:
                 self.rect.setRight(self.rect.right() - factor)
                 changed = True
