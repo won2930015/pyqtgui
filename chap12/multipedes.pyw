@@ -9,27 +9,27 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import math
-import random
+import math     # 数学
+import random   # 随机
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-SCENESIZE = 500
-INTERVAL = 200
+SCENESIZE = 500 # 场景SIZE
+INTERVAL = 200  # 间隔
 
-Running = False
+Running = False # 运转
 
 
-class Head(QGraphicsItem):
+class Head(QGraphicsItem):  #头部
 
     Rect = QRectF(-30, -20, 60, 40)
 
     def __init__(self, color, angle, position):
         super(Head, self).__init__()
         self.color = color
-        self.angle = angle
+        self.angle = angle  # 角度
         self.setPos(position)
         self.timer = QTimer()
         QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
@@ -41,8 +41,8 @@ class Head(QGraphicsItem):
 
 
     def shape(self):
-        path = QPainterPath()
-        path.addEllipse(Head.Rect)
+        path = QPainterPath()   # PainterPath : 涂(画)路径
+        path.addEllipse(Head.Rect)  # addEllipse:加入椭圆
         return path
 
 
@@ -50,15 +50,15 @@ class Head(QGraphicsItem):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
         painter.drawEllipse(Head.Rect)
-        if option.levelOfDetail > 0.5: # Outer eyes
-            painter.setBrush(QBrush(Qt.yellow))
+        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:细节级别
+            painter.setBrush(QBrush(Qt.yellow)) #yellow:黄
             painter.drawEllipse(-12, -19, 8, 8)
             painter.drawEllipse(-12, 11, 8, 8)
-            if option.levelOfDetail > 0.9: # Inner eyes
-                painter.setBrush(QBrush(Qt.darkBlue))
+            if option.levelOfDetail > 0.9: # Inner eyes:内眼(瞳孔部分).
+                painter.setBrush(QBrush(Qt.darkBlue))   #darkBlue:深蓝
                 painter.drawEllipse(-12, -19, 4, 4)
                 painter.drawEllipse(-12, 11, 4, 4)
-                if option.levelOfDetail > 1.3: # Nostrils
+                if option.levelOfDetail > 1.3: # Nostrils:鼻孔
                     painter.setBrush(QBrush(Qt.white))
                     painter.drawEllipse(-27, -5, 2, 2)
                     painter.drawEllipse(-27, 3, 2, 2)
@@ -71,18 +71,18 @@ class Head(QGraphicsItem):
         while True:
             angle += random.randint(-9, 9)
             offset = random.randint(3, 15)
-            x = self.x() + (offset * math.sin(math.radians(angle)))
-            y = self.y() + (offset * math.cos(math.radians(angle)))
+            x = self.x() + (offset * math.sin(math.radians(angle))) # sin:正弦,radians:弧度
+            y = self.y() + (offset * math.cos(math.radians(angle))) # cos:余弦
             if 0 <= x <= SCENESIZE and 0 <= y <= SCENESIZE:
                 break
         self.angle = angle
-        self.rotate(random.randint(-5, 5))
+        self.rotate(random.randint(-5, 5))      #rotate:旋转
         self.setPos(QPointF(x, y))
-        for item in self.scene().collidingItems(self):
+        for item in self.scene().collidingItems(self):  #collidingItems:碰撞_项
             if isinstance(item, Head):
-                self.color.setRed(min(255, self.color.red() + 1))
+                self.color.setRed(min(255, self.color.red() + 5))   # 碰撞时头部红色成分增加.
             else:
-                item.color.setBlue(min(255, item.color.blue() + 1))
+                item.color.setBlue(min(255, item.color.blue() + 5)) # 没有碰撞时头部蓝色成分增加.
 
 
 
