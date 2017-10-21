@@ -40,8 +40,8 @@ class Head(QGraphicsItem):  #头部
         return Head.Rect
 
 
-    def shape(self):
-        path = QPainterPath()   # PainterPath : 涂(画)路径
+    def shape(self):       #形状
+        path = QPainterPath()   # PainterPath : 涂(画)路径|涂(画)范围.
         path.addEllipse(Head.Rect)  # addEllipse:加入椭圆
         return path
 
@@ -50,7 +50,7 @@ class Head(QGraphicsItem):  #头部
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
         painter.drawEllipse(Head.Rect)
-        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:细节级别
+        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节
             painter.setBrush(QBrush(Qt.yellow)) #yellow:黄
             painter.drawEllipse(-12, -19, 8, 8)
             painter.drawEllipse(-12, 11, 8, 8)
@@ -79,7 +79,7 @@ class Head(QGraphicsItem):  #头部
         self.rotate(random.randint(-5, 5))      #rotate:旋转
         self.setPos(QPointF(x, y))
         for item in self.scene().collidingItems(self):  #collidingItems:碰撞_项
-            if isinstance(item, Head):
+            if isinstance(item, Head):  #当碰撞项是Head Class时...
                 self.color.setRed(min(255, self.color.red() + 5))   # 碰撞时头部红色成分增加.
             else:
                 item.color.setBlue(min(255, item.color.blue() + 5)) # 没有碰撞时头部蓝色成分增加.
@@ -97,11 +97,11 @@ class Segment(QGraphicsItem):
         x = offset + 15
         y = -20
         self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))
-        self.path.closeSubpath()
+                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))    #蜈蚣左脚
+        self.path.closeSubpath()    #closeSubpath:结束子路径
         y = 20
         self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))
+                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))    #蜈蚣右脚
         self.path.closeSubpath()
         self.change = 1
         self.angle = 0
@@ -121,7 +121,7 @@ class Segment(QGraphicsItem):
     def paint(self, painter, option, widget=None):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        if option.levelOfDetail < 0.9:
+        if option.levelOfDetail < 0.9:   #levelOfDetail:级别of细节
             painter.drawEllipse(self.rect)
         else:
             painter.drawPath(self.path)
