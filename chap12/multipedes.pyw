@@ -118,7 +118,7 @@ class Segment(QGraphicsItem):
         return self.path
 
 
-    def paint(self, painter, option, widget=None):
+    def paint(self, painter, option, widget=None):  #涂(画)
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
         if option.levelOfDetail < 0.9:   #levelOfDetail:级别of细节
@@ -150,12 +150,12 @@ class MainForm(QDialog):
 
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0, SCENESIZE, SCENESIZE)
-        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)
+        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)   #setItemIndexMethod:设置项索引方法
         self.view = QGraphicsView()
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
         self.view.setFocusPolicy(Qt.NoFocus)
-        zoomSlider = QSlider(Qt.Horizontal)
+        zoomSlider = QSlider(Qt.Horizontal) #QSlider:滑块, Qt.Horizontal:水平方向
         zoomSlider.setRange(5, 200)
         zoomSlider.setValue(100)
         self.pauseButton = QPushButton("Pa&use")
@@ -200,7 +200,7 @@ class MainForm(QDialog):
         for i in range(random.randint(6, 10)):
             angle = random.randint(0, 360)
             offset = random.randint(0, SCENESIZE // 2)
-            half = SCENESIZE / 2
+            half = SCENESIZE / 2    # 一半
             x = half + (offset * math.sin(math.radians(angle)))
             y = half + (offset * math.cos(math.radians(angle)))
             color = QColor(red, green, blue)
@@ -220,12 +220,12 @@ class MainForm(QDialog):
     def timerEvent(self, event):
         if not Running:
             return
-        dead = set()
+        dead = set()    # 死亡的...
         items = self.scene.items()
         if len(items) == 0:
             self.populate()
             return
-        heads = set()
+        heads = set()   # 头???
         for item in items:
             if isinstance(item, Head):
                 heads.add(item)
