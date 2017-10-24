@@ -40,7 +40,7 @@ class Head(QGraphicsItem):  #头部
         return Head.Rect
 
 
-    def shape(self):       #形状
+    def shape(self):       # 形状:根据返回的形状检测碰撞项.
         path = QPainterPath()   # PainterPath : 涂(画)路径|涂(画)范围.
         path.addEllipse(Head.Rect)  # addEllipse:加入椭圆
         return path
@@ -50,7 +50,7 @@ class Head(QGraphicsItem):  #头部
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
         painter.drawEllipse(Head.Rect)
-        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节
+        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行...
             painter.setBrush(QBrush(Qt.yellow)) #yellow:黄
             painter.drawEllipse(-12, -19, 8, 8)
             painter.drawEllipse(-12, 11, 8, 8)
@@ -121,7 +121,7 @@ class Segment(QGraphicsItem):
     def paint(self, painter, option, widget=None):  #涂(画)
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        if option.levelOfDetail < 0.9:   #levelOfDetail:级别of细节
+        if option.levelOfDetail < 0.9:   #levelOfDetail:级别of细节 < 90% 时执行...
             painter.drawEllipse(self.rect)
         else:
             painter.drawPath(self.path)
@@ -150,7 +150,7 @@ class MainForm(QDialog):
 
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0, SCENESIZE, SCENESIZE)
-        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)   #setItemIndexMethod:设置项索引方法
+        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)   #setItemIndexMethod:设置_项_索引_方法
         self.view = QGraphicsView()
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
@@ -242,7 +242,7 @@ class MainForm(QDialog):
 
 app = QApplication(sys.argv)
 form = MainForm()
-rect = QApplication.desktop().availableGeometry()
+rect = QApplication.desktop().availableGeometry()   # QApplication::应用程序, desktop::桌面, .availableGeometry::可用_几何(范围).
 form.resize(int(rect.width() * 0.75), int(rect.height() * 0.9))
 form.show()
 app.exec_()
