@@ -69,8 +69,8 @@ class Head(QGraphicsItem):
             return
         angle = self.angle
         while True:
-            flipper = 1
-            angle += random.random() * random.choice((-1, 1))
+            flipper = 1 # 鳍状肢
+            angle += random.random() * random.choice((-1, 1))   #.choice::选择
             offset = flipper * random.random()
             x = self.x() + (offset * math.sin(math.radians(angle)))
             y = self.y() + (offset * math.cos(math.radians(angle)))
