@@ -59,7 +59,7 @@ class Head(QGraphicsItem):
                     painter.drawEllipse(-27, 3, 2, 2)
 
 
-    def advance(self, phase):
+    def advance(self, phase):    # advance::前进|先行, phase::相位
         if phase == 0:
             angle = self.angle
             while True:
