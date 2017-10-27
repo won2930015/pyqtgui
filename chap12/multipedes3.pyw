@@ -16,18 +16,19 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-SCENESIZE = 500
-INTERVAL = 1
+SCENESIZE = 500 # 场景SIZE
+INTERVAL = 1  # 间隔
 
 
-class Head(QGraphicsItem):
+
+class Head(QGraphicsItem):  #头部
 
     Rect = QRectF(-30, -20, 60, 40)
 
     def __init__(self, color, angle, position):
         super(Head, self).__init__()
         self.color = color
-        self.angle = angle
+        self.angle = angle  # 角度
         self.setPos(position)
 
 
@@ -35,9 +36,9 @@ class Head(QGraphicsItem):
         return Head.Rect
 
 
-    def shape(self):
-        path = QPainterPath()
-        path.addEllipse(Head.Rect)
+    def shape(self):       # 形状:根据返回的形状检测碰撞项.
+        path = QPainterPath()   # PainterPath : 涂(画)路径|涂(画)范围.
+        path.addEllipse(Head.Rect)  # addEllipse:加入椭圆
         return path
 
 
@@ -45,15 +46,15 @@ class Head(QGraphicsItem):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
         painter.drawEllipse(Head.Rect)
-        if option.levelOfDetail > 0.5: # Outer eyes
-            painter.setBrush(QBrush(Qt.yellow))
+        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行...
+            painter.setBrush(QBrush(Qt.yellow)) #yellow:黄
             painter.drawEllipse(-12, -19, 8, 8)
             painter.drawEllipse(-12, 11, 8, 8)
-            if option.levelOfDetail > 0.9: # Inner eyes
-                painter.setBrush(QBrush(Qt.darkBlue))
+            if option.levelOfDetail > 0.9: # Inner eyes:内眼(瞳孔部分).
+                painter.setBrush(QBrush(Qt.darkBlue))   #darkBlue:深蓝
                 painter.drawEllipse(-12, -19, 4, 4)
                 painter.drawEllipse(-12, 11, 4, 4)
-                if option.levelOfDetail > 1.3: # Nostrils
+                if option.levelOfDetail > 1.3: # Nostrils:鼻孔
                     painter.setBrush(QBrush(Qt.white))
                     painter.drawEllipse(-27, -5, 2, 2)
                     painter.drawEllipse(-27, 3, 2, 2)
@@ -63,8 +64,8 @@ class Head(QGraphicsItem):
         if phase == 0:
             angle = self.angle
             while True:
-                flipper = 1
-                angle += random.random() * random.choice((-1, 1))
+                flipper = 1 # 鳍状肢
+                angle += random.random() * random.choice((-1, 1))   #.choice::选择
                 offset = flipper * random.random()
                 x = self.x() + (offset * math.sin(math.radians(angle)))
                 y = self.y() + (offset * math.cos(math.radians(angle)))
@@ -97,11 +98,11 @@ class Segment(QGraphicsItem):
         x = offset + 15
         y = -20
         self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))
-        self.path.closeSubpath()
+                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))    #蜈蚣左脚
+        self.path.closeSubpath()    #closeSubpath:结束子路径
         y = 20
         self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))
+                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))    #蜈蚣右脚
         self.path.closeSubpath()
         self.change = 1
         self.angle = 0
@@ -115,10 +116,10 @@ class Segment(QGraphicsItem):
         return self.path
 
 
-    def paint(self, painter, option, widget=None):
+    def paint(self, painter, option, widget=None):  #涂(画)
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        if option.levelOfDetail < 0.9:
+        if option.levelOfDetail < 0.9:   #levelOfDetail:级别of细节 < 90% 时执行...
             painter.drawEllipse(self.rect)
         else:
             painter.drawPath(self.path)
@@ -148,12 +149,12 @@ class MainForm(QDialog):
         self.running = False
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0, SCENESIZE, SCENESIZE)
-        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)
+        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)   #setItemIndexMethod:设置_项_索引_方法
         self.view = QGraphicsView()
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
         self.view.setFocusPolicy(Qt.NoFocus)
-        zoomSlider = QSlider(Qt.Horizontal)
+        zoomSlider = QSlider(Qt.Horizontal) #QSlider:滑块, Qt.Horizontal:水平方向
         zoomSlider.setRange(5, 200)
         zoomSlider.setValue(100)
         self.pauseButton = QPushButton("Pa&use")
@@ -197,7 +198,7 @@ class MainForm(QDialog):
         for i in range(random.randint(6, 10)):
             angle = random.randint(0, 360)
             offset = random.randint(0, SCENESIZE // 2)
-            half = SCENESIZE / 2
+            half = SCENESIZE / 2    # 一半
             x = half + (offset * math.sin(math.radians(angle)))
             y = half + (offset * math.cos(math.radians(angle)))
             color = QColor(red, green, blue)
@@ -216,12 +217,12 @@ class MainForm(QDialog):
     def timerEvent(self, event):
         if not self.running:
             return
-        dead = set()
+        dead = set()    # 死亡的...
         items = self.scene.items()
         if len(items) == 0:
             self.populate()
             return
-        heads = set()
+        heads = set()   # 头???
         for item in items:
             if isinstance(item, Head):
                 heads.add(item)
@@ -234,12 +235,12 @@ class MainForm(QDialog):
             item = dead.pop()
             self.scene.removeItem(item)
             del item
-        self.scene.advance()
-
+        self.scene.advance()    #QGraphicsScene::advance()会调用场景中每一个元素自己的advance()函数。
+                                # #https://www.devbean.net/2012/12/qt-study-road-2-snake-2/
 
 app = QApplication(sys.argv)
 form = MainForm()
-rect = QApplication.desktop().availableGeometry()
+rect = QApplication.desktop().availableGeometry()   # QApplication::应用程序, desktop::桌面, .availableGeometry::可用_几何(范围).
 form.resize(int(rect.width() * 0.75), int(rect.height() * 0.9))
 form.show()
 app.exec_()
