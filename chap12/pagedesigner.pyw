@@ -27,7 +27,7 @@ FileVersion = 1
 Dirty = False
 
 
-class TextItemDlg(QDialog):     #自定义的文本编辑窗口控件...
+class TextItemDlg(QDialog):     #自定义的文本项对话框...
 
     def __init__(self, item=None, position=None, scene=None, parent=None):
         super(QDialog, self).__init__(parent)
@@ -37,12 +37,12 @@ class TextItemDlg(QDialog):     #自定义的文本编辑窗口控件...
         self.scene = scene
 
         self.editor = QTextEdit()
-        self.editor.setAcceptRichText(False)    # 设置_接受_富文本
-        self.editor.setTabChangesFocus(True)    # 设置_Tab_改变_焦点
+        self.editor.setAcceptRichText(False)    # 设置_接受_富文本 =False
+        self.editor.setTabChangesFocus(True)    # 设置_Tab_改变_焦点 =True
         editorLabel = QLabel("&Text:")
         editorLabel.setBuddy(self.editor)
-        self.fontComboBox = QFontComboBox()     # 创建字体复合选择框实例.
-        self.fontComboBox.setCurrentFont(QFont("宋体", PointSize))
+        self.fontComboBox = QFontComboBox()     # 创建 字体复合选择框 实例.
+        self.fontComboBox.setCurrentFont(QFont("宋体", PointSize))    # 设置_当前_字体
         fontLabel = QLabel("&Font:")
         fontLabel.setBuddy(self.fontComboBox)
         self.fontSpinBox = QSpinBox()
@@ -122,12 +122,12 @@ class TextItem(QGraphicsTextItem):
         Dirty = True
 
 
-    def parentWidget(self): # 返回父窗口控件
+    def parentWidget(self): # 返回父窗口控件 P272
         return self.scene().views()[0]
 
 
-    def itemChange(self, change, variant):
-        if change != QGraphicsItem.ItemSelectedChange:
+    def itemChange(self, change, variant):  #如果用户与项进行交互(移动|选择),就会调用些方法.P272
+        if change != QGraphicsItem.ItemSelectedChange:  #交互内容不是 移动|选择 时执行.
             global Dirty
             Dirty = True
         return QGraphicsTextItem.itemChange(self, change, variant)
