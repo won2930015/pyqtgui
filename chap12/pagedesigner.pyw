@@ -29,7 +29,7 @@ Dirty = False
 
 class TextItemDlg(QDialog):     #自定义的文本项对话框...
 
-    def __init__(self, item=None, position=None, scene=None, parent=None):
+    def __init__(self, item: object = None, position: object = None, scene: object = None, parent: object = None) -> object:
         super(QDialog, self).__init__(parent)
 
         self.item = item
@@ -179,8 +179,8 @@ class BoxItem(QGraphicsItem):
         painter.drawRect(self.rect)
 
 
-    def itemChange(self, change, variant):
-        if change != QGraphicsItem.ItemSelectedChange:
+    def itemChange(self, change, variant):  #如果用户与项进行交互(移动|选择),就会调用些方法
+        if change != QGraphicsItem.ItemSelectedChange:  #改变 != 移动|选择 时执行.
             global Dirty
             Dirty = True
         return QGraphicsItem.itemChange(self, change, variant)
@@ -198,7 +198,7 @@ class BoxItem(QGraphicsItem):
             wrapper = functools.partial(self.setStyle, param)   #偏函数:.partial(函数(), 参数1,参数2,...)
             wrapped.append(wrapper)
             menu.addAction(text, wrapper)
-        menu.exec_(event.screenPos())
+        menu.exec_(event.screenPos())   #event.screenPos()::事件.屏幕坐标点
 
 
     def setStyle(self, style):
@@ -212,27 +212,27 @@ class BoxItem(QGraphicsItem):
         factor = PointSize / 4
         changed = False
         if event.modifiers() & Qt.ShiftModifier:    #event.modifiers():功能键被按下时->True,   Qt.ShiftModifier:Shift键被按下时->True
-            if event.key() == Qt.Key_Left:
+            if event.key() == Qt.Key_Left:  # ←键
                 self.rect.setRight(self.rect.right() - factor)
                 changed = True
-            elif event.key() == Qt.Key_Right:
+            elif event.key() == Qt.Key_Right:   # →键
                 self.rect.setRight(self.rect.right() + factor)
                 changed = True
-            elif event.key() == Qt.Key_Up:
+            elif event.key() == Qt.Key_Up:  # ↑键
                 self.rect.setBottom(self.rect.bottom() - factor)
                 changed = True
-            elif event.key() == Qt.Key_Down:
+            elif event.key() == Qt.Key_Down:    # ↓键
                 self.rect.setBottom(self.rect.bottom() + factor)
                 changed = True
         if changed:
             self.update()
             global Dirty
             Dirty = True
-        else:
+        else:   # 除 SHIFT+ ↑↓←→按键事件外,所有keyPressEvent由父类QGraphicsItem.keyPressEvent()处理.
             QGraphicsItem.keyPressEvent(self, event)
 
 
-class GraphicsView(QGraphicsView):
+class GraphicsView(QGraphicsView):  #扩展视图子类.
 
     def __init__(self, parent=None):
         super(GraphicsView, self).__init__(parent)
@@ -241,7 +241,7 @@ class GraphicsView(QGraphicsView):
         self.setRenderHint(QPainter.TextAntialiasing)
 
 
-    def wheelEvent(self, event):
+    def wheelEvent(self, event):    #鼠标滚轮事件.
         factor = 1.41 ** (-event.delta() / 240.0)   #delta:增量
         self.scale(factor, factor)
 
@@ -261,9 +261,9 @@ class MainForm(QDialog):
         self.printer = QPrinter(QPrinter.HighResolution)    #.HighResolution:高分辨率
         self.printer.setPageSize(QPrinter.Letter)
 
-        self.view = GraphicsView()
+        self.view = GraphicsView()  #创建视图对象.
         self.scene = QGraphicsScene(self)
-        self.scene.setSceneRect(0, 0, PageSize[0], PageSize[1])
+        self.scene.setSceneRect(0, 0, PageSize[0], PageSize[1]) #设置屏幕范围.
         self.addBorders()   #加入边界
         self.view.setScene(self.scene)
 
@@ -297,7 +297,7 @@ class MainForm(QDialog):
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
-        fm = QFontMetrics(self.font())
+        fm = QFontMetrics(self.font())  #FontMetrics::字体度量对象
         self.resize(self.scene.width() + fm.width(" Delete... ") + 50,
                     self.scene.height() + 50)
         self.setWindowTitle("Page Designer")

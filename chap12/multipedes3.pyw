@@ -97,7 +97,7 @@ class Segment(QGraphicsItem):
         self.path.addEllipse(self.rect)
         x = offset + 15
         y = -20
-        self.path.addPolygon(QPolygonF([QPointF(x, y),
+        self.path.addPolygon(QPolygonF([QPointF(x, y),  #addPolygon:加入多边形
                 QPointF(x - 5, y - 12), QPointF(x - 5, y)]))    #蜈蚣左脚
         self.path.closeSubpath()    #closeSubpath:结束子路径
         y = 20
