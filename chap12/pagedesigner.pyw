@@ -403,7 +403,7 @@ class MainForm(QDialog):
         return None
 
 
-    def copy(self):
+    def copy(self):     #复制
         item = self.selectedItem()
         if item is None:
             return
@@ -413,7 +413,7 @@ class MainForm(QDialog):
         self.writeItemToStream(stream, item)
 
 
-    def cut(self):
+    def cut(self):      #剪切
         item = self.selectedItem()
         if item is None:
             return
@@ -422,7 +422,7 @@ class MainForm(QDialog):
         del item
 
 
-    def paste(self):
+    def paste(self):    #粘贴
         if self.copiedItem.isEmpty():
             return
         stream = QDataStream(self.copiedItem, QIODevice.ReadOnly)
@@ -430,12 +430,12 @@ class MainForm(QDialog):
         self.pasteOffset += 5
 
 
-    def rotate(self):
+    def rotate(self):   #旋转
         for item in self.scene.selectedItems():
             item.rotate(30)
 
 
-    def delete(self):
+    def delete(self):   #删除
         items = self.scene.selectedItems()
         if (len(items) and QMessageBox.question(self,
                 "Page Designer - Delete",
@@ -451,7 +451,7 @@ class MainForm(QDialog):
             Dirty = True
 
 
-    def print_(self):
+    def print_(self):   #打印
         dialog = QPrintDialog(self.printer)
         if dialog.exec_():
             painter = QPainter(self.printer)
@@ -459,7 +459,7 @@ class MainForm(QDialog):
             painter.setRenderHint(QPainter.TextAntialiasing)
             self.scene.clearSelection()
             self.removeBorders()
-            self.scene.render(painter)      # render::渲染.(PS打印屏幕内容?)
+            self.scene.render(painter)      # render():渲染. PS:用 painter:打印机 当输出介质打印出屏幕内容.
             self.addBorders()
 
 
