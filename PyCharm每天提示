@@ -1,0 +1,2 @@
+Ctrl +斜杠::          单行\选择行.注释\取消注释({ #在Django模板,或#在Python脚本)。
+Ctrl + Shift +斜杠::  一块选择的源代码在Django模板块与周围{ %评论% }和{ % endcomment % }标记。
