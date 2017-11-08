@@ -19,16 +19,16 @@ import qrc_resources
 __version__ = "1.0.1"
 
 
-class PythonHighlighter(QSyntaxHighlighter):
+class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高亮.
 
     Rules = []
 
     def __init__(self, parent=None):
         super(PythonHighlighter, self).__init__(parent)
 
-        keywordFormat = QTextCharFormat()
-        keywordFormat.setForeground(Qt.darkBlue)
-        keywordFormat.setFontWeight(QFont.Bold)
+        keywordFormat = QTextCharFormat()   # QTextCharFormat::文本_字符_格式.
+        keywordFormat.setForeground(Qt.darkBlue)    # Foreground::前景
+        keywordFormat.setFontWeight(QFont.Bold) # FontWeight::字型粗细, QFont.Bold::粗体
         for pattern in ((r"\band\b", r"\bas\b", r"\bassert\b",
                 r"\bbreak\b", r"\bclass\b", r"\bcontinue\b",
                 r"\bdef\b", r"\bdel\b", r"\belif\b", r"\belse\b",
@@ -40,9 +40,9 @@ class PythonHighlighter(QSyntaxHighlighter):
                 r"\byield\b")):
             PythonHighlighter.Rules.append((QRegExp(pattern),
                                            keywordFormat))
-        commentFormat = QTextCharFormat()
+        commentFormat = QTextCharFormat()   # commentFormat::注释_格式,QTextCharFormat::文本_字符_格式.
         commentFormat.setForeground(QColor(0, 127, 0))
-        commentFormat.setFontItalic(True)
+        commentFormat.setFontItalic(True)   # Italic::斜体
         PythonHighlighter.Rules.append((QRegExp(r"#.*"),
                                         commentFormat))
         self.stringFormat = QTextCharFormat()
