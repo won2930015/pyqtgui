@@ -29,7 +29,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         keywordFormat = QTextCharFormat()   # QTextCharFormat::文本_字符_格式.
         keywordFormat.setForeground(Qt.darkBlue)    # Foreground::前景
         keywordFormat.setFontWeight(QFont.Bold) # FontWeight::字型粗细, QFont.Bold::粗体
-        for pattern in ((r"\band\b", r"\bas\b", r"\bassert\b",
+        for pattern in ((r"\band\b", r"\bas\b", r"\bassert\b",      # https://zhidao.baidu.com/question/446577778.html
                 r"\bbreak\b", r"\bclass\b", r"\bcontinue\b",
                 r"\bdef\b", r"\bdel\b", r"\belif\b", r"\belse\b",
                 r"\bexcept\b", r"\bexec\b", r"\bfinally\b", r"\bfor\b",
@@ -48,7 +48,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         self.stringFormat = QTextCharFormat()
         self.stringFormat.setForeground(Qt.darkYellow)
         stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")
-        stringRe.setMinimal(True)
+        stringRe.setMinimal(True)   # Minimal::最小的...(设置为非贪婪模式)
         PythonHighlighter.Rules.append((stringRe, self.stringFormat))
         self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")
         self.stringRe.setMinimal(True)
@@ -58,10 +58,10 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         self.tripleDoubleRe = QRegExp(r'''"""(?!')''')
 
 
-    def highlightBlock(self, text):
+    def highlightBlock(self, text): #高亮块
         NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)
 
-        for regex, format in PythonHighlighter.Rules:
+        for regex, format in PythonHighlighter.Rules:   # 对所以适配模式的关键字进行格式操作.
             i = regex.indexIn(text)
             while i >= 0:
                 length = regex.matchedLength()
