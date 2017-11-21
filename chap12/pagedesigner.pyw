@@ -127,7 +127,7 @@ class TextItem(QGraphicsTextItem):
 
 
     def itemChange(self, change, variant):  #如果用户与项进行交互(移动|选择),就会调用些方法.P272
-        if change != QGraphicsItem.ItemSelectedChange:  #交互内容不是 移动|选择 时执行.
+        if change != QGraphicsItem.ItemSelectedChange:  #交互内容不是 移动 [内容是选择]时执行...
             global Dirty
             Dirty = True
         return QGraphicsTextItem.itemChange(self, change, variant)
