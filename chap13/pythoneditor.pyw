@@ -54,12 +54,12 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         self.stringRe.setMinimal(True)
         PythonHighlighter.Rules.append((self.stringRe,
                                         self.stringFormat))
-        self.tripleSingleRe = QRegExp(r"""'''(?!")""")
-        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')
+        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   '''单引号模式
+        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  #   """双引号模式
 
 
     def highlightBlock(self, text): #高亮块
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2
 
         for regex, format in PythonHighlighter.Rules:   # 对所以适配模式的关键字进行格式操作.
             i = regex.indexIn(text)
