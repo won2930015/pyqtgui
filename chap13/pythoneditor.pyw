@@ -71,10 +71,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         self.setCurrentBlockState(NORMAL)
         if self.stringRe.indexIn(text) != -1:
             return
-        for i, state in ((self.tripleSingleRe.indexIn(text),
-                          TRIPLESINGLE),
-                         (self.tripleDoubleRe.indexIn(text),
-                          TRIPLEDOUBLE)):
+        for i, state in ((self.tripleSingleRe.indexIn(text),TRIPLESINGLE),(self.tripleDoubleRe.indexIn(text),TRIPLEDOUBLE)):
             if self.previousBlockState() == state:
                 if i == -1:
                     i = text.length()
