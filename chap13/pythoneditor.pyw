@@ -59,7 +59,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
 
 
     def highlightBlock(self, text): #高亮块
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2       NORMAL = '   ', TRIPLESINGLE = '''   ''', TRIPLEDOUBLE = """   """
 
         for regex, format in PythonHighlighter.Rules:   # 对所以适配模式的关键字进行格式操作.
             i = regex.indexIn(text)
