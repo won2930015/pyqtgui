@@ -59,7 +59,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
 
 
     def highlightBlock(self, text): #高亮块
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2       NORMAL = '   ', TRIPLESINGLE = '''   ''', TRIPLEDOUBLE = """   """
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2   NORMAL='', TRIPLESINGLE=''' ''', TRIPLEDOUBLE = """ """
 
         for regex, format in PythonHighlighter.Rules:   # 对所以适配模式的关键字进行格式操作.
             i = regex.indexIn(text)
@@ -88,7 +88,7 @@ class TextEdit(QTextEdit):
         super(TextEdit, self).__init__(parent)
 
 
-    def event(self, event):
+    def event(self, event): #修改TAB键按下时输出为四个空格.
         if (event.type() == QEvent.KeyPress and
             event.key() == Qt.Key_Tab):
             cursor = self.textCursor()
@@ -103,28 +103,23 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
 
         font = QFont("Courier", 11)
-        font.setFixedPitch(True)
+        font.setFixedPitch(True)    #设置_固定_间距
         self.editor = TextEdit()
         self.editor.setFont(font)
-        self.highlighter = PythonHighlighter(self.editor.document())
+        self.highlighter = PythonHighlighter(self.editor.document())    #parent == self.editor.document()
         self.setCentralWidget(self.editor)
 
         status = self.statusBar()
         status.setSizeGripEnabled(False)
         status.showMessage("Ready", 5000)
 
-        fileNewAction = self.createAction("&New...", self.fileNew,
-                QKeySequence.New, "filenew", "Create a Python file")
-        fileOpenAction = self.createAction("&Open...", self.fileOpen,
-                QKeySequence.Open, "fileopen",
-                "Open an existing Python file")
-        self.fileSaveAction = self.createAction("&Save", self.fileSave,
-                QKeySequence.Save, "filesave", "Save the file")
-        self.fileSaveAsAction = self.createAction("Save &As...",
-                self.fileSaveAs, icon="filesaveas",
-                tip="Save the file using a new name")
-        fileQuitAction = self.createAction("&Quit", self.close,
-                "Ctrl+Q", "filequit", "Close the application")
+        fileNewAction = self.createAction("&New...", self.fileNew, QKeySequence.New, "filenew", "Create a Python file")
+
+        fileOpenAction = self.createAction("&Open...", self.fileOpen, QKeySequence.Open, "fileopen", "Open an existing Python file")
+        self.fileSaveAction = self.createAction("&Save", self.fileSave, QKeySequence.Save, "filesave", "Save the file")
+        self.fileSaveAsAction = self.createAction("Save &As...", self.fileSaveAs, icon="filesaveas", tip="Save the file using a new name")
+
+        fileQuitAction = self.createAction("&Quit", self.close, "Ctrl+Q", "filequit", "Close the application")
         self.editCopyAction = self.createAction("&Copy",
                 self.editor.copy, QKeySequence.Copy, "editcopy",
                 "Copy text to the clipboard")
