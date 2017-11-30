@@ -41,7 +41,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
             PythonHighlighter.Rules.append((QRegExp(pattern),
                                            keywordFormat))
         commentFormat = QTextCharFormat()   # commentFormat::注释_格式,QTextCharFormat::文本_字符_格式.
-        commentFormat.setForeground(QColor(0, 127, 0))
+        commentFormat.setForeground(QColor(0, 127, 0))    # Foreground::前景
         commentFormat.setFontItalic(True)   # Italic::斜体
         PythonHighlighter.Rules.append((QRegExp(r"#.*"),
                                         commentFormat))
@@ -52,23 +52,22 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         PythonHighlighter.Rules.append((stringRe, self.stringFormat))
         self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")
         self.stringRe.setMinimal(True)
-        PythonHighlighter.Rules.append((self.stringRe,
-                                        self.stringFormat))
-        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   '''单引号模式
+        PythonHighlighter.Rules.append((self.stringRe, self.stringFormat))
+        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   '''单引号模式    http://blog.csdn.net/sunhuaer123/article/details/16343313
         self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  #   """双引号模式
 
 
     def highlightBlock(self, text): #高亮块
         NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2   NORMAL='', TRIPLESINGLE=''' ''', TRIPLEDOUBLE = """ """
 
-        for regex, format in PythonHighlighter.Rules:   # 对所以适配模式的关键字进行格式操作.
+        for regex, format in PythonHighlighter.Rules:   # 对所有适配模式的关键字进行格式操作.
             i = regex.indexIn(text)
             while i >= 0:
                 length = regex.matchedLength()
                 self.setFormat(i, length, format)
                 i = regex.indexIn(text, i + length)
 
-        self.setCurrentBlockState(NORMAL)
+        self.setCurrentBlockState(NORMAL) #设置当前'块'状态.??????????
         if self.stringRe.indexIn(text) != -1:
             return
         for i, state in ((self.tripleSingleRe.indexIn(text),TRIPLESINGLE),(self.tripleDoubleRe.indexIn(text),TRIPLEDOUBLE)):
@@ -89,8 +88,7 @@ class TextEdit(QTextEdit):
 
 
     def event(self, event): #修改TAB键按下时输出为四个空格.
-        if (event.type() == QEvent.KeyPress and
-            event.key() == Qt.Key_Tab):
+        if (event.type() == QEvent.KeyPress and event.key() == Qt.Key_Tab):
             cursor = self.textCursor()
             cursor.insertText("    ")
             return True
@@ -114,44 +112,34 @@ class MainWindow(QMainWindow):
         status.showMessage("Ready", 5000)
 
         fileNewAction = self.createAction("&New...", self.fileNew, QKeySequence.New, "filenew", "Create a Python file")
-
         fileOpenAction = self.createAction("&Open...", self.fileOpen, QKeySequence.Open, "fileopen", "Open an existing Python file")
+
         self.fileSaveAction = self.createAction("&Save", self.fileSave, QKeySequence.Save, "filesave", "Save the file")
         self.fileSaveAsAction = self.createAction("Save &As...", self.fileSaveAs, icon="filesaveas", tip="Save the file using a new name")
 
         fileQuitAction = self.createAction("&Quit", self.close, "Ctrl+Q", "filequit", "Close the application")
-        self.editCopyAction = self.createAction("&Copy",
-                self.editor.copy, QKeySequence.Copy, "editcopy",
-                "Copy text to the clipboard")
-        self.editCutAction = self.createAction("Cu&t", self.editor.cut,
-                QKeySequence.Cut, "editcut",
-                "Cut text to the clipboard")
-        self.editPasteAction = self.createAction("&Paste",
-                self.editor.paste, QKeySequence.Paste, "editpaste",
-                "Paste in the clipboard's text")
+
+        self.editCopyAction = self.createAction("&Copy", self.editor.copy, QKeySequence.Copy, "editcopy", "Copy text to the clipboard")
+        self.editCutAction = self.createAction("Cu&t", self.editor.cut, QKeySequence.Cut, "editcut", "Cut text to the clipboard")
+        self.editPasteAction = self.createAction("&Paste", self.editor.paste, QKeySequence.Paste, "editpaste", "Paste in the clipboard's text")
 
         fileMenu = self.menuBar().addMenu("&File")
-        self.addActions(fileMenu, (fileNewAction, fileOpenAction,
-                self.fileSaveAction, self.fileSaveAsAction, None,
-                fileQuitAction))
+        self.addActions(fileMenu, (fileNewAction, fileOpenAction, self.fileSaveAction, self.fileSaveAsAction, None, fileQuitAction))
+
         editMenu = self.menuBar().addMenu("&Edit")
-        self.addActions(editMenu, (self.editCopyAction,
-                self.editCutAction, self.editPasteAction))
+        self.addActions(editMenu, (self.editCopyAction, self.editCutAction, self.editPasteAction))
+
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolBar")
-        self.addActions(fileToolbar, (fileNewAction, fileOpenAction,
-                                      self.fileSaveAction))
+        self.addActions(fileToolbar, (fileNewAction, fileOpenAction, self.fileSaveAction))
+
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolBar")
-        self.addActions(editToolbar, (self.editCopyAction,
-                self.editCutAction, self.editPasteAction))
+        self.addActions(editToolbar, (self.editCopyAction, self.editCutAction, self.editPasteAction))
 
-        self.connect(self.editor,
-                SIGNAL("selectionChanged()"), self.updateUi)
-        self.connect(self.editor.document(),
-                SIGNAL("modificationChanged(bool)"), self.updateUi)
-        self.connect(QApplication.clipboard(),
-                SIGNAL("dataChanged()"), self.updateUi)
+        self.connect(self.editor, SIGNAL("selectionChanged()"), self.updateUi)  #获得焦点 / 失去焦点 时...
+        self.connect(self.editor.document(), SIGNAL("modificationChanged(bool)"), self.updateUi) # modificationChanged::发生 修正_改变 时...
+        self.connect(QApplication.clipboard(), SIGNAL("dataChanged()"), self.updateUi)  #QApplication.clipboard()::应用.粘贴板
 
         self.resize(800, 600)
         self.setWindowTitle("Python Editor")
@@ -172,8 +160,7 @@ class MainWindow(QMainWindow):
         self.editPasteAction.setEnabled(self.editor.canPaste())
 
 
-    def createAction(self, text, slot=None, shortcut=None, icon=None,
-                     tip=None, checkable=False, signal="triggered()"):
+    def createAction(self, text, slot=None, shortcut=None, icon=None, tip=None, checkable=False, signal="triggered()"):
         action = QAction(text, self)
         if icon is not None:
             action.setIcon(QIcon(":/{}.png".format(icon)))
@@ -243,16 +230,16 @@ class MainWindow(QMainWindow):
     def loadFile(self):
         fh = None
         try:
-            fh = QFile(self.filename)
+            fh = QFile(self.filename)   #实例化文件对像.
             if not fh.open(QIODevice.ReadOnly):
                 raise IOError(fh.errorString())
-            stream = QTextStream(fh)
+            stream = QTextStream(fh)    #文本流..
             stream.setCodec("UTF-8")
-            self.editor.setPlainText(stream.readAll())
+            self.editor.setPlainText(stream.readAll())  #PlainText::纯文本.
             self.editor.document().setModified(False)
             self.setWindowTitle("Python Editor - {}".format(
                     QFileInfo(self.filename).fileName()))
-        except EnvironmentError as e:
+        except EnvironmentError as e:   #EnvironmentError::环境_错误
             QMessageBox.warning(self, "Python Editor -- Load Error",
                     "Failed to load {}: {}".format(self.filename, e))
         finally:
