@@ -38,27 +38,29 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 r"\bor\b", r"\bpass\b", r"\bprint\b", r"\braise\b",
                 r"\breturn\b", r"\btry\b", r"\bwhile\b", r"\bwith\b",
                 r"\byield\b")):
-            PythonHighlighter.Rules.append((QRegExp(pattern),
-                                           keywordFormat))
+            PythonHighlighter.Rules.append((QRegExp(pattern), keywordFormat))
+
         commentFormat = QTextCharFormat()   # commentFormat::注释_格式,QTextCharFormat::文本_字符_格式.
         commentFormat.setForeground(QColor(0, 127, 0))    # Foreground::前景
         commentFormat.setFontItalic(True)   # Italic::斜体
-        PythonHighlighter.Rules.append((QRegExp(r"#.*"),
-                                        commentFormat))
+        PythonHighlighter.Rules.append((QRegExp(r"#.*"), commentFormat))
+
         self.stringFormat = QTextCharFormat()
         self.stringFormat.setForeground(Qt.darkYellow)
         stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")
         stringRe.setMinimal(True)   # Minimal::最小的...(设置为非贪婪模式)
         PythonHighlighter.Rules.append((stringRe, self.stringFormat))
+
         self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")
         self.stringRe.setMinimal(True)
         PythonHighlighter.Rules.append((self.stringRe, self.stringFormat))
-        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   '''单引号模式    http://blog.csdn.net/sunhuaer123/article/details/16343313
+
+        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   '''单引号模式::http://blog.csdn.net/sunhuaer123/article/details/16343313
         self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  #   """双引号模式
 
 
     def highlightBlock(self, text): #高亮块
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2   NORMAL='', TRIPLESINGLE=''' ''', TRIPLEDOUBLE = """ """
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2   NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式
 
         for regex, format in PythonHighlighter.Rules:   # 对所有适配模式的关键字进行格式操作.
             i = regex.indexIn(text)
@@ -67,7 +69,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 self.setFormat(i, length, format)
                 i = regex.indexIn(text, i + length)
 
-        self.setCurrentBlockState(NORMAL) #设置当前'块'状态.??????????
+        self.setCurrentBlockState(NORMAL) #设置_当前_'块'_状态.??????????
         if self.stringRe.indexIn(text) != -1:
             return
         for i, state in ((self.tripleSingleRe.indexIn(text),TRIPLESINGLE),(self.tripleDoubleRe.indexIn(text),TRIPLEDOUBLE)):
