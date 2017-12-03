@@ -75,12 +75,14 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         for i, state in ((self.tripleSingleRe.indexIn(text),TRIPLESINGLE),(self.tripleDoubleRe.indexIn(text),TRIPLEDOUBLE)):
             if self.previousBlockState() == state:
                 if i == -1:
-                    i = text.length()
+                    # i = text.length()
+                    i = len(text)
                     self.setCurrentBlockState(state)
                 self.setFormat(0, i + 3, self.stringFormat)
             elif i > -1:
                 self.setCurrentBlockState(state)
-                self.setFormat(i, text.length(), self.stringFormat)
+                # self.setFormat(i, text.length(), self.stringFormat)
+                self.setFormat(i, len(text), self.stringFormat)
 
 
 class TextEdit(QTextEdit):
@@ -152,10 +154,9 @@ class MainWindow(QMainWindow):
 
 
     def updateUi(self, arg=None):
-        self.fileSaveAction.setEnabled(
-                self.editor.document().isModified())
-        self.fileSaveAsAction.setEnabled(
-                not self.editor.document().isEmpty())
+        self.fileSaveAction.setEnabled(self.editor.document().isModified())
+        self.fileSaveAsAction.setEnabled(not self.editor.document().isEmpty())
+
         enable = self.editor.textCursor().hasSelection()
         self.editCopyAction.setEnabled(enable)
         self.editCutAction.setEnabled(enable)
