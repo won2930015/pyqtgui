@@ -24,50 +24,50 @@ class RichTextLineEdit(QTextEdit):
     def __init__(self, parent=None):
         super(RichTextLineEdit, self).__init__(parent)
 
-        self.monofamily = "courier"
-        self.sansfamily = "helvetica"
-        self.seriffamily = "times"
+        self.monofamily = "courier" #等宽字体
+        self.sansfamily = "helvetica"   #无衬线字体
+        self.seriffamily = "times"  #有衬线字体
         self.setLineWrapMode(QTextEdit.NoWrap)
-        self.setTabChangesFocus(True)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        fm = QFontMetrics(self.font())
+        self.setTabChangesFocus(True)   #设置_Tab_变化_焦点=True
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)      #setVerticalScrollBarPolicy::设置_垂直_滚动_条_策略 ,Qt.ScrollBarAlwaysOff::滚动_条_总是_关闭
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)    #setHorizontalScrollBarPolicy::设置_水平_滚动_条_策略
+        fm = QFontMetrics(self.font())      #创建 字体_度量 对象.
         h = int(fm.height() * (1.4 if platform.system() == "Windows"
                                    else 1.2))
-        self.setMinimumHeight(h)
-        self.setMaximumHeight(int(h * 1.2))
-        self.setToolTip("Press <b>Ctrl+M</b> for the text effects "
-                "menu and <b>Ctrl+K</b> for the color menu")
+        self.setMinimumHeight(h) #设置 LineEdit 最小高度
+        self.setMaximumHeight(int(h * 1.2)) ##设置 LineEdit 最大高度
+        self.setToolTip("Press <b>Ctrl+M</b> for the text effects " #Ctrl+M == 文本效果
+                "menu and <b>Ctrl+K</b> for the color menu")    #Ctrl+k == 颜色
 
     
-    def toggleItalic(self):
+    def toggleItalic(self): #斜体
         self.setFontItalic(not self.fontItalic())
 
 
-    def toggleUnderline(self):
+    def toggleUnderline(self):  #下划线
         self.setFontUnderline(not self.fontUnderline())
 
 
-    def toggleBold(self):
+    def toggleBold(self):   #粗体
         self.setFontWeight(QFont.Normal
-                if self.fontWeight() > QFont.Normal else QFont.Bold)
+                if self.fontWeight() > QFont.Normal else QFont.Bold)    #字体类形之间可以比较.
 
 
-    def sizeHint(self):
-        return QSize(self.document().idealWidth() + 5,
+    def sizeHint(self): #大小提示
+        return QSize(self.document().idealWidth() + 5,  #idealWidth::理想_宽度
                      self.maximumHeight())
 
 
-    def minimumSizeHint(self):
+    def minimumSizeHint(self):  # 最小值提示
         fm = QFontMetrics(self.font())
         return QSize(fm.width("WWWW"), self.minimumHeight())
 
 
-    def contextMenuEvent(self, event):
+    def contextMenuEvent(self, event):  # 环境/上下文 菜单事件
         self.textEffectMenu()
 
         
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event): # 键按下事件
         if event.modifiers() & Qt.ControlModifier:
             handled = False
             if event.key() == Qt.Key_B:
@@ -95,7 +95,7 @@ class RichTextLineEdit(QTextEdit):
             QTextEdit.keyPressEvent(self, event)
 
 
-    def colorMenu(self):
+    def colorMenu(self):    #颜色菜单
         pixmap = QPixmap(22, 22)
         menu = QMenu("Colour")
         for text, color in (
@@ -127,7 +127,7 @@ class RichTextLineEdit(QTextEdit):
                 self.setTextColor(color)
 
 
-    def textEffectMenu(self):
+    def textEffectMenu(self):   # 文本_效果_菜单.
         format = self.currentCharFormat()
         menu = QMenu("Text Effect")
         for text, shortcut, data, checked in (
@@ -166,7 +166,7 @@ class RichTextLineEdit(QTextEdit):
                    self.cursorRect().center()))
 
 
-    def setTextEffect(self):
+    def setTextEffect(self):    #设置_文本_效果
         action = self.sender()
         if action is not None and isinstance(action, QAction):
             what = int(action.data())
@@ -200,7 +200,7 @@ class RichTextLineEdit(QTextEdit):
             self.mergeCurrentCharFormat(format)
 
 
-    def toSimpleHtml(self):
+    def toSimpleHtml(self): # to_简单_Html
         html = ""
         black = QColor(Qt.black)
         block = self.document().begin()
