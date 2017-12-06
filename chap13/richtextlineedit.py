@@ -29,7 +29,7 @@ class RichTextLineEdit(QTextEdit):
         self.seriffamily = "times"  #有衬线字体
         self.setLineWrapMode(QTextEdit.NoWrap)
         self.setTabChangesFocus(True)   #设置_Tab_变化_焦点=True
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)      #setVerticalScrollBarPolicy::设置_垂直_滚动_条_策略 ,Qt.ScrollBarAlwaysOff::滚动_条_总是_关闭
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  #setVerticalScrollBarPolicy::设置_垂直_滚动_条_策略 ,Qt.ScrollBarAlwaysOff::滚动_条_总是_关闭
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)    #setHorizontalScrollBarPolicy::设置_水平_滚动_条_策略
         fm = QFontMetrics(self.font())      #创建 字体_度量 对象.
         h = int(fm.height() * (1.4 if platform.system() == "Windows"
@@ -64,12 +64,12 @@ class RichTextLineEdit(QTextEdit):
 
 
     def contextMenuEvent(self, event):  # 环境/上下文 菜单事件
-        self.textEffectMenu()
+        self.textEffectMenu()   #文本_效果_菜单
 
         
     def keyPressEvent(self, event): # 键按下事件
         if event.modifiers() & Qt.ControlModifier:
-            handled = False
+            handled = False     # handled::处理
             if event.key() == Qt.Key_B:
                 self.toggleBold()
                 handled = True
