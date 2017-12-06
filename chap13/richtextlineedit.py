@@ -120,54 +120,54 @@ class RichTextLineEdit(QTextEdit):
 
 
     def setColor(self):
-        action = self.sender()
+        action = self.sender()  #将当前触发的动作 关联 action对象.
         if action is not None and isinstance(action, QAction):
             color = QColor(action.data())
-            if color.isValid():
+            if color.isValid(): #is_有效的....
                 self.setTextColor(color)
 
 
     def textEffectMenu(self):   # 文本_效果_菜单.
-        format = self.currentCharFormat()
+        format = self.currentCharFormat()   # 当前_字符_格式
         menu = QMenu("Text Effect")
         for text, shortcut, data, checked in (
-                ("&Bold", "Ctrl+B", RichTextLineEdit.Bold,
+                ("&Bold", "Ctrl+B", RichTextLineEdit.Bold,  #粗体
                  self.fontWeight() > QFont.Normal),
-                ("&Italic", "Ctrl+I", RichTextLineEdit.Italic,
+                ("&Italic", "Ctrl+I", RichTextLineEdit.Italic,  #斜体
                  self.fontItalic()),
-                ("Strike &out", None, RichTextLineEdit.StrikeOut,
+                ("Strike &out", None, RichTextLineEdit.StrikeOut,   #删除线
                  format.fontStrikeOut()),
-                ("&Underline", "Ctrl+U", RichTextLineEdit.Underline,
+                ("&Underline", "Ctrl+U", RichTextLineEdit.Underline,    #下划线
                  self.fontUnderline()),
-                ("&Monospaced", None, RichTextLineEdit.Monospaced,
+                ("&Monospaced", None, RichTextLineEdit.Monospaced,  #等宽字体
                  format.fontFamily() == self.monofamily),
-                ("&Serifed", None, RichTextLineEdit.Serif,
+                ("&Serifed", None, RichTextLineEdit.Serif,  #衬线体
                  format.fontFamily() == self.seriffamily),
-                ("S&ans Serif", None, RichTextLineEdit.Sans,
+                ("S&ans Serif", None, RichTextLineEdit.Sans,    #无衬线体
                  format.fontFamily() == self.sansfamily),
-                ("&No super or subscript", None,
+                ("&No super or subscript", None,        # 没有超级或下标???
                  RichTextLineEdit.NoSuperOrSubscript,
-                 format.verticalAlignment() ==
-                 QTextCharFormat.AlignNormal),
-                ("Su&perscript", None, RichTextLineEdit.Superscript,
+                 format.verticalAlignment() ==  #verticalAlignment::垂直_对齐
+                 QTextCharFormat.AlignNormal),  #AlignNormal::对齐_标准
+                ("Su&perscript", None, RichTextLineEdit.Superscript,    #上标
                  format.verticalAlignment() ==
                  QTextCharFormat.AlignSuperScript),
-                ("Subs&cript", None, RichTextLineEdit.Subscript,
+                ("Subs&cript", None, RichTextLineEdit.Subscript,    #下标
                  format.verticalAlignment() ==
                  QTextCharFormat.AlignSubScript)):
             action = menu.addAction(text, self.setTextEffect)
             if shortcut is not None:
                 action.setShortcut(QKeySequence(shortcut))
             action.setData(data)
-            action.setCheckable(True)
+            action.setCheckable(True)   #设置成复选
             action.setChecked(checked)
-        self.ensureCursorVisible()
+            self.ensureCursorVisible()  #确保_光标_可见()
         menu.exec_(self.viewport().mapToGlobal(
                    self.cursorRect().center()))
 
 
     def setTextEffect(self):    #设置_文本_效果
-        action = self.sender()
+        action = self.sender()  #将当前触发的动作关联action对象.
         if action is not None and isinstance(action, QAction):
             what = int(action.data())
             if what == RichTextLineEdit.Bold:
@@ -197,7 +197,7 @@ class RichTextLineEdit(QTextEdit):
             elif what == RichTextLineEdit.Subscript:
                 format.setVerticalAlignment(
                         QTextCharFormat.AlignSubScript)
-            self.mergeCurrentCharFormat(format)
+            self.mergeCurrentCharFormat(format) #mergeCurrentCharFormat::合并_当前_字符_格式.
 
 
     def toSimpleHtml(self): # to_简单_Html
@@ -207,7 +207,7 @@ class RichTextLineEdit(QTextEdit):
         while block.isValid():
             iterator = block.begin()
             while iterator != block.end():
-                fragment = iterator.fragment()
+                fragment = iterator.fragment()  #fragment::片段
                 if fragment.isValid():
                     format = fragment.charFormat()
                     family = format.fontFamily()
