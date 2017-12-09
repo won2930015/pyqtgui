@@ -27,7 +27,7 @@ class RichTextLineEdit(QTextEdit):
         self.monofamily = "courier" #等宽字体
         self.sansfamily = "helvetica"   #无衬线字体
         self.seriffamily = "times"  #有衬线字体
-        self.setLineWrapMode(QTextEdit.NoWrap)
+        self.setLineWrapMode(QTextEdit.NoWrap)  #setLineWrapMode::设置_自动换行_模式, NoWrap::不自动换行.
         self.setTabChangesFocus(True)   #设置_Tab_变化_焦点=True
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  #setVerticalScrollBarPolicy::设置_垂直_滚动_条_策略 ,Qt.ScrollBarAlwaysOff::滚动_条_总是_关闭
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)    #setHorizontalScrollBarPolicy::设置_水平_滚动_条_策略
@@ -166,7 +166,7 @@ class RichTextLineEdit(QTextEdit):
 
 
     def setTextEffect(self):    #设置_文本_效果
-        action = self.sender()  #将当前触发的动作关联action对象.
+        action = self.sender()  #将当前被触发的动作关联到action对象.
         if action is not None and isinstance(action, QAction):
             what = int(action.data())
             if what == RichTextLineEdit.Bold:
@@ -212,7 +212,7 @@ class RichTextLineEdit(QTextEdit):
                     family = format.fontFamily()
                     color = format.foreground().color()
                     text = Qt.escape(fragment.text())
-                    if (format.verticalAlignment() ==
+                    if (format.verticalAlignment() ==           #verticalAlignment::垂直_对齐
                         QTextCharFormat.AlignSubScript):
                         text = "<sub>{}</sub>".format(text)
                     elif (format.verticalAlignment() ==
