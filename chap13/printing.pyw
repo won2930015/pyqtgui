@@ -19,16 +19,16 @@ import qrc_resources
 DATE_FORMAT = "MMM d, yyyy"
 
 
-class Statement(object):
+class Statement(object):    #声明_对象
 
     def __init__(self, company, contact, address):
-        self.company = company
-        self.contact = contact
-        self.address = address
-        self.transactions = [] # List of (QDate, float) two-tuples
+        self.company = company  #公司
+        self.contact = contact  #联系方式
+        self.address = address  #地址
+        self.transactions = [] # List of (QDate, float) two-tuples ::交易|事务
 
 
-    def balance(self):
+    def balance(self):  #结算::返回amount总和.
         return sum([amount for date, amount in self.transactions])
 
 
@@ -39,9 +39,9 @@ class Form(QDialog):
 
         self.printer = QPrinter()
         self.printer.setPageSize(QPrinter.Letter)
-        self.generateFakeStatements()
+        self.generateFakeStatements()   #生成_伪_声明
         self.table = QTableWidget()
-        self.populateTable()
+        self.populateTable()    #填充_表格
 
         cursorButton = QPushButton("Print via Q&Cursor")
         htmlButton = QPushButton("Print via &HTML")
@@ -106,7 +106,7 @@ class Form(QDialog):
     def populateTable(self):
         headers = ["Company", "Contact", "Address", "Balance"]
         self.table.setColumnCount(len(headers))
-        self.table.setHorizontalHeaderLabels(headers)
+        self.table.setHorizontalHeaderLabels(headers)   #setHorizontalHeaderLabels::设置_水平_头_标签
         self.table.setRowCount(len(self.statements))
         for row, statement in enumerate(self.statements):
             self.table.setItem(row, 0,
@@ -119,13 +119,13 @@ class Form(QDialog):
                                     statement.balance()))
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
             self.table.setItem(row, 3, item)
-        self.table.resizeColumnsToContents()
+        self.table.resizeColumnsToContents()    #调整_栏_to_内容::调整栏宽度适配内容.
 
 
     def printViaHtml(self):
         html = ""
         for statement in self.statements:
-            date = QDate.currentDate().toString(DATE_FORMAT)
+            date = QDate.currentDate().toString(DATE_FORMAT)    #获得当前时间.
             address = Qt.escape(statement.address).replace(
                     ",", "<br>")
             contact = Qt.escape(statement.contact)
