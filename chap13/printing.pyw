@@ -121,7 +121,7 @@ class Form(QDialog):
             self.table.setItem(row, 3, item)
         self.table.resizeColumnsToContents()    #调整_栏_to_内容::调整栏宽度适配内容.
 
-
+    #用Html方式生成文字表格后打印.
     def printViaHtml(self):
         html = ""
         for statement in self.statements:
@@ -166,7 +166,7 @@ class Form(QDialog):
             document.setHtml(html)
             document.print_(self.printer)
 
-
+    #用光标方法生成文字和表格后打印.
     def printViaQCursor(self):
         dialog = QPrintDialog(self.printer, self)
         if not dialog.exec_():
@@ -174,30 +174,32 @@ class Form(QDialog):
         logo = QPixmap(":/logo.png")
         headFormat = QTextBlockFormat()
         headFormat.setAlignment(Qt.AlignLeft)
-        headFormat.setTextIndent(
+        headFormat.setTextIndent(   #设置_文本_缩进
                 self.printer.pageRect().width() - logo.width() - 216)
         bodyFormat = QTextBlockFormat()
-        bodyFormat.setAlignment(Qt.AlignJustify)
+        bodyFormat.setAlignment(Qt.AlignJustify)    #AlignJustify::对齐_两端(两端对齐)
         lastParaBodyFormat = QTextBlockFormat(bodyFormat)
-        lastParaBodyFormat.setPageBreakPolicy(
+        lastParaBodyFormat.setPageBreakPolicy(      #设置_分页_规则
                 QTextFormat.PageBreak_AlwaysAfter)
         rightBodyFormat = QTextBlockFormat()
         rightBodyFormat.setAlignment(Qt.AlignRight)
+
         headCharFormat = QTextCharFormat()
         headCharFormat.setFont(QFont("Helvetica", 10))
         bodyCharFormat = QTextCharFormat()
         bodyCharFormat.setFont(QFont("Times", 11))
         redBodyCharFormat = QTextCharFormat(bodyCharFormat)
         redBodyCharFormat.setForeground(Qt.red)
+
         tableFormat = QTextTableFormat()
         tableFormat.setBorder(1)
         tableFormat.setCellPadding(2)
-        document = QTextDocument()
-        cursor = QTextCursor(document)
-        mainFrame = cursor.currentFrame()
+        document = QTextDocument()  #创建文本文件.
+        cursor = QTextCursor(document)  #创建 文本_光标::为文本文件创建一个光标.
+        mainFrame = cursor.currentFrame() #光标.当前_框架 ???
         page = 1
         for statement in self.statements:
-            cursor.insertBlock(headFormat, headCharFormat)
+            cursor.insertBlock(headFormat, headCharFormat)  #insertBlock::插入_块
             cursor.insertImage(":/logo.png")
             for text in ("Greasy Hands Ltd.", "New Lombard Street",
                          "London", "WC13 4PX",
@@ -229,10 +231,9 @@ class Form(QDialog):
                                        tableFormat)
             row = 0
             for date, amount in statement.transactions:
-                cellCursor = table.cellAt(row, 0).firstCursorPosition()
-                cellCursor.setBlockFormat(rightBodyFormat)
-                cellCursor.insertText(date.toString(DATE_FORMAT),
-                                      bodyCharFormat)
+                cellCursor = table.cellAt(row, 0).firstCursorPosition() #firstCursorPosition::第一_光标_位置()
+                cellCursor.setBlockFormat(rightBodyFormat)  #光标_单元格.设置_块_格式
+                cellCursor.insertText(date.toString(DATE_FORMAT), bodyCharFormat)
                 cellCursor = table.cellAt(row, 1).firstCursorPosition()
                 if amount > 0:
                     cellCursor.insertText("Credit", bodyCharFormat)
@@ -244,8 +245,8 @@ class Form(QDialog):
                 if amount < 0:
                     format = redBodyCharFormat
                 cellCursor.insertText("$ {:,.2f}".format(amount), format)
-                row += 1
-            cursor.setPosition(mainFrame.lastPosition())
+                row += 1    #行 +=1
+            cursor.setPosition(mainFrame.lastPosition())    #主_框架.最后_位置()
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("We hope to continue doing business "
                               "with you,")
