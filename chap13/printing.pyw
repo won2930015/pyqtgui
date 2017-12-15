@@ -266,14 +266,14 @@ class Form(QDialog):
         dialog = QPrintDialog(self.printer, self)
         if not dialog.exec_():
             return
-        LeftMargin = 72
+        LeftMargin = 72 #左_边缘
         sansFont = QFont("Helvetica", 10)
         sansLineHeight = QFontMetrics(sansFont).height()
-        serifFont = QFont("Times", 11)
+        serifFont = QFont("Times", 11)  #衬线字体
         fm = QFontMetrics(serifFont)
-        DateWidth = fm.width(" September 99, 2999 ")
-        CreditWidth = fm.width(" Credit ")
-        AmountWidth = fm.width(" W999999.99 ")
+        DateWidth = fm.width(" September 99, 2999 ")    #日期栏_宽度
+        CreditWidth = fm.width(" Credit ")      #信贷栏_宽度
+        AmountWidth = fm.width(" W999999.99 ")  #合计栏_宽度
         serifLineHeight = fm.height()
         logo = QPixmap(":/logo.png")
         painter = QPainter(self.printer)
@@ -361,7 +361,7 @@ class Form(QDialog):
             font.setItalic(True)
             painter.setFont(font)
             option = QTextOption(Qt.AlignCenter)
-            option.setWrapMode(QTextOption.WordWrap)
+            option.setWrapMode(QTextOption.WordWrap)    #自动换行
             painter.drawText(
                     QRectF(x, y, pageRect.width() - 2 * LeftMargin, 31),
                     "The contents of this letter are for information "
@@ -369,8 +369,8 @@ class Form(QDialog):
                     option)
             page += 1
             if page <= len(self.statements):
-                self.printer.newPage()
-            painter.restore()
+                self.printer.newPage()  #newPage::新页
+            painter.restore()  #restore::还原
 
 
 if __name__ == "__main__":
