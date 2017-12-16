@@ -22,9 +22,9 @@ DATE_FORMAT = "MMM d, yyyy"
 class Statement(object):
 
     def __init__(self, company, contact, address):
-        self.company = company
-        self.contact = contact
-        self.address = address
+        self.company = company  #公司
+        self.contact = contact  #联系人
+        self.address = address  #地址
         self.transactions = [] # List of (QDate, float) two-tuples
 
 
@@ -37,11 +37,11 @@ class Form(QDialog):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
 
-        self.printer = QPrinter()
-        self.printer.setPageSize(QPrinter.Letter)
-        self.generateFakeStatements()
-        self.table = QTableWidget()
-        self.populateTable()
+        self.printer = QPrinter()   #创建打印对象
+        self.printer.setPageSize(QPrinter.Letter)   #设置页格式
+        self.generateFakeStatements()   #生成_伪_清单
+        self.table = QTableWidget()     #TableWidget::表_部件
+        self.populateTable()    #填充_表格
 
         cursorButton = QPushButton("Print via Q&Cursor")
         htmlButton = QPushButton("Print via &HTML")
@@ -70,7 +70,7 @@ class Form(QDialog):
         self.setWindowTitle("Printing")
 
 
-    def generateFakeStatements(self):
+    def generateFakeStatements(self):   #生成_伪_清单
         self.statements = []
         statement = Statement("Consality", "Ms S. Royal",
                 "234 Rue Saint Hyacinthe, 750201, Paris")
@@ -105,9 +105,9 @@ class Form(QDialog):
 
     def populateTable(self):
         headers = ["Company", "Contact", "Address", "Balance"]
-        self.table.setColumnCount(len(headers))
-        self.table.setHorizontalHeaderLabels(headers)
-        self.table.setRowCount(len(self.statements))
+        self.table.setColumnCount(len(headers)) #setColumnCount::设置_栏_数
+        self.table.setHorizontalHeaderLabels(headers)#setHorizontalHeaderLabels#设置_水平_头栏_标签
+        self.table.setRowCount(len(self.statements))    #setRowCount::设置_行_数
         for row, statement in enumerate(self.statements):
             self.table.setItem(row, 0,
                     QTableWidgetItem(statement.company))
@@ -119,9 +119,9 @@ class Form(QDialog):
                                     statement.balance()))
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
             self.table.setItem(row, 3, item)
-        self.table.resizeColumnsToContents()
+        self.table.resizeColumnsToContents()    #调整_栏_to_内容::调整栏宽度适配内容.
 
-
+    # 用Html方式生成文字表格后打印.
     def printViaHtml(self):
         html = ""
         for i, statement in enumerate(self.statements):
@@ -144,7 +144,7 @@ class Form(QDialog):
                          "with you.")
             html += ("</p><p>&nbsp;</p><p>"
                      "<table border=1 cellpadding=2 "
-                     "cellspacing=2><tr><td colspan=3>"
+                     "cellspacing=2><tr><td colspan=3>" #<tr>==行,<td>==单元格
                      "Transactions</td></tr>")
             for date, amount in statement.transactions:
                 color, status = "black", "Credit"

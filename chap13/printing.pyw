@@ -39,7 +39,7 @@ class Form(QDialog):
 
         self.printer = QPrinter()
         self.printer.setPageSize(QPrinter.Letter)
-        self.generateFakeStatements()   #生成_伪_声明
+        self.generateFakeStatements()   #生成_伪_清单
         self.table = QTableWidget()
         self.populateTable()    #填充_表格
 
@@ -70,7 +70,7 @@ class Form(QDialog):
         self.setWindowTitle("Printing")
 
 
-    def generateFakeStatements(self):
+    def generateFakeStatements(self):   #生成_伪_清单
         self.statements = []
         statement = Statement("Consality", "Ms S. Royal",
                 "234 Rue Saint Hyacinthe, 750201, Paris")
@@ -105,7 +105,7 @@ class Form(QDialog):
 
     def populateTable(self):
         headers = ["Company", "Contact", "Address", "Balance"]
-        self.table.setColumnCount(len(headers))
+        self.table.setColumnCount(len(headers)) #setColumnCount::设置_栏_数
         self.table.setHorizontalHeaderLabels(headers)   #setHorizontalHeaderLabels::设置_水平_头_标签
         self.table.setRowCount(len(self.statements))
         for row, statement in enumerate(self.statements):
@@ -276,7 +276,7 @@ class Form(QDialog):
         AmountWidth = fm.width(" W999999.99 ")  #合计栏_宽度
         serifLineHeight = fm.height()
         logo = QPixmap(":/logo.png")
-        painter = QPainter(self.printer)
+        painter = QPainter(self.printer)        #Painter::画(画纸).
         pageRect = self.printer.pageRect()
         page = 1
         for statement in self.statements:
@@ -360,7 +360,7 @@ class Form(QDialog):
             font = QFont("Helvetica", 9)
             font.setItalic(True)
             painter.setFont(font)
-            option = QTextOption(Qt.AlignCenter)
+            option = QTextOption(Qt.AlignCenter)    #TextOption::文件选项
             option.setWrapMode(QTextOption.WordWrap)    #自动换行
             painter.drawText(
                     QRectF(x, y, pageRect.width() - 2 * LeftMargin, 31),
