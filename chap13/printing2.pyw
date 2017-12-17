@@ -41,7 +41,7 @@ class Form(QDialog):
         self.printer.setPageSize(QPrinter.Letter)   #设置页格式
         self.generateFakeStatements()   #生成_伪_清单
         self.table = QTableWidget()     #TableWidget::表_部件
-        self.populateTable()    #填充_表格
+        self.populateTable()    #填充_表格部件
 
         cursorButton = QPushButton("Print via Q&Cursor")
         htmlButton = QPushButton("Print via &HTML")
@@ -103,7 +103,7 @@ class Form(QDialog):
         self.statements.append(statement)
 
 
-    def populateTable(self):
+    def populateTable(self):    #填充_表格部件
         headers = ["Company", "Contact", "Address", "Balance"]
         self.table.setColumnCount(len(headers)) #setColumnCount::设置_栏_数
         self.table.setHorizontalHeaderLabels(headers)#setHorizontalHeaderLabels#设置_水平_头栏_标签
@@ -125,7 +125,7 @@ class Form(QDialog):
     def printViaHtml(self):
         html = ""
         for i, statement in enumerate(self.statements):
-            date = QDate.currentDate().toString(DATE_FORMAT)
+            date = QDate.currentDate().toString(DATE_FORMAT)    #获得当前时间.
             address = Qt.escape(statement.address).replace(",", "<br>")
             contact = Qt.escape(statement.contact)
             balance = statement.balance()

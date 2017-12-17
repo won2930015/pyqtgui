@@ -145,7 +145,7 @@ class Form(QDialog):
                          "with you.")
             html += ("</p><p>&nbsp;</p><p>"
                      "<table border=1 cellpadding=2 "
-                     "cellspacing=2><tr><td colspan=3>"
+                     "cellspacing=2><tr><td colspan=3>" #<tr>==行,<td>==单元格
                      "Transactions</td></tr>")
             for date, amount in statement.transactions:
                 color, status = "black", "Credit"

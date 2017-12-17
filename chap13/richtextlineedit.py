@@ -115,11 +115,12 @@ class RichTextLineEdit(QTextEdit):
             action = menu.addAction(QIcon(pixmap), text, self.setColor)
             action.setData(color)
         self.ensureCursorVisible()  #确保_光标_可见()
-        menu.exec_(self.viewport().mapToGlobal(self.cursorRect().center()))
+        menu.exec_(self.viewport().mapToGlobal(
+                   self.cursorRect().center()))
 
 
     def setColor(self):
-        action = self.sender()  #将当前被触发的动作 关联到 action对象.
+        action = self.sender()  #将当前触发的动作 关联 action对象.
         if action is not None and isinstance(action, QAction):
             color = QColor(action.data())
             if color.isValid(): #is_有效的....
@@ -127,7 +128,7 @@ class RichTextLineEdit(QTextEdit):
 
 
     def textEffectMenu(self):   # 文本_效果_菜单.
-        format = self.currentCharFormat()   # 创键 当前_字符_格式 对象.
+        format = self.currentCharFormat()   # 当前_字符_格式
         menu = QMenu("Text Effect")
         for text, shortcut, data, checked in (
                 ("&Bold", "Ctrl+B", RichTextLineEdit.Bold,  #粗体
