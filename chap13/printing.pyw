@@ -23,9 +23,9 @@ class Statement(object):    #声明_对象
 
     def __init__(self, company, contact, address):
         self.company = company  #公司
-        self.contact = contact  #联系方式
+        self.contact = contact  #联系人
         self.address = address  #地址
-        self.transactions = [] # List of (QDate, float) two-tuples ::交易|事务
+        self.transactions = [] # List of (QDate, float) two-tuples::两个-元组
 
 
     def balance(self):  #结算::返回amount总和.
@@ -37,11 +37,11 @@ class Form(QDialog):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
 
-        self.printer = QPrinter()
-        self.printer.setPageSize(QPrinter.Letter)
+        self.printer = QPrinter()   #创建打印对象
+        self.printer.setPageSize(QPrinter.Letter)   #设置页格式
         self.generateFakeStatements()   #生成_伪_清单
-        self.table = QTableWidget()
-        self.populateTable()    #填充_表格
+        self.table = QTableWidget()     #TableWidget::表_部件
+        self.populateTable()    #填充_表格部件
 
         cursorButton = QPushButton("Print via Q&Cursor")
         htmlButton = QPushButton("Print via &HTML")
@@ -103,7 +103,7 @@ class Form(QDialog):
         self.statements.append(statement)
 
 
-    def populateTable(self):
+    def populateTable(self):    #填充_表格部件
         headers = ["Company", "Contact", "Address", "Balance"]
         self.table.setColumnCount(len(headers)) #setColumnCount::设置_栏_数
         self.table.setHorizontalHeaderLabels(headers)   #setHorizontalHeaderLabels::设置_水平_头_标签
@@ -126,8 +126,7 @@ class Form(QDialog):
         html = ""
         for statement in self.statements:
             date = QDate.currentDate().toString(DATE_FORMAT)    #获得当前时间.
-            address = Qt.escape(statement.address).replace(
-                    ",", "<br>")
+            address = Qt.escape(statement.address).replace( ",", "<br>")    #escape::换码
             contact = Qt.escape(statement.contact)
             balance = statement.balance()
             html += ("<p align=right><img src=':/logo.png'></p>"

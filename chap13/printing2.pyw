@@ -19,16 +19,16 @@ import qrc_resources
 DATE_FORMAT = "MMM d, yyyy"
 
 
-class Statement(object):
+class Statement(object):    #声明_对象
 
     def __init__(self, company, contact, address):
         self.company = company  #公司
         self.contact = contact  #联系人
         self.address = address  #地址
-        self.transactions = [] # List of (QDate, float) two-tuples
+        self.transactions = [] # List of (QDate, float) two-tuples::两个-元组
 
 
-    def balance(self):
+    def balance(self):  #结算::返回amount总和.
         return sum([amount for date, amount in self.transactions])
 
 
@@ -106,8 +106,8 @@ class Form(QDialog):
     def populateTable(self):    #填充_表格部件
         headers = ["Company", "Contact", "Address", "Balance"]
         self.table.setColumnCount(len(headers)) #setColumnCount::设置_栏_数
-        self.table.setHorizontalHeaderLabels(headers)#setHorizontalHeaderLabels#设置_水平_头栏_标签
-        self.table.setRowCount(len(self.statements))    #setRowCount::设置_行_数
+        self.table.setHorizontalHeaderLabels(headers)   #setHorizontalHeaderLabels::设置_水平_头_标签
+        self.table.setRowCount(len(self.statements))
         for row, statement in enumerate(self.statements):
             self.table.setItem(row, 0,
                     QTableWidgetItem(statement.company))
@@ -121,12 +121,12 @@ class Form(QDialog):
             self.table.setItem(row, 3, item)
         self.table.resizeColumnsToContents()    #调整_栏_to_内容::调整栏宽度适配内容.
 
-    # 用Html方式生成文字表格后打印.
+    #用Html方式生成文字表格后打印.
     def printViaHtml(self):
         html = ""
         for i, statement in enumerate(self.statements):
             date = QDate.currentDate().toString(DATE_FORMAT)    #获得当前时间.
-            address = Qt.escape(statement.address).replace(",", "<br>")
+            address = Qt.escape(statement.address).replace( ",", "<br>")    #escape::换码
             contact = Qt.escape(statement.contact)
             balance = statement.balance()
             html += ("<p align=right><img src=':/logo.png'></p>"
