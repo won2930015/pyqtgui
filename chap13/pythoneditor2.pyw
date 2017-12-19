@@ -29,12 +29,15 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
 
         self.initializeFormats()    #格式_初始化
 
+        #关键字
         KEYWORDS = ["and", "as", "assert", "break", "class",
                 "continue", "def", "del", "elif", "else", "except",
                 "exec", "finally", "for", "from", "global", "if",
                 "import", "in", "is", "lambda", "not", "or", "pass",
                 "print", "raise", "return", "try", "while", "with",
                 "yield"]
+
+        #内置函数
         BUILTINS = ["abs", "all", "any", "basestring", "bool",
                 "callable", "chr", "classmethod", "cmp", "compile",
                 "complex", "delattr", "dict", "dir", "divmod",
@@ -47,34 +50,33 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 "round", "set", "setattr", "slice", "sorted",
                 "staticmethod", "str", "sum", "super", "tuple", "type",
                 "vars", "zip"] 
+
+        #常量
         CONSTANTS = ["False", "True", "None", "NotImplemented",
                      "Ellipsis"]
 
         PythonHighlighter.Rules.append((QRegExp(
-                "|".join([r"\b%s\b" % keyword for keyword in KEYWORDS])),
-                "keyword"))
+                "|".join([r"\b%s\b" % keyword for keyword in KEYWORDS])), "keyword"))   #关键字
         PythonHighlighter.Rules.append((QRegExp(
-                "|".join([r"\b%s\b" % builtin for builtin in BUILTINS])),
-                "builtin"))
+                "|".join([r"\b%s\b" % builtin for builtin in BUILTINS])), "builtin"))   #内置函数
         PythonHighlighter.Rules.append((QRegExp(
-                "|".join([r"\b%s\b" % constant
-                for constant in CONSTANTS])), "constant"))
+                "|".join([r"\b%s\b" % constant for constant in CONSTANTS])), "constant"))   #常量
         PythonHighlighter.Rules.append((QRegExp(
-                r"\b[+-]?[0-9]+[lL]?\b"
-                r"|\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b"
-                r"|\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b"),
-                "number"))
+                r"\b[+-]?[0-9]+[lL]?\b"     #10进制数
+                r"|\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b"     #16进制数
+                r"|\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b"),  #浮点指数
+                "number"))  #数值
         PythonHighlighter.Rules.append((QRegExp(
-                r"\bPyQt4\b|\bQt?[A-Z][a-z]\w+\b"), "pyqt"))
+                r"\bPyQt4\b|\bQt?[A-Z][a-z]\w+\b"), "pyqt"))        #\w+  匹配数字和字母下划线的多个字符
         PythonHighlighter.Rules.append((QRegExp(r"\b@\w+\b"),
-                "decorator"))
-        stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")
-        stringRe.setMinimal(True)
+                "decorator"))       #装饰器.
+        stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")  #匹配字符串的正则表达式.
+        stringRe.setMinimal(True)   #设置非贪婪匹配模式(小最匹配模式)
         PythonHighlighter.Rules.append((stringRe, "string"))
-        self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")
+        self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")   ##设置三个'''或""""号的字符串匹配模式.
         self.stringRe.setMinimal(True)
         PythonHighlighter.Rules.append((self.stringRe, "string"))
-        self.tripleSingleRe = QRegExp(r"""'''(?!")""")
+        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   匹配'''单引号,前驱!="  ::http://blog.csdn.net/sunhuaer123/article/details/16343313
         self.tripleDoubleRe = QRegExp(r'''"""(?!')''')
 
 
