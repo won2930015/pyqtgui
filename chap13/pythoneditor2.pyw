@@ -19,15 +19,15 @@ import qrc_resources
 __version__ = "1.1.0"
 
 
-class PythonHighlighter(QSyntaxHighlighter):
+class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高亮.
 
     Rules = []
-    Formats = {}
+    Formats = {}    #定义为字典.
 
     def __init__(self, parent=None):
         super(PythonHighlighter, self).__init__(parent)
 
-        self.initializeFormats()
+        self.initializeFormats()    #格式_初始化
 
         KEYWORDS = ["and", "as", "assert", "break", "class",
                 "continue", "def", "del", "elif", "else", "except",
@@ -79,10 +79,10 @@ class PythonHighlighter(QSyntaxHighlighter):
 
 
     @staticmethod
-    def initializeFormats():
+    def initializeFormats():    #格式_初始化
         baseFormat = QTextCharFormat()
-        baseFormat.setFontFamily("courier")
-        baseFormat.setFontPointSize(12)
+        baseFormat.setFontFamily("courier") #设置_字体_Family
+        baseFormat.setFontPointSize(12)     #设置_点_大小(字符大小)
         for name, color in (("normal", Qt.black),
                 ("keyword", Qt.darkBlue), ("builtin", Qt.darkRed),
                 ("constant", Qt.darkGreen),

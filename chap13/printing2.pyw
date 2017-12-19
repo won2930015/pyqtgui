@@ -156,7 +156,7 @@ class Form(QDialog):
                          date.toString(DATE_FORMAT), status, color,
                          "$ {:,.2f}".format(abs(amount))))
             html += "</table></p>"
-            html += ("<p style='page-break-after:always;'>"
+            html += ("<p style='page-break-after:always;'>"     #page-break-after:插入分页符,after:在指定组件之后插入.(ps::http://bbs.csdn.net/topics/380127102)
                      if i + 1 < len(self.statements) else "<p>")
             html += ("We hope to continue doing "
                      "business with you,<br>Yours sincerely,"
@@ -167,7 +167,7 @@ class Form(QDialog):
             document.setHtml(html)
             document.print_(self.printer)
 
-
+    #用光标方法生成文字和表格后打印.
     def printViaQCursor(self):
         dialog = QPrintDialog(self.printer, self)
         if not dialog.exec_():
@@ -175,30 +175,32 @@ class Form(QDialog):
         logo = QPixmap(":/logo.png")
         headFormat = QTextBlockFormat()
         headFormat.setAlignment(Qt.AlignLeft)
-        headFormat.setTextIndent(
+        headFormat.setTextIndent(   #设置_文本_缩进
                 self.printer.pageRect().width() - logo.width() - 216)
         bodyFormat = QTextBlockFormat()
-        bodyFormat.setAlignment(Qt.AlignJustify)
+        bodyFormat.setAlignment(Qt.AlignJustify)    #AlignJustify::对齐_两端(两端对齐)
         lastParaBodyFormat = QTextBlockFormat(bodyFormat)
-        lastParaBodyFormat.setPageBreakPolicy(
+        lastParaBodyFormat.setPageBreakPolicy(      #设置_分页_规则
                 QTextFormat.PageBreak_AlwaysAfter)
         rightBodyFormat = QTextBlockFormat()
         rightBodyFormat.setAlignment(Qt.AlignRight)
+
         headCharFormat = QTextCharFormat()
         headCharFormat.setFont(QFont("Helvetica", 10))
         bodyCharFormat = QTextCharFormat()
         bodyCharFormat.setFont(QFont("Times", 11))
         redBodyCharFormat = QTextCharFormat(bodyCharFormat)
         redBodyCharFormat.setForeground(Qt.red)
+
         tableFormat = QTextTableFormat()
         tableFormat.setBorder(1)
         tableFormat.setCellPadding(2)
-        document = QTextDocument()
-        cursor = QTextCursor(document)
-        mainFrame = cursor.currentFrame()
+        document = QTextDocument()  #创建文本文件对象.
+        cursor = QTextCursor(document)  #创建 文本_光标::以文本文件对象创建一个光标.
+        mainFrame = cursor.currentFrame() #光标.当前_框架 ???
         page = 1
         for statement in self.statements:
-            cursor.insertBlock(headFormat, headCharFormat)
+            cursor.insertBlock(headFormat, headCharFormat)  #insertBlock::插入_块
             cursor.insertImage(":/logo.png")
             for text in ("Greasy Hands Ltd.", "New Lombard Street",
                          "London", "WC13 4PX",
@@ -208,7 +210,7 @@ class Form(QDialog):
             for line in statement.address.split(", "):
                 cursor.insertBlock(bodyFormat, bodyCharFormat)
                 cursor.insertText(line)
-            cursor.insertBlock(bodyFormat)
+            cursor.insertBlock(bodyFormat)  #以bodyFormat格式插入空行
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("Dear {},".format(statement.contact))
             cursor.insertBlock(bodyFormat)
@@ -226,14 +228,13 @@ class Form(QDialog):
                                   "business with you.")
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("Transactions:")
-            table = cursor.insertTable(len(statement.transactions), 3,
+            table = cursor.insertTable(len(statement.transactions), 3,  #插入表格(行,列)
                                        tableFormat)
             row = 0
             for date, amount in statement.transactions:
-                cellCursor = table.cellAt(row, 0).firstCursorPosition()
-                cellCursor.setBlockFormat(rightBodyFormat)
-                cellCursor.insertText(date.toString(DATE_FORMAT),
-                                      bodyCharFormat)
+                cellCursor = table.cellAt(row, 0).firstCursorPosition() #firstCursorPosition::第一_光标_位置()
+                cellCursor.setBlockFormat(rightBodyFormat)  #光标_单元格.设置_块_格式
+                cellCursor.insertText(date.toString(DATE_FORMAT), bodyCharFormat)
                 cellCursor = table.cellAt(row, 1).firstCursorPosition()
                 if amount > 0:
                     cellCursor.insertText("Credit", bodyCharFormat)
@@ -245,8 +246,8 @@ class Form(QDialog):
                 if amount < 0:
                     format = redBodyCharFormat
                 cellCursor.insertText("$ {:,.2f}".format(amount), format)
-                row += 1
-            cursor.setPosition(mainFrame.lastPosition())
+                row += 1    #行 +=1
+            cursor.setPosition(mainFrame.lastPosition())    #主_框架.最后_位置()::定位到主框架最后位置.
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("We hope to continue doing business "
                               "with you,")
@@ -259,24 +260,24 @@ class Form(QDialog):
                 cursor.insertBlock(lastParaBodyFormat, bodyCharFormat)
             cursor.insertText("K. Longrey, Manager")
             page += 1
-        document.print_(self.printer)
+        document.print_(self.printer)   #document对象向printer对象输出内容.
 
 
     def printViaQPainter(self):
         dialog = QPrintDialog(self.printer, self)
         if not dialog.exec_():
             return
-        LeftMargin = 72
+        LeftMargin = 72 #左_边缘
         sansFont = QFont("Helvetica", 10)
         sansLineHeight = QFontMetrics(sansFont).height()
-        serifFont = QFont("Times", 11)
+        serifFont = QFont("Times", 11)  #衬线字体
         fm = QFontMetrics(serifFont)
-        DateWidth = fm.width(" September 99, 2999 ")
-        CreditWidth = fm.width(" Credit ")
-        AmountWidth = fm.width(" W999999.99 ")
+        DateWidth = fm.width(" September 99, 2999 ")    #日期栏_宽度
+        CreditWidth = fm.width(" Credit ")      #信贷栏_宽度
+        AmountWidth = fm.width(" W999999.99 ")  #合计栏_宽度
         serifLineHeight = fm.height()
         logo = QPixmap(":/logo.png")
-        painter = QPainter(self.printer)
+        painter = QPainter(self.printer)        #Painter::画(画纸).
         pageRect = self.printer.pageRect()
         page = 1
         for statement in self.statements:
@@ -320,22 +321,22 @@ class Form(QDialog):
             y += int(serifLineHeight * 1.5)
             painter.drawText(x, y, "Transactions:")
             y += serifLineHeight
-            option = QTextOption(Qt.AlignRight|
-                                       Qt.AlignVCenter)
+            option = QTextOption(Qt.AlignRight|Qt.AlignVCenter)
             for date, amount in statement.transactions:
                 x = LeftMargin
                 h = int(fm.height() * 1.3)
                 painter.drawRect(x, y, DateWidth, h)
-                painter.drawText(QRectF(x + 3, y + 3,
-                                        DateWidth - 6, h - 6),
-                                 date.toString(DATE_FORMAT), option)
+                painter.drawText(
+                        QRectF(x + 3, y + 3, DateWidth - 6, h - 6),
+                        date.toString(DATE_FORMAT), option)
                 x += DateWidth
                 painter.drawRect(x, y, CreditWidth, h)
                 text = "Credit"
                 if amount < 0:
                     text = "Debit"
-                painter.drawText(QRectF(x + 3, y + 3,
-                                 CreditWidth - 6, h - 6), text, option)
+                painter.drawText(
+                        QRectF(x + 3, y + 3, CreditWidth - 6, h - 6),
+                        text, option)
                 x += CreditWidth
                 painter.drawRect(x, y, AmountWidth, h)
                 if amount < 0:
@@ -360,8 +361,8 @@ class Form(QDialog):
             font = QFont("Helvetica", 9)
             font.setItalic(True)
             painter.setFont(font)
-            option = QTextOption(Qt.AlignCenter)
-            option.setWrapMode(QTextOption.WordWrap)
+            option = QTextOption(Qt.AlignCenter)    #TextOption::文件选项
+            option.setWrapMode(QTextOption.WordWrap)    #自动换行
             painter.drawText(
                     QRectF(x, y, pageRect.width() - 2 * LeftMargin, 31),
                     "The contents of this letter are for information "

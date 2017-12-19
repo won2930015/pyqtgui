@@ -155,7 +155,7 @@ class Form(QDialog):
                          "<font color={2}>{3}</font></td></tr>".format(
                          date.toString(DATE_FORMAT), status, color,
                          "$ {:,.2f}".format(abs(amount))))
-            html += ("</table></p><p style='page-break-after:always;'>"
+            html += ("</table></p><p style='page-break-after:always;'>" #page-break-after:插入分页符,after:在指定组件之后插入.(ps::http://bbs.csdn.net/topics/380127102)
                      "We hope to continue doing "
                      "business with you,<br>Yours sincerely,"
                      "<br><br>K.&nbsp;Longrey, Manager</p>")
@@ -193,8 +193,9 @@ class Form(QDialog):
         tableFormat = QTextTableFormat()
         tableFormat.setBorder(1)
         tableFormat.setCellPadding(2)
-        document = QTextDocument()  #创建文本文件.
-        cursor = QTextCursor(document)  #创建 文本_光标::为文本文件创建一个光标.
+
+        document = QTextDocument()  #创建文本文件对象.
+        cursor = QTextCursor(document)  #创建 文本_光标::以文本文件对象创建一个光标.
         mainFrame = cursor.currentFrame() #光标.当前_框架 ???
         page = 1
         for statement in self.statements:
@@ -208,7 +209,7 @@ class Form(QDialog):
             for line in statement.address.split(", "):
                 cursor.insertBlock(bodyFormat, bodyCharFormat)
                 cursor.insertText(line)
-            cursor.insertBlock(bodyFormat)
+            cursor.insertBlock(bodyFormat)  #以bodyFormat格式插入空行
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("Dear {},".format(statement.contact))
             cursor.insertBlock(bodyFormat)
@@ -226,7 +227,7 @@ class Form(QDialog):
                                   "business with you.")
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("Transactions:")
-            table = cursor.insertTable(len(statement.transactions), 3,
+            table = cursor.insertTable(len(statement.transactions), 3,  #插入表格(行,列)
                                        tableFormat)
             row = 0
             for date, amount in statement.transactions:
@@ -245,7 +246,7 @@ class Form(QDialog):
                     format = redBodyCharFormat
                 cellCursor.insertText("$ {:,.2f}".format(amount), format)
                 row += 1    #行 +=1
-            cursor.setPosition(mainFrame.lastPosition())    #主_框架.最后_位置()
+            cursor.setPosition(mainFrame.lastPosition())    #主_框架.最后_位置()::定位到主框架最后位置.
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("We hope to continue doing business "
                               "with you,")
@@ -258,7 +259,7 @@ class Form(QDialog):
                 cursor.insertBlock(lastParaBodyFormat, bodyCharFormat)
             cursor.insertText("K. Longrey, Manager")
             page += 1
-        document.print_(self.printer)
+        document.print_(self.printer)   #document对象向printer对象输出内容.
 
 
     def printViaQPainter(self):
