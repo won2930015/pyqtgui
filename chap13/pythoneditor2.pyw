@@ -76,14 +76,14 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")   ##设置三个'''或""""号的字符串匹配模式.
         self.stringRe.setMinimal(True)
         PythonHighlighter.Rules.append((self.stringRe, "string"))
-        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   匹配'''单引号,前驱!="  ::http://blog.csdn.net/sunhuaer123/article/details/16343313
-        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')
+        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   匹配'''单引号,但前驱 != "  ::http://blog.csdn.net/sunhuaer123/article/details/16343313
+        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  ##  匹配"""双引号,但前驱 != '
 
 
     @staticmethod
     def initializeFormats():    #格式_初始化
         baseFormat = QTextCharFormat()
-        baseFormat.setFontFamily("courier") #设置_字体_Family
+        baseFormat.setFontFamily("courier") #设置_字体_家族
         baseFormat.setFontPointSize(12)     #设置_点_大小(字符大小)
         for name, color in (("normal", Qt.black),
                 ("keyword", Qt.darkBlue), ("builtin", Qt.darkRed),
@@ -97,36 +97,31 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 format.setFontWeight(QFont.Bold)
             if name == "comment":
                 format.setFontItalic(True)
-            PythonHighlighter.Formats[name] = format
+            PythonHighlighter.Formats[name] = format    #设置字典key:value对::{"keyword":format,"builtin":format,...}
 
 
-    def highlightBlock(self, text):
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE, ERROR = range(4)
+    def highlightBlock(self, text): #高亮_块
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE, ERROR = range(4)    #   0,1,2 ,3  NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式, ERROR=错误
 
         textLength = len(text)
-        prevState = self.previousBlockState()
+        prevState = self.previousBlockState()   # 前置_块_状态
 
-        self.setFormat(0, textLength,
-                       PythonHighlighter.Formats["normal"])
+        self.setFormat(0, textLength, PythonHighlighter.Formats["normal"])
 
         if text.startswith("Traceback") or text.startswith("Error: "):
             self.setCurrentBlockState(ERROR)
-            self.setFormat(0, textLength,
-                           PythonHighlighter.Formats["error"])
+            self.setFormat(0, textLength, PythonHighlighter.Formats["error"])
             return
-        if (prevState == ERROR and
-            not (text.startswith(sys.ps1) or text.startswith("#"))):
+        if (prevState == ERROR and not (text.startswith(sys.ps1) or text.startswith("#"))):
             self.setCurrentBlockState(ERROR)
-            self.setFormat(0, textLength,
-                           PythonHighlighter.Formats["error"])
+            self.setFormat(0, textLength, PythonHighlighter.Formats["error"])
             return
 
         for regex, format in PythonHighlighter.Rules:
             i = regex.indexIn(text)
             while i >= 0:
-                length = regex.matchedLength()
-                self.setFormat(i, length,
-                               PythonHighlighter.Formats[format])
+                length = regex.matchedLength()  #matchedLength::匹配_长度
+                self.setFormat(i, length, PythonHighlighter.Formats[format])
                 i = regex.indexIn(text, i + length)
 
         # Slow but good quality highlighting for comments. For more
@@ -135,12 +130,11 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         if not text:
             pass
         elif text[0] == "#":
-            self.setFormat(0, len(text),
-                           PythonHighlighter.Formats["comment"])
+            self.setFormat(0, len(text), PythonHighlighter.Formats["comment"])
         else:
-            stack = []
+            stack = []  # 堆栈
             for i, c in enumerate(text):
-                if c in ('"', "'"):
+                if c in ('"', "'"):     #包含 " 或 ' 号时执行.
                     if stack and stack[-1] == c:
                         stack.pop()
                     else:
