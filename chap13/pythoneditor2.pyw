@@ -101,7 +101,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
 
 
     def highlightBlock(self, text): #高亮_块
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE, ERROR = range(4)    #   0,1,2 ,3  NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式, ERROR=错误
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE, ERROR = range(4)    #   0,1,2,3  NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式, ERROR=错误
 
         textLength = len(text)
         prevState = self.previousBlockState()   # 前置_块_状态
@@ -140,34 +140,29 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                     else:
                         stack.append(c)
                 elif c == "#" and len(stack) == 0:
-                    self.setFormat(i, len(text),
-                                   PythonHighlighter.Formats["comment"])
-                    break
+                    self.setFormat(i, len(text), PythonHighlighter.Formats["comment"])
+                    break   #跳出for循环.
 
         self.setCurrentBlockState(NORMAL)
 
         if self.stringRe.indexIn(text) != -1:
             return
         # This is fooled by triple quotes inside single quoted strings
-        for i, state in ((self.tripleSingleRe.indexIn(text),
-                          TRIPLESINGLE),
-                         (self.tripleDoubleRe.indexIn(text),
-                          TRIPLEDOUBLE)):
+        for i, state in ((self.tripleSingleRe.indexIn(text), TRIPLESINGLE),
+                         (self.tripleDoubleRe.indexIn(text), TRIPLEDOUBLE)):
             if self.previousBlockState() == state:
                 if i == -1:
                     i = len(text)
                     self.setCurrentBlockState(state)
-                self.setFormat(0, i + 3,     
-                               PythonHighlighter.Formats["string"])
+                self.setFormat(0, i + 3, PythonHighlighter.Formats["string"])
             elif i > -1:
                 self.setCurrentBlockState(state)
                 self.setFormat(i, len(text),
                                PythonHighlighter.Formats["string"])
 
 
-    def rehighlight(self):
-        QApplication.setOverrideCursor(QCursor(
-                                                    Qt.WaitCursor))
+    def rehighlight(self):  #???
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
         QSyntaxHighlighter.rehighlight(self)
         QApplication.restoreOverrideCursor()
 
@@ -179,10 +174,9 @@ class TextEdit(QTextEdit):
 
 
     def event(self, event):
-        if (event.type() == QEvent.KeyPress and
-            event.key() == Qt.Key_Tab):
-            cursor = self.textCursor()
-            cursor.insertText("    ")
+        if (event.type() == QEvent.KeyPress and event.key() == Qt.Key_Tab):
+            cursor = self.textCursor()  # 获得文本光标
+            cursor.insertText("    ")   #插入四个空格符
             return True
         return QTextEdit.event(self, event)
 
@@ -264,7 +258,7 @@ class MainWindow(QMainWindow):
         self.updateUi()
 
 
-    def updateUi(self, arg=None):
+    def updateUi(self, arg=None):   #更新Ui
         self.fileSaveAction.setEnabled(
                 self.editor.document().isModified())
         enable = not self.editor.document().isEmpty()
@@ -400,35 +394,35 @@ class MainWindow(QMainWindow):
         return False
 
 
-    def editIndent(self):
+    def editIndent(self):   # 编辑_缩进
         cursor = self.editor.textCursor()
         cursor.beginEditBlock()
-        if cursor.hasSelection():
-            start = pos = cursor.anchor()
-            end = cursor.position()
+        if cursor.hasSelection():   #有_选择 时...
+            start = pos = cursor.anchor()   #anchor:: 锚(光标的选择区域)起始位置.
+            end = cursor.position() # 获得锚的结束位置.
             if start > end:
                 start, end = end, start
                 pos = start
             cursor.clearSelection()
             cursor.setPosition(pos)
-            cursor.movePosition(QTextCursor.StartOfLine)
+            cursor.movePosition(QTextCursor.StartOfLine)    #StartOfLine::移动到当前行开始处.
             while pos <= end:
                 cursor.insertText("    ")
-                cursor.movePosition(QTextCursor.Down)
-                cursor.movePosition(QTextCursor.StartOfLine)
+                cursor.movePosition(QTextCursor.Down)   #Down::向下移动一行.
+                cursor.movePosition(QTextCursor.StartOfLine)    #StartOfLine::移动到当前行开始处.
                 pos = cursor.position()
             cursor.setPosition(start)
-            cursor.movePosition(QTextCursor.NextCharacter,
-                                QTextCursor.KeepAnchor, end - start)
+            cursor.movePosition(QTextCursor.NextCharacter,  #NextCharacter::next_字符(移动到下一个字符)
+                                QTextCursor.KeepAnchor, end - start)    #KeepAnchor::保持_锚(保持_选择区域[锚])
         else:
             pos = cursor.position()
-            cursor.movePosition(QTextCursor.StartOfBlock)
+            cursor.movePosition(QTextCursor.StartOfBlock)   #StartOfBlock::移动到当前块的开始处.
             cursor.insertText("    ")
             cursor.setPosition(pos + 4)
         cursor.endEditBlock()
 
 
-    def editUnindent(self):
+    def editUnindent(self): #编辑_取消缩进
         cursor = self.editor.textCursor()
         cursor.beginEditBlock()
         if cursor.hasSelection():
