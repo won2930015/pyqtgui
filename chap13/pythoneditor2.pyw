@@ -67,15 +67,17 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 r"|\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b"),  #浮点指数
                 "number"))  #数值
         PythonHighlighter.Rules.append((QRegExp(
-                r"\bPyQt4\b|\bQt?[A-Z][a-z]\w+\b"), "pyqt"))        #\w+  匹配数字和字母下划线的多个字符
-        PythonHighlighter.Rules.append((QRegExp(r"\b@\w+\b"),
-                "decorator"))       #装饰器.
-        stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")  #匹配字符串的正则表达式.
+                r"\bPyQt4\b|\bQt?[A-Z][a-z]\w+\b"), "pyqt"))        #Qt关键盘 :: \w+  匹配数字和字母下划线的多个字符
+        PythonHighlighter.Rules.append((QRegExp(r"\b@\w+\b"), "decorator"))   #装饰器.
+
+        stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")  # '字符串' 正则表达式.
         stringRe.setMinimal(True)   #设置非贪婪匹配模式(小最匹配模式)
         PythonHighlighter.Rules.append((stringRe, "string"))
+
         self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")   ##设置三个'''或""""号的字符串匹配模式.
         self.stringRe.setMinimal(True)
         PythonHighlighter.Rules.append((self.stringRe, "string"))
+
         self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   匹配'''单引号,但前驱 != "  ::http://blog.csdn.net/sunhuaer123/article/details/16343313
         self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  ##  匹配"""双引号,但前驱 != '
 
@@ -117,7 +119,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
             self.setFormat(0, textLength, PythonHighlighter.Formats["error"])
             return
 
-        for regex, format in PythonHighlighter.Rules:
+        for regex, format in PythonHighlighter.Rules: #匹配所有关键字
             i = regex.indexIn(text)
             while i >= 0:
                 length = regex.matchedLength()  #matchedLength::匹配_长度
@@ -157,8 +159,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 self.setFormat(0, i + 3, PythonHighlighter.Formats["string"])
             elif i > -1:
                 self.setCurrentBlockState(state)
-                self.setFormat(i, len(text),
-                               PythonHighlighter.Formats["string"])
+                self.setFormat(i, len(text), PythonHighlighter.Formats["string"])
 
 
     def rehighlight(self):  #???
@@ -187,7 +188,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
 
         font = QFont("Courier", 11)
-        font.setFixedPitch(True)
+        font.setFixedPitch(True)    #设置_固定_间距
         self.editor = TextEdit()
         self.editor.setFont(font)
         self.highlighter = PythonHighlighter(self.editor.document())
