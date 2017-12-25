@@ -88,9 +88,9 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         baseFormat.setFontFamily("courier") #设置_字体_家族
         baseFormat.setFontPointSize(12)     #设置_点_大小(字符大小)
         for name, color in (("normal", Qt.black),
-                ("keyword", Qt.darkBlue), ("builtin", Qt.darkRed),
+                ("keyword", Qt.darkBlue), ("builtin", Qt.darkRed),          #keyword::关键字,builtin::内置函数,constant::常量,decorator::装饰器,
                 ("constant", Qt.darkGreen),
-                ("decorator", Qt.darkBlue), ("comment", Qt.darkGreen),
+                ("decorator", Qt.darkBlue), ("comment", Qt.darkGreen),      #comment::注释,string::字符串,number::数值,error::错误,pyqt::pyqt关键字
                 ("string", Qt.darkYellow), ("number", Qt.darkMagenta),
                 ("error", Qt.darkRed), ("pyqt", Qt.darkCyan)):
             format = QTextCharFormat(baseFormat)
@@ -162,10 +162,10 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 self.setFormat(i, len(text), PythonHighlighter.Formats["string"])
 
 
-    def rehighlight(self):  #???
-        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+    def rehighlight(self):  #??? 重新_高亮语块.
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))  #setOverrideCursor::设置_覆盖(重写|重载)_光标,WaitCursor::等待(等候)光标
         QSyntaxHighlighter.rehighlight(self)
-        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()    #restoreOverrideCursor::还原_覆盖(重写|重载)_光标
 
 
 class TextEdit(QTextEdit):
