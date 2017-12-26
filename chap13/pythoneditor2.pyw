@@ -247,7 +247,7 @@ class MainWindow(QMainWindow):
         self.connect(self.editor,
                 SIGNAL("selectionChanged()"), self.updateUi)
         self.connect(self.editor.document(),
-                SIGNAL("modificationChanged(bool)"), self.updateUi)
+                SIGNAL("modificationChanged(bool)"), self.updateUi) #modificationChanged::更正改变.
         self.connect(QApplication.clipboard(),
                 SIGNAL("dataChanged()"), self.updateUi)
 
@@ -261,7 +261,7 @@ class MainWindow(QMainWindow):
 
     def updateUi(self, arg=None):   #更新Ui
         self.fileSaveAction.setEnabled(
-                self.editor.document().isModified())
+                self.editor.document().isModified())    #isModified::is_修改
         enable = not self.editor.document().isEmpty()
         self.fileSaveAsAction.setEnabled(enable)
         self.editIndentAction.setEnabled(enable)
@@ -269,7 +269,7 @@ class MainWindow(QMainWindow):
         enable = self.editor.textCursor().hasSelection()
         self.editCopyAction.setEnabled(enable)
         self.editCutAction.setEnabled(enable)
-        self.editPasteAction.setEnabled(self.editor.canPaste())
+        self.editPasteAction.setEnabled(self.editor.canPaste()) #canPaste::能_粘贴
 
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
@@ -285,7 +285,7 @@ class MainWindow(QMainWindow):
         if slot is not None:
             self.connect(action, SIGNAL(signal), slot)
         if checkable:
-            action.setCheckable(True)
+            action.setCheckable(True)   #设置为可复选动作.
         return action
 
 
@@ -321,7 +321,7 @@ class MainWindow(QMainWindow):
             return
         document = self.editor.document()
         document.clear()
-        document.setModified(False)
+        document.setModified(False) #设置_修改 标记
         self.filename = None
         self.setWindowTitle("Python Editor - Unnamed")
         self.updateUi()
@@ -330,8 +330,7 @@ class MainWindow(QMainWindow):
     def fileOpen(self):
         if not self.okToContinue():
             return
-        dir = (os.path.dirname(self.filename)
-               if self.filename is not None else ".")
+        dir = (os.path.dirname(self.filename) if self.filename is not None else ".")
         fname = QFileDialog.getOpenFileName(self,
                 "Python Editor - Choose File", dir,
                 "Python files (*.py *.pyw)")
@@ -344,13 +343,13 @@ class MainWindow(QMainWindow):
         fh = None
         try:
             fh = QFile(self.filename)
-            if not fh.open(QIODevice.ReadOnly):
+            if not fh.open(QIODevice.ReadOnly): #IO_设备
                 raise IOError(fh.errorString())
             stream = QTextStream(fh)
             stream.setCodec("UTF-8")
-            self.editor.setPlainText(stream.readAll())
+            self.editor.setPlainText(stream.readAll())  #setPlainText::设置_纯文本
             self.editor.document().setModified(False)
-        except EnvironmentError as e:
+        except EnvironmentError as e:   #EnvironmentError::环境_错误
             QMessageBox.warning(self, "Python Editor -- Load Error",
                     "Failed to load {}: {}".format(self.filename, e))
         finally:
@@ -406,7 +405,7 @@ class MainWindow(QMainWindow):
                 pos = start
             cursor.clearSelection()
             cursor.setPosition(pos)
-            cursor.movePosition(QTextCursor.StartOfLine)    #StartOfLine::移动到当前行开始处.
+            cursor.movePosition(QTextCursor.StartOfLine)    #StartOfLine::移动到当前'行'开始处.
             while pos <= end:
                 cursor.insertText("    ")
                 cursor.movePosition(QTextCursor.Down)   #Down::向下移动一行.
@@ -437,7 +436,7 @@ class MainWindow(QMainWindow):
             while pos <= end:
                 cursor.clearSelection()
                 cursor.movePosition(QTextCursor.NextCharacter,
-                                    QTextCursor.KeepAnchor, 4)
+                                    QTextCursor.KeepAnchor, 4)  #移动4个字符
                 if cursor.selectedText() == "    ":
                     cursor.removeSelectedText()
                 cursor.movePosition(QTextCursor.Down)
