@@ -24,40 +24,40 @@ FILE_VERSION = 1
 class Ship(object):
 
     def __init__(self, name, owner, country, teu=0, description=""):
-        self.name = name
-        self.owner = owner
-        self.country = country
-        self.teu = teu
-        self.description = description
+        self.name = name    #名
+        self.owner = owner  #物主
+        self.country = country  #国家
+        self.teu = teu  #标准箱
+        self.description = description  #描述
 
 
-    def __hash__(self):
+    def __hash__(self):     #哈希表|散列表
         return super(Ship, self).__hash__()
 
 
-    def __lt__(self, other):
+    def __lt__(self, other):    # 比较符 <
         return self.name.lower() < other.name.lower()
 
 
-    def __eq__(self, other):
+    def __eq__(self, other):    # 比较符 ==
         return self.name.lower() == other.name.lower()
 
 
-class ShipContainer(object):
+class ShipContainer(object):    #船_集装箱
 
     def __init__(self, filename=""):
-        self.filename = filename
-        self.dirty = False
-        self.ships = {}
-        self.owners = set()
-        self.countries = set()
+        self.filename = filename    #文件名
+        self.dirty = False  #dirty::脏的(文件修改标记)
+        self.ships = {}     #ships::N条船
+        self.owners = set() #owners::物主们
+        self.countries = set()  #countries::国家们
 
 
-    def ship(self, identity):
+    def ship(self, identity):   #identity::身份
         return self.ships.get(identity)
 
         
-    def addShip(self, ship):
+    def addShip(self, ship):    #加入_船
         self.ships[id(ship)] = ship
         self.owners.add(ship.owner)
         self.countries.add(ship.country)
@@ -74,22 +74,21 @@ class ShipContainer(object):
         return len(self.ships)
 
 
-    def __iter__(self):
+    def __iter__(self):     #迭代器(返回ships的值集(values).
         for ship in self.ships.values():
             yield ship
 
 
-    def inOrder(self):
+    def inOrder(self):  #执行排序(按values排序)
         return sorted(self.ships.values())
 
 
-    def inCountryOwnerOrder(self):
-        return sorted(self.ships.values(),
-                      key=lambda x: (x.country, x.owner, x.name))
+    def inCountryOwnerOrder(self):  #执行 国家&物主&名 排序
+        return sorted(self.ships.values(), key=lambda x: (x.country, x.owner, x.name))
 
 
     def load(self):
-        exception = None
+        exception = None    #exception::异常
         fh = None
         try:
             if not self.filename:
@@ -154,7 +153,7 @@ class ShipContainer(object):
                 raise exception
 
 
-class ShipTableModel(QAbstractTableModel):
+class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (AbstractTableModel::抽象_表_样式)
 
     def __init__(self, filename=""):
         super(ShipTableModel, self).__init__()
@@ -165,23 +164,20 @@ class ShipTableModel(QAbstractTableModel):
         self.countries = set()
 
 
-    def sortByName(self):
+    def sortByName(self):   #按名字排序
         self.ships = sorted(self.ships)
         self.reset()
 
 
-    def sortByCountryOwner(self):
-        self.ships = sorted(self.ships,
-                            key=lambda x: (x.country, x.owner, x.name))
+    def sortByCountryOwner(self):   #按 国家&物主 排序
+        self.ships = sorted(self.ships, key=lambda x: (x.country, x.owner, x.name))
         self.reset()
 
 
-    def flags(self, index):
-        if not index.isValid():
+    def flags(self, index): #标志
+        if not index.isValid(): #isValid::is_有效的
             return Qt.ItemIsEnabled
-        return Qt.ItemFlags(
-                QAbstractTableModel.flags(self, index)|
-                Qt.ItemIsEditable)
+        return Qt.ItemFlags(QAbstractTableModel.flags(self, index)| Qt.ItemIsEditable)
 
 
     def data(self, index, role=Qt.DisplayRole):
