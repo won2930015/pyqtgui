@@ -174,18 +174,17 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (Abstr
         self.reset()
 
 
-    def flags(self, index): #标志
+    def flags(self, index): #标志???
         if not index.isValid(): #isValid::is_有效的
             return Qt.ItemIsEnabled
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)| Qt.ItemIsEditable)
 
 
-    def data(self, index, role=Qt.DisplayRole):
-        if (not index.isValid() or
-            not (0 <= index.row() < len(self.ships))):
+    def data(self, index, role=Qt.DisplayRole): #DisplayRole::显示_角色
+        if (not index.isValid() or not (0 <= index.row() < len(self.ships))):
             return None
         ship = self.ships[index.row()]
-        column = index.column()
+        column = index.column() #column::列
         if role == Qt.DisplayRole:
             if column == NAME:
                 return ship.name
@@ -197,11 +196,11 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (Abstr
                 return ship.description
             elif column == TEU:
                 return "{:,}".format(ship.teu)
-        elif role == Qt.TextAlignmentRole:
+        elif role == Qt.TextAlignmentRole:  #TextAlignmentRole::文本_对齐_角色
             if column == TEU:
                 return int(Qt.AlignRight|Qt.AlignVCenter)
             return int(Qt.AlignLeft|Qt.AlignVCenter)
-        elif role == Qt.TextColorRole and column == TEU:
+        elif role == Qt.TextColorRole and column == TEU:    #文本_色_角色
             if ship.teu < 80000:
                 return QColor(Qt.black)
             elif ship.teu < 100000:
@@ -210,7 +209,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (Abstr
                 return QColor(Qt.blue)
             else:
                 return QColor(Qt.red)
-        elif role == Qt.BackgroundColorRole:
+        elif role == Qt.BackgroundColorRole:    #BackgroundColorRole::背景_色_角色
             if ship.country in ("Bahamas", "Cyprus", "Denmark",
                     "France", "Germany", "Greece"):
                 return QColor(250, 230, 250)

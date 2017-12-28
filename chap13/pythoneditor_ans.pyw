@@ -92,8 +92,7 @@ class TextEdit(QTextEdit):
 
 
     def event(self, event):
-        if (event.type() == QEvent.KeyPress and
-            event.key() == Qt.Key_Tab):
+        if (event.type() == QEvent.KeyPress and event.key() == Qt.Key_Tab):
             cursor = self.textCursor()
             cursor.insertText("    ")
             return True
