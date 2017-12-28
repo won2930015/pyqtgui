@@ -222,7 +222,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (Abstr
         return None
 
 
-    def headerData(self, section, orientation, role=Qt.DisplayRole):
+    def headerData(self, section, orientation, role=Qt.DisplayRole):    # headerData::头数据,section::区段, orientation::定位
         if role == Qt.TextAlignmentRole:
             if orientation == Qt.Horizontal:
                 return int(Qt.AlignLeft|Qt.AlignVCenter)
@@ -243,11 +243,11 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (Abstr
         return int(section + 1)
 
 
-    def rowCount(self, index=QModelIndex()):
+    def rowCount(self, index=QModelIndex()):    #rowCount::行数
         return len(self.ships)
 
 
-    def columnCount(self, index=QModelIndex()):
+    def columnCount(self, index=QModelIndex()): #columnCount::例数
         return 5
 
 
@@ -266,26 +266,23 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (Abstr
             elif column == TEU:
                 ship.teu = int(value)
             self.dirty = True
-            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                      index, index)
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
             return True
         return False
 
 
-    def insertRows(self, position, rows=1, index=QModelIndex()):
+    def insertRows(self, position, rows=1, index=QModelIndex()):    #插入_行.
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
         for row in range(rows):
-            self.ships.insert(position + row,
-                              Ship(" Unknown", " Unknown", " Unknown"))
+            self.ships.insert(position + row, Ship(" Unknown", " Unknown", " Unknown"))
         self.endInsertRows()
         self.dirty = True
         return True
 
 
-    def removeRows(self, position, rows=1, index=QModelIndex()):
+    def removeRows(self, position, rows=1, index=QModelIndex()):    #移除_行
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.ships = (self.ships[:position] +
-                      self.ships[position + rows:])
+        self.ships = (self.ships[:position] + self.ships[position + rows:]) #这是一种排除自身重新赋值的方法.
         self.endRemoveRows()
         self.dirty = True
         return True
@@ -358,7 +355,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (Abstr
                 raise exception
 
 
-class ShipDelegate(QStyledItemDelegate):
+class ShipDelegate(QStyledItemDelegate): #船_委托(委派)
 
     def __init__(self, parent=None):
         super(ShipDelegate, self).__init__(parent)
@@ -367,7 +364,7 @@ class ShipDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):
         if index.column() == DESCRIPTION:
             text = index.model().data(index)
-            palette = QApplication.palette()
+            palette = QApplication.palette()    #palette::调色板
             document = QTextDocument()
             document.setDefaultFont(option.font)
             if option.state & QStyle.State_Selected:
@@ -381,9 +378,9 @@ class ShipDelegate(QStyledItemDelegate):
                                  Qt.BackgroundColorRole)))
             painter.save()
             painter.fillRect(option.rect, color)
-            painter.translate(option.rect.x(), option.rect.y())
+            painter.translate(option.rect.x(), option.rect.y()) #translate::翻译 转化???
             document.drawContents(painter)
-            painter.restore()
+            painter.restore()   #restore::恢复
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
@@ -397,7 +394,7 @@ class ShipDelegate(QStyledItemDelegate):
             document = QTextDocument()
             document.setDefaultFont(option.font)
             document.setHtml(text)
-            return QSize(document.idealWidth() + 5, fm.height())
+            return QSize(document.idealWidth() + 5, fm.height())    #idealWidth::理想_宽度
         return QStyledItemDelegate.sizeHint(self, option, index)
 
 
@@ -411,7 +408,7 @@ class ShipDelegate(QStyledItemDelegate):
         elif index.column() == OWNER:
             combobox = QComboBox(parent)
             combobox.addItems(sorted(index.model().owners))
-            combobox.setEditable(True)
+            combobox.setEditable(True)  #setEditable::设置_可编辑
             return combobox
         elif index.column() == COUNTRY:
             combobox = QComboBox(parent)
@@ -424,7 +421,7 @@ class ShipDelegate(QStyledItemDelegate):
                          self.commitAndCloseEditor)
             return editor
         elif index.column() == DESCRIPTION:
-            editor = richtextlineedit.RichTextLineEdit(parent)
+            editor = richtextlineedit.RichTextLineEdit(parent)  #rich,text,line,edit::富_文本_行_编辑框
             self.connect(editor, SIGNAL("returnPressed()"),
                          self.commitAndCloseEditor)
             return editor
@@ -448,7 +445,7 @@ class ShipDelegate(QStyledItemDelegate):
             elif isinstance(text, int):
                 value = text
             else:
-                value = int(re.sub(r"[., ]", "", text))
+                value = int(re.sub(r"[., ]", "", text)) #https://zhidao.baidu.com/question/369467791671548644.html
             editor.setValue(value)
         elif index.column() in (OWNER, COUNTRY):
             i = editor.findText(text)
@@ -463,7 +460,7 @@ class ShipDelegate(QStyledItemDelegate):
             QStyledItemDelegate.setEditorData(self, editor, index)
 
 
-    def setModelData(self, editor, model, index):
+    def setModelData(self, editor, model, index):   #设置_模型_数据
         if index.column() == TEU:
             model.setData(index, editor.value())
         elif index.column() in (OWNER, COUNTRY):
@@ -476,7 +473,7 @@ class ShipDelegate(QStyledItemDelegate):
             QStyledItemDelegate.setModelData(self, editor, model, index)
 
 
-def generateFakeShips():
+def generateFakeShips():    #生成_伪造_船舶
     for name, owner, country, teu, description in (
 ("Emma M\u00E6rsk", "M\u00E6rsk Line", "Denmark", 151687,
  "<b>W\u00E4rtsil\u00E4-Sulzer RTA96-C</b> main engine,"
