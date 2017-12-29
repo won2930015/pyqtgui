@@ -43,7 +43,7 @@ class Ship(object):
         return self.name.lower() == other.name.lower()
 
 
-class ShipContainer(object):    #船_集装箱
+class ShipContainer(object):    #船_容器
 
     def __init__(self, filename=""):
         self.filename = filename    #文件名
@@ -96,7 +96,7 @@ class ShipContainer(object):    #船_集装箱
             fh = QFile(self.filename)
             if not fh.open(QIODevice.ReadOnly):
                 raise IOError(fh.errorString())
-            stream = QDataStream(fh)
+            stream = QDataStream(fh)    #创建 数据流文件(二进制)
             magic = stream.readInt32()
             if magic != MAGIC_NUMBER:
                 raise IOError("unrecognized file type")
@@ -153,7 +153,7 @@ class ShipContainer(object):    #船_集装箱
                 raise exception
 
 
-class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (AbstractTableModel::抽象_表_样式)
+class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::抽象_表_模型)
 
     def __init__(self, filename=""):
         super(ShipTableModel, self).__init__()
@@ -195,7 +195,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型|型号|样式 (Abstr
             elif column == DESCRIPTION:
                 return ship.description
             elif column == TEU:
-                return "{:,}".format(ship.teu)
+                return "{:,}".format(ship.teu)  #"{:,}"::添加千位分隔符?
         elif role == Qt.TextAlignmentRole:  #TextAlignmentRole::文本_对齐_角色
             if column == TEU:
                 return int(Qt.AlignRight|Qt.AlignVCenter)
