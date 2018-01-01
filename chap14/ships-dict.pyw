@@ -14,7 +14,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ships
 
-MAC = "qt_mac_set_native_menubar" in dir()
+MAC = "qt_mac_set_native_menubar" in dir()  #判断是否在MAC系统.
 
 
 class MainForm(QDialog):
@@ -75,8 +75,7 @@ class MainForm(QDialog):
                 SIGNAL("itemChanged(QTableWidgetItem*)"),
                 self.tableItemChanged)
         self.connect(addShipButton, SIGNAL("clicked()"), self.addShip)
-        self.connect(removeShipButton, SIGNAL("clicked()"),
-                     self.removeShip)
+        self.connect(removeShipButton, SIGNAL("clicked()"), self.removeShip)
         self.connect(quitButton, SIGNAL("clicked()"), self.accept)
 
         self.ships = ships.ShipContainer("ships.dat")
@@ -97,7 +96,7 @@ class MainForm(QDialog):
                         "Failed to load: {}".format(e))
         self.populateList()
         self.populateTable()
-        self.tableWidget.sortItems(0)
+        self.tableWidget.sortItems(0)   #排序_项
         self.populateTree()
 
 
@@ -136,7 +135,7 @@ class MainForm(QDialog):
     def populateTable(self, selectedShip=None):
         selected = None
         self.tableWidget.clear()
-        self.tableWidget.setSortingEnabled(False)
+        self.tableWidget.setSortingEnabled(False)   #设置_排序_允许 == False
         self.tableWidget.setRowCount(len(self.ships))
         headers = ["Name", "Owner", "Country", "Description", "TEU"]
         self.tableWidget.setColumnCount(len(headers))
@@ -153,11 +152,11 @@ class MainForm(QDialog):
                     QTableWidgetItem(ship.country))
             self.tableWidget.setItem(row, ships.DESCRIPTION,
                     QTableWidgetItem(ship.description))
-            item = QTableWidgetItem("{:10}".format(ship.teu))
+            item = QTableWidgetItem("{:10}".format(ship.teu))   #"{:10}"::10 == 十进制
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
             self.tableWidget.setItem(row, ships.TEU, item)
-        self.tableWidget.setSortingEnabled(True)
-        self.tableWidget.resizeColumnsToContents()
+        self.tableWidget.setSortingEnabled(True)    #设置_排序_允许 == True
+        self.tableWidget.resizeColumnsToContents()  #调整列宽适配内容
         if selected is not None:
             selected.setSelected(True)
             self.tableWidget.setCurrentItem(selected)
@@ -167,8 +166,8 @@ class MainForm(QDialog):
         selected = None
         self.treeWidget.clear()
         self.treeWidget.setColumnCount(2)
-        self.treeWidget.setHeaderLabels(["Country/Owner/Name", "TEU"])
-        self.treeWidget.setItemsExpandable(True)
+        self.treeWidget.setHeaderLabels(["Country/Owner/Name", "TEU"])  #设置2列的标题.
+        self.treeWidget.setItemsExpandable(True)    #设置_项_可扩展(设置项是否可扩展)
         parentFromCountry = {}
         parentFromCountryOwner = {}
         for ship in self.ships.inCountryOwnerOrder():
@@ -185,9 +184,9 @@ class MainForm(QDialog):
             item.setTextAlignment(1, Qt.AlignRight|Qt.AlignVCenter)
             if selectedShip is not None and selectedShip == id(ship):
                 selected = item
-            self.treeWidget.expandItem(parent)
+            self.treeWidget.expandItem(parent)      #expandItem::展开_项
             self.treeWidget.expandItem(ancestor)
-        self.treeWidget.resizeColumnToContents(0)
+        self.treeWidget.resizeColumnToContents(0)   #调整_列宽适配内容
         self.treeWidget.resizeColumnToContents(1)
         if selected is not None:
             selected.setSelected(True)
@@ -210,7 +209,7 @@ class MainForm(QDialog):
             return
         column = self.tableWidget.currentColumn()
         if column == ships.NAME:
-            ship.name = item.text().strip()
+            ship.name = item.text().strip() #strip::去除字符头尾空白字符.
         elif column == ships.OWNER:
             ship.owner = item.text().strip()
         elif column == ships.COUNTRY:
@@ -224,7 +223,7 @@ class MainForm(QDialog):
         self.populateTree()
 
 
-    def currentTableShip(self):
+    def currentTableShip(self): #返回当前选定行(row)的Ship对象.
         item = self.tableWidget.item(self.tableWidget.currentRow(), 0)
         if item is None:
             return None
