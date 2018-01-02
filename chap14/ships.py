@@ -166,7 +166,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
 
     def sortByName(self):   #按名字排序
         self.ships = sorted(self.ships)
-        self.reset()
+        self.reset()    #重置::数据重置.
 
 
     def sortByCountryOwner(self):   #按 国家&物主 排序
@@ -222,9 +222,9 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
         return None
 
 
-    def headerData(self, section, orientation, role=Qt.DisplayRole):    # headerData::头数据,section::区段, orientation::定位
+    def headerData(self, section, orientation, role=Qt.DisplayRole):    # headerData::(表)头数据,section::区段, orientation::方向
         if role == Qt.TextAlignmentRole:
-            if orientation == Qt.Horizontal:
+            if orientation == Qt.Horizontal:    #Horizontal::水平
                 return int(Qt.AlignLeft|Qt.AlignVCenter)
             return int(Qt.AlignRight|Qt.AlignVCenter)
         if role != Qt.DisplayRole:
@@ -243,7 +243,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
         return int(section + 1)
 
 
-    def rowCount(self, index=QModelIndex()):    #rowCount::行数
+    def rowCount(self, index=QModelIndex()):    #rowCount::行数, ModelIndex::模型_索引
         return len(self.ships)
 
 
@@ -282,7 +282,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
 
     def removeRows(self, position, rows=1, index=QModelIndex()):    #移除_行
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.ships = (self.ships[:position] + self.ships[position + rows:]) #这是一种排除自身重新赋值的方法.
+        self.ships = (self.ships[:position] + self.ships[position + rows:]) #这是一种排除 自身 重新赋值的方法.
         self.endRemoveRows()
         self.dirty = True
         return True
