@@ -22,12 +22,14 @@ class MainForm(QDialog):
     def __init__(self, parent=None):
         super(MainForm, self).__init__(parent)
 
-        self.model = ships.ShipTableModel("ships.dat")
+        self.model = ships.ShipTableModel("ships.dat")  #创建 船_表_模型 对象
+
         tableLabel1 = QLabel("Table &1")
         self.tableView1 = QTableView()
         tableLabel1.setBuddy(self.tableView1)
-        self.tableView1.setModel(self.model)
-        self.tableView1.setItemDelegate(ships.ShipDelegate(self))
+        self.tableView1.setModel(self.model)    #关联 船_表_模型
+        self.tableView1.setItemDelegate(ships.ShipDelegate(self))   #关联 船_委托(自定义)
+
         tableLabel2 = QLabel("Table &2")
         self.tableView2 = QTableView()
         tableLabel2.setBuddy(self.tableView2)
@@ -47,19 +49,23 @@ class MainForm(QDialog):
         buttonLayout.addWidget(removeShipButton)
         buttonLayout.addStretch()
         buttonLayout.addWidget(quitButton)
+
         splitter = QSplitter(Qt.Horizontal)
+
         vbox = QVBoxLayout()
         vbox.addWidget(tableLabel1)
         vbox.addWidget(self.tableView1)
         widget = QWidget()
         widget.setLayout(vbox)
         splitter.addWidget(widget)
+
         vbox = QVBoxLayout()
         vbox.addWidget(tableLabel2)
         vbox.addWidget(self.tableView2)
         widget = QWidget()
         widget.setLayout(vbox)
         splitter.addWidget(widget)
+
         layout = QVBoxLayout()
         layout.addWidget(splitter)
         layout.addLayout(buttonLayout)
@@ -67,11 +73,9 @@ class MainForm(QDialog):
 
         for tableView in (self.tableView1, self.tableView2):
             header = tableView.horizontalHeader()
-            self.connect(header, SIGNAL("sectionClicked(int)"),
-                         self.sortTable)
+            self.connect(header, SIGNAL("sectionClicked(int)"), self.sortTable)
         self.connect(addShipButton, SIGNAL("clicked()"), self.addShip)
-        self.connect(removeShipButton, SIGNAL("clicked()"),
-                     self.removeShip)
+        self.connect(removeShipButton, SIGNAL("clicked()"), self.removeShip)
         self.connect(quitButton, SIGNAL("clicked()"), self.accept)
 
         self.setWindowTitle("Ships (delegate)")
@@ -84,7 +88,7 @@ class MainForm(QDialog):
                 self.model.ships.append(ship)
                 self.model.owners.add(ship.owner)
                 self.model.countries.add(ship.country)
-            self.model.reset()
+            self.model.reset()  #重置数据.(继承自父类的方法)
             self.model.dirty = False
         else:
             try:
@@ -96,7 +100,7 @@ class MainForm(QDialog):
         self.resizeColumns()
 
 
-    def resizeColumns(self):
+    def resizeColumns(self):    #调整列宽
         self.tableView1.resizeColumnsToContents()
         self.tableView2.resizeColumnsToContents()
 
@@ -119,7 +123,7 @@ class MainForm(QDialog):
         QDialog.accept(self)
 
     
-    def sortTable(self, section):
+    def sortTable(self, section):   #section::区段==int
         if section in (ships.OWNER, ships.COUNTRY):
             self.model.sortByCountryOwner()
         else:

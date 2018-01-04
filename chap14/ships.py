@@ -355,14 +355,14 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
                 raise exception
 
 
-class ShipDelegate(QStyledItemDelegate): #船_委托(委派)
+class ShipDelegate(QStyledItemDelegate): #船_委托
 
     def __init__(self, parent=None):
         super(ShipDelegate, self).__init__(parent)
 
 
     def paint(self, painter, option, index):
-        if index.column() == DESCRIPTION:
+        if index.column() == DESCRIPTION:#处理描述项的字符.
             text = index.model().data(index)
             palette = QApplication.palette()    #palette::调色板
             document = QTextDocument()
@@ -417,17 +417,14 @@ class ShipDelegate(QStyledItemDelegate): #船_委托(委派)
             return combobox
         elif index.column() == NAME:
             editor = QLineEdit(parent)
-            self.connect(editor, SIGNAL("returnPressed()"),
-                         self.commitAndCloseEditor)
+            self.connect(editor, SIGNAL("returnPressed()"), self.commitAndCloseEditor)
             return editor
         elif index.column() == DESCRIPTION:
             editor = richtextlineedit.RichTextLineEdit(parent)  #rich,text,line,edit::富_文本_行_编辑框
-            self.connect(editor, SIGNAL("returnPressed()"),
-                         self.commitAndCloseEditor)
+            self.connect(editor, SIGNAL("returnPressed()"), self.commitAndCloseEditor)
             return editor
         else:
-            return QStyledItemDelegate.createEditor(self, parent, option,
-                                                    index)
+            return QStyledItemDelegate.createEditor(self, parent, option, index)
 
 
     def commitAndCloseEditor(self):
@@ -437,24 +434,24 @@ class ShipDelegate(QStyledItemDelegate): #船_委托(委派)
             self.emit(SIGNAL("closeEditor(QWidget*)"), editor)
 
 
-    def setEditorData(self, editor, index):
+    def setEditorData(self, editor, index): #定义各栏设置数据的方式.
         text = index.model().data(index, Qt.DisplayRole)
-        if index.column() == TEU:
+        if index.column() == TEU:   #TEU栏
             if text is None:
                 value = 0
             elif isinstance(text, int):
                 value = text
             else:
-                value = int(re.sub(r"[., ]", "", text)) #https://zhidao.baidu.com/question/369467791671548644.html
+                value = int(re.sub(r"[., ]", "", text)) #将".,"替换为""空白字符.::https://zhidao.baidu.com/question/369467791671548644.html
             editor.setValue(value)
-        elif index.column() in (OWNER, COUNTRY):
+        elif index.column() in (OWNER, COUNTRY):    #物主,国家 栏.
             i = editor.findText(text)
             if i == -1:
                 i = 0
             editor.setCurrentIndex(i)
-        elif index.column() == NAME:
+        elif index.column() == NAME:    #名称 栏.
             editor.setText(text)
-        elif index.column() == DESCRIPTION:
+        elif index.column() == DESCRIPTION: #描述 栏.
             editor.setHtml(text)
         else:
             QStyledItemDelegate.setEditorData(self, editor, index)
