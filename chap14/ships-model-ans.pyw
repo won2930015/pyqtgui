@@ -83,7 +83,7 @@ class MainForm(QDialog):
     def initialLoad(self):
         if not QFile.exists(self.model.filename):
             for ship in ships_ans.generateFakeShips():
-                self.model.ships_ans.append(ship)
+                self.model.ships.append(ship)
                 self.model.owners.add(ship.owner)
                 self.model.countries.add(ship.country)
             self.model.reset()  #reset::重置(重置数据)

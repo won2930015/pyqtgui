@@ -132,14 +132,14 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
         return None
 
 
-    def headerData(self, section, orientation, role=Qt.DisplayRole):
+    def headerData(self, section, orientation, role=Qt.DisplayRole):    #表头数据相关::section:区段, orientation:方向
         if role == Qt.TextAlignmentRole:
-            if orientation == Qt.Horizontal:
+            if orientation == Qt.Horizontal:        #.Horizontal:水平
                 return int(Qt.AlignLeft|Qt.AlignVCenter)
             return int(Qt.AlignRight|Qt.AlignVCenter)
         if role != Qt.DisplayRole:
             return None
-        if orientation == Qt.Horizontal:
+        if orientation == Qt.Horizontal:    #列表头(栏目)
             if section == NAME:
                 return "Name"
             elif section == OWNER:
@@ -150,7 +150,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
                 return "Description"
             elif section == TEU:
                 return "TEU"
-        return int(section + 1)
+        return int(section + 1)  #行表头(序号)
 
 
     def rowCount(self, index=QModelIndex()):
@@ -176,8 +176,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
             elif column == TEU:
                 ship.teu = int(value)
             self.dirty = True
-            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                      index, index)
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
             return True
         return False
 
@@ -185,8 +184,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
     def insertRows(self, position, rows=1, index=QModelIndex()):
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
         for row in range(rows):
-            self.ships.insert(position + row,
-                              Ship(" Unknown", " Unknown", " Unknown"))
+            self.ships.insert(position + row, Ship(" Unknown", " Unknown", " Unknown"))
         self.endInsertRows()
         self.dirty = True
         return True
@@ -224,8 +222,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
                 country = stream.readQString()
                 description = stream.readQString()
                 teu = stream.readInt32()
-                self.ships.append(Ship(name, owner, country, teu,
-                                       description))
+                self.ships.append(Ship(name, owner, country, teu, description))
                 self.owners.add(owner)
                 self.countries.add(country)
             self.dirty = False
