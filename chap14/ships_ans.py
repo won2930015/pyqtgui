@@ -31,26 +31,26 @@ class Ship(object):
         self.description = description
 
 
-    def __hash__(self):
+    def __hash__(self): #哈希表|散列表
         return super(Ship, self).__hash__()
 
 
-    def __lt__(self, other):
+    def __lt__(self, other):    #小于::实现比较排序需要
         return self.name.lower() < other.name.lower()
 
 
-    def __eq__(self, other):
+    def __eq__(self, other):    #等于::实现比较排序需要
         return self.name.lower() == other.name.lower()
 
 
-class ShipTableModel(QAbstractTableModel):
+class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractTableModel(抽象_表_模型)
 
     def __init__(self, filename=""):
         super(ShipTableModel, self).__init__()
         self.filename = filename
         self.dirty = False
         self.ships = []
-        self.owners = set()
+        self.owners = set() #set()::元组(不存在重复元素.)
         self.countries = set()
 
 
@@ -59,28 +59,27 @@ class ShipTableModel(QAbstractTableModel):
         self.reset()
 
 
-    def sortByTEU(self):
-        ships = [(ship.teu, ship) for ship in self.ships]
-        ships.sort()
-        self.ships = [ship for teu, ship in ships]
+    def sortByTEU(self):    #采用 封装-排序-解封 方法排序
+        ships = [(ship.teu, ship) for ship in self.ships]   #1.封装
+        ships.sort()    #2.排序
+        self.ships = [ship for teu, ship in ships]  #3.解封
         self.reset()
 
 
-    def sortByCountryOwner(self):
+    def sortByCountryOwner(self):   #按 国家/物主 排序(排序函数,参数key用匿名函数lambda定义.)
         self.ships = sorted(self.ships, key=lambda s: (s.country, s.owner))
         self.reset()
 
 
-    def flags(self, index):
+    def flags(self, index): #实现 可编辑_模型表 必须实现.
         if not index.isValid():
-            return Qt.ItemIsEnabled
+            return Qt.ItemIsEnabled     #项_只读可选的
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)|
-                            Qt.ItemIsEditable)
+                            Qt.ItemIsEditable)  #项_可选可读写
 
 
     def data(self, index, role=Qt.DisplayRole):
-        if (not index.isValid() or
-            not (0 <= index.row() < len(self.ships))):
+        if (not index.isValid() or not (0 <= index.row() < len(self.ships))):
             return None
         ship = self.ships[index.row()]
         column = index.column()

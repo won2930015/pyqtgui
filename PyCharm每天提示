@@ -95,3 +95,5 @@ Ctrl+Shift+ Backspace(导航|最后编辑位置)把你带回最后一个地方�
 译文：当您想捕获一些代码片段抛出的异常时，在编辑器中选择它，按Ctrl +Alt+ T(代码|环绕)并选择try / except。这将自动生成except子句。
 
 译文：在交互式控制台工作，您不需要记住命令行语法或可用的函数。相反,您可以使用熟悉的代码完成Ctrl +空格。此外，从查找列表中，可以按Ctrl + Q查看项目的文档。
+
+译文：要在“列模式”中选择多个片段，按住Control+Alt+Shift(在Windows和Linux上)或Cmd+Alt+Shift(在MAC上)，拖动鼠标光标。
