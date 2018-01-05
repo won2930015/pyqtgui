@@ -124,7 +124,7 @@ class MainForm(QDialog):
 
     
     def sortTable(self, section):   #排序表
-        if section in (ships.OWNER, ships.COUNTRY):
+        if section in (ships_ans.OWNER, ships_ans.COUNTRY):
             self.model.sortByCountryOwner()
         else:
             self.model.sortByName()
@@ -152,11 +152,11 @@ class MainForm(QDialog):
             return
         row = index.row()
         name = self.model.data(
-                    self.model.index(row, ships.NAME))
+                    self.model.index(row, ships_ans.NAME))
         owner = self.model.data(
-                    self.model.index(row, ships.OWNER))
+                    self.model.index(row, ships_ans.OWNER))
         country = self.model.data(
-                    self.model.index(row, ships.COUNTRY))
+                    self.model.index(row, ships_ans.COUNTRY))
         if (QMessageBox.question(self, "Ships - Remove", 
                 "Remove {} of {}/{}?".format(name, owner, country),
                 QMessageBox.Yes|QMessageBox.No) ==
