@@ -192,7 +192,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
 
     def removeRows(self, position, rows=1, index=QModelIndex()):
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.ships = (self.ships[:position] + self.ships[position + rows:])
+        self.ships = (self.ships[:position] + self.ships[position + rows:]) #用排除自身的方法更新ships列表.
         self.endRemoveRows()
         self.dirty = True
         return True
@@ -270,13 +270,13 @@ class ShipDelegate(QStyledItemDelegate):
         super(ShipDelegate, self).__init__(parent)
 
 
-    def paint(self, painter, option, index):
+    def paint(self, painter, option, index):    #painter::绘画器,option::模型表_项(各种状态选项), index::模型表索引对象
         if index.column() == DESCRIPTION:
             text = index.model().data(index)
-            palette = QApplication.palette()
+            palette = QApplication.palette()    #palette::调色板
             document = QTextDocument()
             document.setDefaultFont(option.font)
-            if option.state & QStyle.State_Selected:
+            if option.state & QStyle.State_Selected:    #表模型_项.状态 如果是被选中时执行...
                 document.setHtml("<font color={}>{}</font>".format(
                         palette.highlightedText().color().name(), text))
             else:
@@ -287,14 +287,14 @@ class ShipDelegate(QStyledItemDelegate):
                                  Qt.BackgroundColorRole)))
             painter.save()
             painter.fillRect(option.rect, color)
-            painter.translate(option.rect.x(), option.rect.y())
+            painter.translate(option.rect.x(), option.rect.y()) #translate::转化,将painter xy坐标 转化到option.rect.xy坐标上.
             document.drawContents(painter)
             painter.restore()
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
 
-    def sizeHint(self, option, index):
+    def sizeHint(self, option, index):  #option::项(包含项的所有状态)
         fm = option.fontMetrics
         if index.column() == TEU:
             return QSize(fm.width("9,999,999"), fm.height())
@@ -317,7 +317,7 @@ class ShipDelegate(QStyledItemDelegate):
         elif index.column() == OWNER:
             combobox = QComboBox(parent)
             combobox.addItems(sorted(index.model().owners))
-            combobox.setEditable(True)
+            combobox.setEditable(True)  #设置_可编辑==
             return combobox
         elif index.column() == COUNTRY:
             combobox = QComboBox(parent)

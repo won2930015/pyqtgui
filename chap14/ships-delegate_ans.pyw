@@ -13,7 +13,7 @@ import re
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import ships_ans as ships
+import ships_ans as ships   #技巧::注意.
 
 MAC = "qt_mac_set_native_menubar" in dir()
 
@@ -24,11 +24,13 @@ class MainForm(QDialog):
         super(MainForm, self).__init__(parent)
 
         self.model = ships.ShipTableModel("ships.dat")
+
         tableLabel1 = QLabel("Table &1")
         self.tableView1 = QTableView()
         tableLabel1.setBuddy(self.tableView1)
         self.tableView1.setModel(self.model)
         self.tableView1.setItemDelegate(ships.ShipDelegate(self))
+
         tableLabel2 = QLabel("Table &2")
         self.tableView2 = QTableView()
         tableLabel2.setBuddy(self.tableView2)
@@ -71,11 +73,10 @@ class MainForm(QDialog):
 
         for tableView in (self.tableView1, self.tableView2):
             header = tableView.horizontalHeader()
-            self.connect(header, SIGNAL("sectionClicked(int)"),
-                         self.sortTable)
+            self.connect(header, SIGNAL("sectionClicked(int)"), self.sortTable)
+
         self.connect(addShipButton, SIGNAL("clicked()"), self.addShip)
-        self.connect(removeShipButton, SIGNAL("clicked()"),
-                     self.removeShip)
+        self.connect(removeShipButton, SIGNAL("clicked()"), self.removeShip)
         self.connect(exportButton, SIGNAL("clicked()"), self.export)
         self.connect(quitButton, SIGNAL("clicked()"), self.accept)
 
@@ -95,8 +96,7 @@ class MainForm(QDialog):
             try:
                 self.model.load()
             except IOError as e:
-                QMessageBox.warning(self, "Ships - Error",
-                        "Failed to load: {}".format(e))
+                QMessageBox.warning(self, "Ships - Error", "Failed to load: {}".format(e))
         self.model.sortByName()
         self.resizeColumns()
 
@@ -185,17 +185,12 @@ class MainForm(QDialog):
             stream = QTextStream(fh)
             stream.setCodec("UTF-8")
             for row in range(self.model.rowCount()):
-                name = self.model.data(
-                        self.model.index(row, ships.NAME))
-                owner = self.model.data(
-                        self.model.index(row, ships.OWNER))
-                country = self.model.data(
-                        self.model.index(row, ships.COUNTRY))
-                teu = self.model.data(
-                        self.model.index(row, ships.TEU))
+                name = self.model.data(self.model.index(row, ships.NAME))
+                owner = self.model.data(self.model.index(row, ships.OWNER))
+                country = self.model.data(self.model.index(row, ships.COUNTRY))
+                teu = self.model.data(self.model.index(row, ships.TEU))
                 teu = int(nonDigits.sub("", teu))
-                description = self.model.data(
-                        self.model.index(row, ships.DESCRIPTION))
+                description = self.model.data(self.model.index(row, ships.DESCRIPTION))
                 description = htmlTags.sub("", description)
                 stream << name << "|" << owner << "|" << country \
                        << "|" << teu << "|" << description << "\n"
