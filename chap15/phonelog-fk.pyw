@@ -45,6 +45,7 @@ def createFakeData():
                 outcomeid INTEGER NOT NULL,
                 FOREIGN KEY (outcomeid) REFERENCES outcomes)""")
     QApplication.processEvents()
+
     print("Populating tables...")
     for name in ("Resolved", "Unresolved", "Calling back", "Escalate",
                  "Wrong number"):
@@ -117,23 +118,29 @@ class PhoneLogDlg(QDialog):
         callerLabel = QLabel("&Caller:")
         self.callerEdit = QLineEdit()
         callerLabel.setBuddy(self.callerEdit)
+
         today = QDate.currentDate()
+
         startLabel = QLabel("&Start:")
         self.startDateTime = QDateTimeEdit()
         startLabel.setBuddy(self.startDateTime)
         self.startDateTime.setDateRange(today, today)
         self.startDateTime.setDisplayFormat(DATETIME_FORMAT)
+
         endLabel = QLabel("&End:")
         self.endDateTime = QDateTimeEdit()
         endLabel.setBuddy(self.endDateTime)
         self.endDateTime.setDateRange(today, today)
         self.endDateTime.setDisplayFormat(DATETIME_FORMAT)
+
         topicLabel = QLabel("&Topic:")
         topicEdit = QLineEdit()
         topicLabel.setBuddy(topicEdit)
+
         outcomeLabel = QLabel("&Outcome:")
         self.outcomeComboBox = QComboBox()
         outcomeLabel.setBuddy(self.outcomeComboBox)
+
         firstButton = QPushButton()
         firstButton.setIcon(QIcon(":/first.png"))
         prevButton = QPushButton()
@@ -142,12 +149,14 @@ class PhoneLogDlg(QDialog):
         nextButton.setIcon(QIcon(":/next.png"))
         lastButton = QPushButton()
         lastButton.setIcon(QIcon(":/last.png"))
+
         addButton = QPushButton("&Add")
         addButton.setIcon(QIcon(":/add.png"))
         deleteButton = QPushButton("&Delete")
         deleteButton.setIcon(QIcon(":/delete.png"))
         quitButton = QPushButton("&Quit")
         quitButton.setIcon(QIcon(":/quit.png"))
+
         if not MAC:
             addButton.setFocusPolicy(Qt.NoFocus)
             deleteButton.setFocusPolicy(Qt.NoFocus)
@@ -163,55 +172,54 @@ class PhoneLogDlg(QDialog):
         fieldLayout.addWidget(topicEdit, 2, 1, 1, 3)
         fieldLayout.addWidget(outcomeLabel, 3, 0)
         fieldLayout.addWidget(self.outcomeComboBox, 3, 1, 1, 3)
+
         navigationLayout = QHBoxLayout()
         navigationLayout.addWidget(firstButton)
         navigationLayout.addWidget(prevButton)
         navigationLayout.addWidget(nextButton)
         navigationLayout.addWidget(lastButton)
         fieldLayout.addLayout(navigationLayout, 4, 0, 1, 2)
+
         buttonLayout = QVBoxLayout()
         buttonLayout.addWidget(addButton)
         buttonLayout.addWidget(deleteButton)
         buttonLayout.addStretch()
         buttonLayout.addWidget(quitButton)
+
         layout = QHBoxLayout()
         layout.addLayout(fieldLayout)
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
-        self.model = QSqlRelationalTableModel(self)
+        self.model = QSqlRelationalTableModel(self) #创建 SQL_关系_表_模型
         self.model.setTable("calls")
-        self.model.setRelation(OUTCOMEID,
-                QSqlRelation("outcomes", "id", "name"))
-        self.model.setSort(STARTTIME, Qt.AscendingOrder)
+        self.model.setRelation(OUTCOMEID, QSqlRelation("outcomes", "id", "name")) #<<---注意!!!
+        self.model.setSort(STARTTIME, Qt.AscendingOrder)    #AscendingOrder::升序排序
         self.model.select()
 
         self.mapper = QDataWidgetMapper(self)
         self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)
         self.mapper.setModel(self.model)
-        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))
+        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))   #<<--注意!!!
         self.mapper.addMapping(self.callerEdit, CALLER)
         self.mapper.addMapping(self.startDateTime, STARTTIME)
         self.mapper.addMapping(self.endDateTime, ENDTIME)
         self.mapper.addMapping(topicEdit, TOPIC)
-        relationModel = self.model.relationModel(OUTCOMEID)
+
+        relationModel = self.model.relationModel(OUTCOMEID) #<<---注意!!!
+
         self.outcomeComboBox.setModel(relationModel)
         self.outcomeComboBox.setModelColumn(
                 relationModel.fieldIndex("name"))
         self.mapper.addMapping(self.outcomeComboBox, OUTCOMEID)
         self.mapper.toFirst()
 
-        self.connect(firstButton, SIGNAL("clicked()"),
-                     lambda: self.saveRecord(PhoneLogDlg.FIRST))
-        self.connect(prevButton, SIGNAL("clicked()"),
-                     lambda: self.saveRecord(PhoneLogDlg.PREV))
-        self.connect(nextButton, SIGNAL("clicked()"),
-                     lambda: self.saveRecord(PhoneLogDlg.NEXT))
-        self.connect(lastButton, SIGNAL("clicked()"),
-                     lambda: self.saveRecord(PhoneLogDlg.LAST))
+        self.connect(firstButton, SIGNAL("clicked()"), lambda: self.saveRecord(PhoneLogDlg.FIRST))
+        self.connect(prevButton, SIGNAL("clicked()"), lambda: self.saveRecord(PhoneLogDlg.PREV))
+        self.connect(nextButton, SIGNAL("clicked()"), lambda: self.saveRecord(PhoneLogDlg.NEXT))
+        self.connect(lastButton, SIGNAL("clicked()"), lambda: self.saveRecord(PhoneLogDlg.LAST))
         self.connect(addButton, SIGNAL("clicked()"), self.addRecord)
-        self.connect(deleteButton, SIGNAL("clicked()"),
-                     self.deleteRecord)
+        self.connect(deleteButton, SIGNAL("clicked()"), self.deleteRecord)
         self.connect(quitButton, SIGNAL("clicked()"), self.done)
 
         self.setWindowTitle("Phone Log")
@@ -288,9 +296,9 @@ def main():
         splash = QLabel()
         pixmap = QPixmap(":/phonelogsplash.png")
         splash.setPixmap(pixmap)
-        splash.setMask(pixmap.createHeuristicMask())
-        splash.setWindowFlags(Qt.SplashScreen)
-        rect = app.desktop().availableGeometry()
+        splash.setMask(pixmap.createHeuristicMask())    #createHeuristicMask:: 创建_启动_标志
+        splash.setWindowFlags(Qt.SplashScreen)  #SplashScreen::泼开_屏幕(在屏幕上泼开),setWindowFlags::设置_屏幕_标记(设置在屏幕上采用的动作)
+        rect = app.desktop().availableGeometry()    #availableGeometry::可用_几何.
         splash.move((rect.width() - pixmap.width()) / 2,
                     (rect.height() - pixmap.height()) / 2)
         splash.show()
