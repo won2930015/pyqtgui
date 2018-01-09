@@ -22,6 +22,7 @@ try:
 except ImportError:
     MAC = False
 
+#ASSETID::资产ID, CATEGORYID:种类ID, DATE::日期, DESCRIPTION::描述, ROOM::房间, ACTIONID::动作ID
 ID = 0
 NAME = ASSETID = 1
 CATEGORYID = DATE = DESCRIPTION = 2
@@ -33,15 +34,15 @@ ACQUIRED = 1
 def createFakeData():
     import random
 
-    print("Dropping tables...")
+    print("Dropping tables...") #删除_表
     query = QSqlQuery()
-    query.exec_("DROP TABLE assets")
-    query.exec_("DROP TABLE logs")
-    query.exec_("DROP TABLE actions")
-    query.exec_("DROP TABLE categories")
+    query.exec_("DROP TABLE assets")    #资产_表
+    query.exec_("DROP TABLE logs")      #日志_表
+    query.exec_("DROP TABLE actions")   #动作_表
+    query.exec_("DROP TABLE categories")#种类_表
     QApplication.processEvents()
 
-    print("Creating tables...")
+    print("Creating tables...") #创建_表
     query.exec_("""CREATE TABLE actions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
                 name VARCHAR(20) NOT NULL,
@@ -65,48 +66,58 @@ def createFakeData():
                 FOREIGN KEY (actionid) REFERENCES actions)""")
     QApplication.processEvents()
 
-    print("Populating tables...")
+    print("Populating tables...")   #填充_表
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Acquired', 'When installed')")
+                "VALUES ('Acquired', 'When installed')")   #Acquired::取得
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Broken', 'When failed and unusable')")
+                "VALUES ('Broken', 'When failed and unusable')")    #Broken::损坏
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Repaired', 'When back in service')")
+                "VALUES ('Repaired', 'When back in service')")  #Repaired::修理
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Routine maintenance', "
+                "VALUES ('Routine maintenance', "   #Routine maintenance::例行维修
                 "'When tested, refilled, etc.')")
+
     query.exec_("INSERT INTO categories (name, description) VALUES "
                 "('Computer Equipment', "
-                "'Monitors, System Units, Peripherals, etc.')")
+                "'Monitors, System Units, Peripherals, etc.')") #Computer Equipment::电脑_设备
     query.exec_("INSERT INTO categories (name, description) VALUES "
-                "('Furniture', 'Chairs, Tables, Desks, etc.')")
+                "('Furniture', 'Chairs, Tables, Desks, etc.')") #Furniture::家具
     query.exec_("INSERT INTO categories (name, description) VALUES "
-                "('Electrical Equipment', 'Non-computer electricals')")
+                "('Electrical Equipment', 'Non-computer electricals')") #Electrical Equipment::电器_设置
     today = QDate.currentDate()
+
+    #楼层
     floors = list(range(1, 12)) + list(range(14, 28))
+
+    #显示器
     monitors = (('17" LCD Monitor', 1),
                 ('20" LCD Monitor', 1),
                 ('21" LCD Monitor', 1),
                 ('21" CRT Monitor', 1),
                 ('24" CRT Monitor', 1))
+    #电脑
     computers = (("Computer (32-bit/80GB/0.5GB)", 1),
                  ("Computer (32-bit/100GB/1GB)", 1),
                  ("Computer (32-bit/120GB/1GB)", 1),
                  ("Computer (64-bit/240GB/2GB)", 1),
                  ("Computer (64-bit/320GB/4GB)", 1))
+    #打印机
     printers = (("Laser Printer (4 ppm)", 1),
                 ("Laser Printer (6 ppm)", 1),
                 ("Laser Printer (8 ppm)", 1),
                 ("Laser Printer (16 ppm)", 1))
+    #椅子
     chairs = (("Secretary Chair", 2),
               ("Executive Chair (Basic)", 2),
               ("Executive Chair (Ergonimic)", 2),
               ("Executive Chair (Hi-Tech)", 2))
+    #桌子
     desks = (("Desk (Basic, 3 drawer)", 2),
              ("Desk (Standard, 3 drawer)", 2),
              ("Desk (Executive, 3 drawer)", 2),
              ("Desk (Executive, 4 drawer)", 2),
              ("Desk (Large, 4 drawer)", 2))
+    #家具
     furniture = (("Filing Cabinet (3 drawer)", 2),
                  ("Filing Cabinet (4 drawer)", 2),
                  ("Filing Cabinet (5 drawer)", 2),
@@ -115,6 +126,7 @@ def createFakeData():
                  ("Table (4 seater)", 2),
                  ("Table (8 seater)", 2),
                  ("Table (12 seater)", 2))
+    #电器
     electrical = (("Fan (3 speed)", 3),
                   ("Fan (5 speed)", 3),
                   ("Photocopier (4 ppm)", 3),
@@ -211,25 +223,24 @@ def createFakeData():
     QApplication.processEvents()
 
 
-class ReferenceDataDlg(QDialog):
+class ReferenceDataDlg(QDialog):    #引用_数据_窗口.
 
     def __init__(self, table, title, parent=None):
         super(ReferenceDataDlg, self).__init__(parent)
 
         self.model = QSqlTableModel(self)
-        self.model.setTable(table)
-        self.model.setSort(NAME, Qt.AscendingOrder)
-        self.model.setHeaderData(ID, Qt.Horizontal, "ID")
+        self.model.setTable(table)  #setTable::设置_表
+        self.model.setSort(NAME, Qt.AscendingOrder) #setSort::设置_排序,(栏目,排列方式)
+        self.model.setHeaderData(ID, Qt.Horizontal, "ID")   #setHeaderData::设置_表头_数据
         self.model.setHeaderData(NAME, Qt.Horizontal, "Name")
-        self.model.setHeaderData(DESCRIPTION, Qt.Horizontal,
-                                 "Description")
-        self.model.select()
+        self.model.setHeaderData(DESCRIPTION, Qt.Horizontal, "Description")
+        self.model.select() #填充表.
 
         self.view = QTableView()
         self.view.setModel(self.model)
-        self.view.setSelectionMode(QTableView.SingleSelection)
-        self.view.setSelectionBehavior(QTableView.SelectRows)
-        self.view.setColumnHidden(ID, True)
+        self.view.setSelectionMode(QTableView.SingleSelection) #SingleSelection::单选
+        self.view.setSelectionBehavior(QTableView.SelectRows)   #setSelectionBehavior::设置_选择_行来, SelectRows::行_选择
+        self.view.setColumnHidden(ID, True) #setColumnHidden::设置_列_隐藏(隐藏列的文字.)
         self.view.resizeColumnsToContents()
 
         addButton = QPushButton("&Add")
@@ -297,7 +308,7 @@ class ReferenceDataDlg(QDialog):
         #QSqlDatabase.database().commit()
 
 
-class AssetDelegate(QSqlRelationalDelegate):
+class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
 
     def __init__(self, parent=None):
         super(AssetDelegate, self).__init__(parent)
@@ -340,7 +351,7 @@ class AssetDelegate(QSqlRelationalDelegate):
                                                 index)
 
 
-class LogDelegate(QSqlRelationalDelegate):
+class LogDelegate(QSqlRelationalDelegate):  #日志_委托
 
     def __init__(self, parent=None):
         super(LogDelegate, self).__init__(parent)
