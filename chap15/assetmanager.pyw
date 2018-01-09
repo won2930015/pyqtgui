@@ -403,49 +403,45 @@ class MainForm(QDialog):
     def __init__(self):
         super(MainForm, self).__init__()
 
-        self.assetModel = QSqlRelationalTableModel(self)
-        self.assetModel.setTable("assets")
+        self.assetModel = QSqlRelationalTableModel(self)    #SqlRelationalTableModel::sql_关系_表_模型.
+        self.assetModel.setTable("assets")  #setTable::设置_表
         self.assetModel.setRelation(CATEGORYID,
                 QSqlRelation("categories", "id", "name"))
-        self.assetModel.setSort(ROOM, Qt.AscendingOrder)
+        self.assetModel.setSort(ROOM, Qt.AscendingOrder)    #AscendingOrder::升序排序
         self.assetModel.setHeaderData(ID, Qt.Horizontal, "ID")
-        self.assetModel.setHeaderData(NAME, Qt.Horizontal,
-                "Name")
-        self.assetModel.setHeaderData(CATEGORYID, Qt.Horizontal,
-                "Category")
-        self.assetModel.setHeaderData(ROOM, Qt.Horizontal,
-                "Room")
-        self.assetModel.select()
+        self.assetModel.setHeaderData(NAME, Qt.Horizontal, "Name")
+        self.assetModel.setHeaderData(CATEGORYID, Qt.Horizontal, "Category")
+        self.assetModel.setHeaderData(ROOM, Qt.Horizontal, "Room")
+        self.assetModel.select()    #填充表
 
         self.assetView = QTableView()
         self.assetView.setModel(self.assetModel)
         self.assetView.setItemDelegate(AssetDelegate(self))
-        self.assetView.setSelectionMode(QTableView.SingleSelection)
-        self.assetView.setSelectionBehavior(QTableView.SelectRows)
-        self.assetView.setColumnHidden(ID, True)
+        self.assetView.setSelectionMode(QTableView.SingleSelection) #setSelectionMode::设置_选择_模式, SingleSelection::单选
+        self.assetView.setSelectionBehavior(QTableView.SelectRows)  #setSelectionBehavior::设置_选择_行为
+        self.assetView.setColumnHidden(ID, True)    #setColumnHidden::设置_列_隐藏(将ID列设为隐藏).
         self.assetView.resizeColumnsToContents()
         assetLabel = QLabel("A&ssets")
         assetLabel.setBuddy(self.assetView)
 
-        self.logModel = QSqlRelationalTableModel(self)
-        self.logModel.setTable("logs")
+        self.logModel = QSqlRelationalTableModel(self)  #SqlRelationalTableModel::sql_关系_表_模型.
+        self.logModel.setTable("logs")  #setTable::设置_表
         self.logModel.setRelation(ACTIONID,
                 QSqlRelation("actions", "id", "name"))
         self.logModel.setSort(DATE, Qt.AscendingOrder)
         self.logModel.setHeaderData(DATE, Qt.Horizontal, "Date")
-        self.logModel.setHeaderData(ACTIONID, Qt.Horizontal,
-                "Action")
+        self.logModel.setHeaderData(ACTIONID, Qt.Horizontal, "Action")
         self.logModel.select()
 
         self.logView = QTableView()
         self.logView.setModel(self.logModel)
         self.logView.setItemDelegate(LogDelegate(self))
-        self.logView.setSelectionMode(QTableView.SingleSelection)
-        self.logView.setSelectionBehavior(QTableView.SelectRows)
-        self.logView.setColumnHidden(ID, True)
+        self.logView.setSelectionMode(QTableView.SingleSelection)   #setSelectionMode::设置_选择_模式, SingleSelection::单选
+        self.logView.setSelectionBehavior(QTableView.SelectRows)    #setSelectionBehavior::设置_选择_行为
+        self.logView.setColumnHidden(ID, True)      #setColumnHidden::设置_列_隐藏(将ID列设为隐藏).
         self.logView.setColumnHidden(ASSETID, True)
         self.logView.resizeColumnsToContents()
-        self.logView.horizontalHeader().setStretchLastSection(True)
+        self.logView.horizontalHeader().setStretchLastSection(True) #setStretchLastSection::设置_伸展_末尾_栏
         logLabel = QLabel("&Logs")
         logLabel.setBuddy(self.logView)
 
@@ -480,7 +476,7 @@ class MainForm(QDialog):
         buttonLayout.addStretch()
         buttonLayout.addWidget(quitButton)
         layout = QHBoxLayout()
-        layout.addLayout(dataLayout, 1)
+        layout.addLayout(dataLayout,0)
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
@@ -500,28 +496,27 @@ class MainForm(QDialog):
         self.connect(quitButton, SIGNAL("clicked()"), self.done)
 
         self.assetChanged(self.assetView.currentIndex())
-        self.setMinimumWidth(650)
+        self.setMinimumWidth(650)   #setMinimumWidth::设置_最小_宽度
         self.setWindowTitle("Asset Manager")
 
 
-    def done(self, result=1):
+    def done(self, result=1):   #done::完成
         query = QSqlQuery()
-        query.exec_("DELETE FROM logs WHERE logs.assetid NOT IN"
+        query.exec_("DELETE FROM logs WHERE logs.assetid NOT IN"    #删除在assets表不存在id的记录.
                     "(SELECT id FROM assets)")
         QDialog.done(self, 1)
 
 
     def assetChanged(self, index):
         if index.isValid():
-            record = self.assetModel.record(index.row())
+            record = self.assetModel.record(index.row())    #record::记录(取得行记录对象.)
             id = int(record.value("id"))
-            self.logModel.setFilter("assetid = {}".format(id))
+            self.logModel.setFilter("assetid = {}".format(id))  #setFilter::设置过滤器.
         else:
             self.logModel.setFilter("assetid = -1")
-        self.logModel.reset() # workaround for Qt <= 4.3.3/SQLite bug
-        self.logModel.select()
-        self.logView.horizontalHeader().setVisible(
-                self.logModel.rowCount() > 0)
+        self.logModel.reset()   # reset::重置(重置数据), workaround for Qt <= 4.3.3/SQLite bug
+        self.logModel.select()  # 填充数据.
+        self.logView.horizontalHeader().setVisible(self.logModel.rowCount() > 0)    #行数>0 设置为Visible可见.
         if PYQT_VERSION_STR < "4.1.0":
             self.logView.setColumnHidden(ID, True)
             self.logView.setColumnHidden(ASSETID, True)
@@ -531,9 +526,9 @@ class MainForm(QDialog):
         row = (self.assetView.currentIndex().row()
                if self.assetView.currentIndex().isValid() else 0)
 
-        QSqlDatabase.database().transaction()
+        QSqlDatabase.database().transaction()       #database::数据库, transaction::事务.
         self.assetModel.insertRow(row)
-        index = self.assetModel.index(row, NAME)
+        index = self.assetModel.index(row, NAME)    #返回列索引对象index
         self.assetView.setCurrentIndex(index)
 
         assetid = 1
@@ -653,9 +648,9 @@ def main():
         splash = QLabel()
         pixmap = QPixmap(":/assetmanagersplash.png")
         splash.setPixmap(pixmap)
-        splash.setMask(pixmap.createHeuristicMask())
-        splash.setWindowFlags(Qt.SplashScreen)
-        rect = app.desktop().availableGeometry()
+        splash.setMask(pixmap.createHeuristicMask())    #setMask::设置_掩码, createHeuristicMask::创建_启发式_掩码(将图片设置为启发式掩码)
+        splash.setWindowFlags(Qt.SplashScreen)      #SplashScreen::泼开_屏幕(在屏幕上泼开),setWindowFlags::设置_窗口_标记(设置在屏幕上采用的动作)
+        rect = app.desktop().availableGeometry()    #availableGeometry::可用_几何(获得桌面可用的几何范围.)
         splash.move((rect.width() - pixmap.width()) / 2,
                     (rect.height() - pixmap.height()) / 2)
         splash.show()
@@ -668,7 +663,7 @@ def main():
         splash.close()
         app.processEvents()
         app.restoreOverrideCursor()
-    app.exec_()
+    app.exec_() #开始事件循环.
     del form
     del db
 
