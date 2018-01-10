@@ -229,7 +229,7 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口.
         super(ReferenceDataDlg, self).__init__(parent)
 
         self.model = QSqlTableModel(self)
-        self.model.setTable(table)  #setTable::设置_表
+        self.model.setTable(table)  #setTable::设置_表(载入数据库表)
         self.model.setSort(NAME, Qt.AscendingOrder) #setSort::设置_排序,(栏目,排列方式)
         self.model.setHeaderData(ID, Qt.Horizontal, "ID")   #setHeaderData::设置_表头_数据
         self.model.setHeaderData(NAME, Qt.Horizontal, "Name")
@@ -239,8 +239,8 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口.
         self.view = QTableView()
         self.view.setModel(self.model)
         self.view.setSelectionMode(QTableView.SingleSelection) #SingleSelection::单选
-        self.view.setSelectionBehavior(QTableView.SelectRows)   #setSelectionBehavior::设置_选择_行来, SelectRows::行_选择
-        self.view.setColumnHidden(ID, True) #setColumnHidden::设置_列_隐藏(隐藏列的文字.)
+        self.view.setSelectionBehavior(QTableView.SelectRows)   #setSelectionBehavior::设置_选择_行为, SelectRows::行_选择
+        self.view.setColumnHidden(ID, True) #setColumnHidden::设置_列_隐藏(隐藏列.)
         self.view.resizeColumnsToContents()
 
         addButton = QPushButton("&Add")
@@ -262,10 +262,9 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口.
 
         self.connect(addButton, SIGNAL("clicked()"), self.addRecord)
         self.connect(deleteButton, SIGNAL("clicked()"), self.deleteRecord)
-        self.connect(okButton, SIGNAL("clicked()"), self.accept)
+        self.connect(okButton, SIGNAL("clicked()"), self.accept)    #accept::自带内置方法.
 
-        self.setWindowTitle(
-                "Asset Manager - Edit {} Reference Data".format(title))
+        self.setWindowTitle("Asset Manager - Edit {} Reference Data".format(title))
 
 
     def addRecord(self):
@@ -276,7 +275,7 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口.
         self.view.edit(index)
 
 
-    def deleteRecord(self):
+    def deleteRecord(self): #删除_记录
         index = self.view.currentIndex()
         if not index.isValid():
             return
@@ -294,7 +293,7 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口.
         count = 0
         if query.next():
             count = int(query.value(0))
-        if count:
+        if count:   #如果 日志表(logs)或资产表(assets)有相关记录的,弹出信息不删除记录.
             QMessageBox.information(self,
                     "Delete {}".format(table),
                     "Cannot delete {}<br>"
@@ -351,7 +350,7 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
                                                 index)
 
 
-class LogDelegate(QSqlRelationalDelegate):  #日志_委托
+class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
 
     def __init__(self, parent=None):
         super(LogDelegate, self).__init__(parent)
@@ -502,21 +501,21 @@ class MainForm(QDialog):
 
     def done(self, result=1):   #done::完成
         query = QSqlQuery()
-        query.exec_("DELETE FROM logs WHERE logs.assetid NOT IN"    #删除在assets表不存在id的记录.
+        query.exec_("DELETE FROM logs WHERE logs.assetid NOT IN"    #如果logs.assetid在assets.id中不存在,即删除!
                     "(SELECT id FROM assets)")
         QDialog.done(self, 1)
 
 
     def assetChanged(self, index):
         if index.isValid():
-            record = self.assetModel.record(index.row())    #record::记录(取得行记录对象.)
+            record = self.assetModel.record(index.row())    #record::记录(取得 行 记录对象.)
             id = int(record.value("id"))
             self.logModel.setFilter("assetid = {}".format(id))  #setFilter::设置过滤器.
         else:
             self.logModel.setFilter("assetid = -1")
         self.logModel.reset()   # reset::重置(重置数据), workaround for Qt <= 4.3.3/SQLite bug
         self.logModel.select()  # 填充数据.
-        self.logView.horizontalHeader().setVisible(self.logModel.rowCount() > 0)    #行数>0 设置为Visible可见.
+        self.logView.horizontalHeader().setVisible(self.logModel.rowCount() > 0)    #行数>0 设置Visible(可见)==.
         if PYQT_VERSION_STR < "4.1.0":
             self.logView.setColumnHidden(ID, True)
             self.logView.setColumnHidden(ASSETID, True)
@@ -550,7 +549,7 @@ class MainForm(QDialog):
         index = self.assetView.currentIndex()
         if not index.isValid():
             return
-        QSqlDatabase.database().transaction()
+        QSqlDatabase.database().transaction()   #database::数据库, transaction::事务.(开始数据库事务.)
         record = self.assetModel.record(index.row())
         assetid = int(record.value(ID))
         logrecords = 1
@@ -563,8 +562,7 @@ class MainForm(QDialog):
                "<br>from room {}".format(
                record.value(NAME), record.value(ROOM)))
         if logrecords > 1:
-            msg += ", along with {} log records".format(
-                   logrecords)
+            msg += ", along with {} log records".format(logrecords)
         msg += "?"
         if (QMessageBox.question(self, "Delete Asset", msg,
                 QMessageBox.Yes|QMessageBox.No) ==
@@ -580,23 +578,21 @@ class MainForm(QDialog):
 
 
     def addAction(self):
-        index = self.assetView.currentIndex()
+        index = self.assetView.currentIndex()   #得到 资产视图 的index对象.
         if not index.isValid():
             return
-        QSqlDatabase.database().transaction()
-        record = self.assetModel.record(index.row())
-        assetid = int(record.value(ID))
+        QSqlDatabase.database().transaction()   #开始 数据库.事务
+        record = self.assetModel.record(index.row())    #获取 资产模型表 的记录(record)
+        assetid = int(record.value(ID)) #取 ID号.
 
-        row = self.logModel.rowCount()
-        self.logModel.insertRow(row)
-        self.logModel.setData(self.logModel.index(row, ASSETID),
-                              assetid)
-        self.logModel.setData(self.logModel.index(row, DATE),
-                              QDate.currentDate())
-        QSqlDatabase.database().commit()
-        index = self.logModel.index(row, ACTIONID)
-        self.logView.setCurrentIndex(index)
-        self.logView.edit(index)
+        row = self.logModel.rowCount()  #取得日志模型表总行数.
+        self.logModel.insertRow(row)    # 日志模型表 插入新行.
+        self.logModel.setData(self.logModel.index(row, ASSETID), assetid)   #插入新行 写入数据.
+        self.logModel.setData(self.logModel.index(row, DATE), QDate.currentDate())
+        QSqlDatabase.database().commit()    #提交数据库修改.
+        index = self.logModel.index(row, ACTIONID)  #取得 日志模型表ACTIONID项 的index对象.
+        self.logView.setCurrentIndex(index) #设置 index对象为 志日视图 的当前对象.
+        self.logView.edit(index)    #编辑当前对象.
 
 
     def deleteAction(self):
