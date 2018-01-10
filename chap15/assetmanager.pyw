@@ -323,10 +323,10 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
     def createEditor(self, parent, option, index):
         if index.column() == ROOM:
             editor = QLineEdit(parent)
-            regex = QRegExp(r"(?:0[1-9]|1[0124-9]|2[0-7])"
-                                   r"(?:0[1-9]|[1-5][0-9]|6[012])")
-            validator = QRegExpValidator(regex, parent)
-            editor.setValidator(validator)
+            regex = QRegExp(r"(?:0[1-9]|1[0124-9]|2[0-7])"          #层数
+                                   r"(?:0[1-9]|[1-5][0-9]|6[012])") #房号
+            validator = QRegExpValidator(regex, parent) #创建过滤器
+            editor.setValidator(validator)  #设置过滤器
             editor.setInputMask("9999")
             editor.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
             return editor
@@ -334,7 +334,7 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
             return QSqlRelationalDelegate.createEditor(self, parent,
                                                        option, index)
 
-    def setEditorData(self, editor, index):
+    def setEditorData(self, editor, index): #从 资产模型表 读room 域 数据填充到editor控件中.
         if index.column() == ROOM:
             text = index.model().data(index, Qt.DisplayRole)
             editor.setText(text)
@@ -342,12 +342,11 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
             QSqlRelationalDelegate.setEditorData(self, editor, index)
 
 
-    def setModelData(self, editor, model, index):
+    def setModelData(self, editor, model, index):   #将eidtor数据填充到 资产模型表 中.
         if index.column() == ROOM:
             model.setData(index, editor.text())
         else:
-            QSqlRelationalDelegate.setModelData(self, editor, model,
-                                                index)
+            QSqlRelationalDelegate.setModelData(self, editor, model, index)
 
 
 class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
@@ -366,24 +365,22 @@ class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
     def createEditor(self, parent, option, index):
         if index.column() == ACTIONID:
             text = index.model().data(index, Qt.DisplayRole)
-            if text.isdigit() and int(text) == ACQUIRED:
-                return # Acquired is read-only
+            if text.isdigit() and int(text) == ACQUIRED:    #isdigit::is数字
+                return # Acquired is read-only::取得 是 只读的.
         if index.column() == DATE:
             editor = QDateEdit(parent)
             editor.setMaximumDate(QDate.currentDate())
             editor.setDisplayFormat("yyyy-MM-dd")
             if PYQT_VERSION_STR >= "4.1.0":
-                editor.setCalendarPopup(True)
-            editor.setAlignment(Qt.AlignRight|
-                                Qt.AlignVCenter)
+                editor.setCalendarPopup(True)   #设置_日期_popup窗口 ==True
+            editor.setAlignment(Qt.AlignRight| Qt.AlignVCenter)
             return editor
         else:
-            return QSqlRelationalDelegate.createEditor(self, parent,
-                                                       option, index)
+            return QSqlRelationalDelegate.createEditor(self, parent, option, index)
 
     def setEditorData(self, editor, index):
         if index.column() == DATE:
-            date = index.model().data(index, Qt.DisplayRole)
+            date = index.model().data(index, Qt.DisplayRole)    #<<<日期转换失败.没法修改日期...
             editor.setDate(date)
         else:
             QSqlRelationalDelegate.setEditorData(self, editor, index)
