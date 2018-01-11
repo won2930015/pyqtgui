@@ -31,7 +31,7 @@ ROOM = ACTIONID = 3
 ACQUIRED = 1
 
 
-def createFakeData():
+def createFakeData():   #创建伪数据.
     import random
 
     print("Dropping tables...") #删除_表
@@ -40,7 +40,7 @@ def createFakeData():
     query.exec_("DROP TABLE logs")      #日志_表
     query.exec_("DROP TABLE actions")   #动作_表
     query.exec_("DROP TABLE categories")#种类_表
-    QApplication.processEvents()
+    QApplication.processEvents()    #processEvents::进程_事件
 
     print("Creating tables...") #创建_表
     query.exec_("""CREATE TABLE actions (
@@ -87,8 +87,9 @@ def createFakeData():
     today = QDate.currentDate()
 
     #楼层
-    floors = list(range(1, 12)) + list(range(14, 28))
+    floors = list(range(1, 12)) + list(range(14, 28))   #创建一个列表,排除13层.
 
+    #电脑相关==1, 家具==2 ,电器==3
     #显示器
     monitors = (('17" LCD Monitor', 1),
                 ('20" LCD Monitor', 1),
@@ -380,7 +381,8 @@ class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
 
     def setEditorData(self, editor, index):
         if index.column() == DATE:
-            date = index.model().data(index, Qt.DisplayRole)    #<<<日期转换失败.没法修改日期...
+            str_date = index.model().data(index, Qt.DisplayRole)    #<<<日期转换失败.没法修改日期...
+            date = QDate.fromString(str(str_date),"yyyy-MM-dd" )
             editor.setDate(date)
         else:
             QSqlRelationalDelegate.setEditorData(self, editor, index)
