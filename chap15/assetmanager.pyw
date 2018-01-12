@@ -224,7 +224,7 @@ def createFakeData():   #创建伪数据.
     QApplication.processEvents()
 
 
-class ReferenceDataDlg(QDialog):    #引用_数据_窗口.
+class ReferenceDataDlg(QDialog):    #引用_数据_窗口::继承Dialog(对话框)窗口
 
     def __init__(self, table, title, parent=None):
         super(ReferenceDataDlg, self).__init__(parent)
@@ -315,7 +315,7 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
 
 
     def paint(self, painter, option, index):
-        myoption = QStyleOptionViewItem(option)
+        myoption = QStyleOptionViewItem(option) #样式选项_视图_项::项 的样式选项集合.
         if index.column() == ROOM:
             myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)
         QSqlRelationalDelegate.paint(self, painter, myoption, index)
@@ -326,9 +326,9 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
             editor = QLineEdit(parent)
             regex = QRegExp(r"(?:0[1-9]|1[0124-9]|2[0-7])"          #层数
                                    r"(?:0[1-9]|[1-5][0-9]|6[012])") #房号
-            validator = QRegExpValidator(regex, parent) #创建过滤器
-            editor.setValidator(validator)  #设置过滤器
-            editor.setInputMask("9999")
+            validator = QRegExpValidator(regex, parent) #创建验证器
+            editor.setValidator(validator)  #设置验证器
+            editor.setInputMask("9999") #设置_输入_掩码.
             editor.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
             return editor
         else:
