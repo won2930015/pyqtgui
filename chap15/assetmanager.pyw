@@ -294,7 +294,7 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口::继承Dialog(对话�
         count = 0
         if query.next():
             count = int(query.value(0))
-        if count:   #如果 日志表(logs)或资产表(assets)有相关记录的,弹出信息不删除记录.
+        if count:   #如果 日志表(logs)或资产表(assets)有该 动作/种类 记录的,弹出信息不删除该记录.
             QMessageBox.information(self,
                     "Delete {}".format(table),
                     "Cannot delete {}<br>"
@@ -304,7 +304,7 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口::继承Dialog(对话�
             #QSqlDatabase.database().rollback()
             return
         self.model.removeRow(index.row())
-        self.model.submitAll()
+        self.model.submitAll()  #提交_全部::更新数据库.
         #QSqlDatabase.database().commit()
 
 
