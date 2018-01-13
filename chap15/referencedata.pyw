@@ -21,7 +21,7 @@ try:
 except ImportError:
     MAC = False
 
-ID, CATEGORY, SHORTDESC, LONGDESC = range(4)
+ID, CATEGORY, SHORTDESC, LONGDESC = range(4)    # CATEGORY::种类, SHORTDESC::短描述, LONGDESC::长描述
 
 
 class ReferenceDataDlg(QDialog):
@@ -49,12 +49,9 @@ class ReferenceDataDlg(QDialog):
         self.view.resizeColumnsToContents()
 
         buttonBox = QDialogButtonBox()
-        addButton = buttonBox.addButton("&Add",
-                QDialogButtonBox.ActionRole)
-        deleteButton = buttonBox.addButton("&Delete",
-                QDialogButtonBox.ActionRole)
-        sortButton = buttonBox.addButton("&Sort",
-                QDialogButtonBox.ActionRole)
+        addButton = buttonBox.addButton("&Add", QDialogButtonBox.ActionRole)
+        deleteButton = buttonBox.addButton("&Delete", QDialogButtonBox.ActionRole)
+        sortButton = buttonBox.addButton("&Sort", QDialogButtonBox.ActionRole)
         if not MAC:
             addButton.setFocusPolicy(Qt.NoFocus)
             deleteButton.setFocusPolicy(Qt.NoFocus)
