@@ -17,7 +17,7 @@ from PyQt4.QtSql import *
 
 MAC = True
 try:
-    from PyQt4.QtGui import qt_mac_set_native_menubar
+    from PyQt4.QtGui import qt_mac_set_native_menubar   #qt_mac_设置_本地_菜单条
 except ImportError:
     MAC = False
 
@@ -33,12 +33,9 @@ class ReferenceDataDlg(QDialog):
         self.model.setTable("reference")
         self.model.setSort(ID, Qt.AscendingOrder)
         self.model.setHeaderData(ID, Qt.Horizontal, "ID")
-        self.model.setHeaderData(CATEGORY, Qt.Horizontal,
-                "Category")
-        self.model.setHeaderData(SHORTDESC, Qt.Horizontal,
-                "Short Desc.")
-        self.model.setHeaderData(LONGDESC, Qt.Horizontal,
-                "Long Desc.")
+        self.model.setHeaderData(CATEGORY, Qt.Horizontal, "Category")
+        self.model.setHeaderData(SHORTDESC, Qt.Horizontal, "Short Desc.")
+        self.model.setHeaderData(LONGDESC, Qt.Horizontal, "Long Desc.")
         self.model.select()
 
         self.view = QTableView()
@@ -49,7 +46,7 @@ class ReferenceDataDlg(QDialog):
         self.view.resizeColumnsToContents()
 
         buttonBox = QDialogButtonBox()
-        addButton = buttonBox.addButton("&Add", QDialogButtonBox.ActionRole)
+        addButton = buttonBox.addButton("&Add", QDialogButtonBox.ActionRole)    #ActionRole::动作角色(作用)
         deleteButton = buttonBox.addButton("&Delete", QDialogButtonBox.ActionRole)
         sortButton = buttonBox.addButton("&Sort", QDialogButtonBox.ActionRole)
         if not MAC:
@@ -70,8 +67,7 @@ class ReferenceDataDlg(QDialog):
         self.setLayout(layout)
 
         self.connect(addButton, SIGNAL("clicked()"), self.addRecord)
-        self.connect(deleteButton, SIGNAL("clicked()"),
-                     self.deleteRecord)
+        self.connect(deleteButton, SIGNAL("clicked()"), self.deleteRecord)
         self.connect(sortByCategoryAction, SIGNAL("triggered()"),
                      lambda: self.sort(CATEGORY))
         self.connect(sortByDescriptionAction, SIGNAL("triggered()"),
