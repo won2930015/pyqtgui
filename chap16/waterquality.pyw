@@ -298,7 +298,7 @@ class MainForm(QDialog):
         self.waterView = WaterQualityView()
         self.waterView.setModel(self.model) #即 QWidget 也具有 setModel属性.
         scrollArea = QScrollArea()  #滚动区域::是一个容器
-        scrollArea.setBackgroundRole(QPalette.Light)    #setBackgroundRole::设置_背景_角色, QPalette.Light::调色板.浅色的(滚动区域是浅色的)
+        scrollArea.setBackgroundRole(QPalette.Light)    #setBackgroundRole::设置_背景_角色, QPalette.Light::调色板.光(滚动区域背景色.浅色光的颜色.)
         scrollArea.setWidget(self.waterView)    #将 waterView 加入到 滚动区域
         self.waterView.scrollarea = scrollArea  #将waterView.scrollarea属性 关联到 scrollArea容器对象.
 
