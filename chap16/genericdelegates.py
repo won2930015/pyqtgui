@@ -137,7 +137,7 @@ class PlainTextColumnDelegate(QStyledItemDelegate): #纯文本委托
         model.setData(index, editor.text())
 
 
-class RichTextColumnDelegate(QStyledItemDelegate):  #富文本委托
+class RichTextColumnDelegate(QStyledItemDelegate):  #富文本_列_委托
 
     def __init__(self, parent=None):
         super(RichTextColumnDelegate, self).__init__(parent)
@@ -159,9 +159,9 @@ class RichTextColumnDelegate(QStyledItemDelegate):  #富文本委托
                  else QColor(index.model().data(index,
                              Qt.BackgroundColorRole)))
         painter.fillRect(option.rect, color)
-        painter.translate(option.rect.x(), option.rect.y()) #translate::转化(转化option.rect.x|y到painter)
+        painter.translate(option.rect.x(), option.rect.y()) #translate::转化(转化option.rect.x|y 坐标到painter.xy坐标.)
         document.drawContents(painter)
-        painter.restore()
+        painter.restore()   #restore ::恢复
 
 
     def sizeHint(self, option, index):
