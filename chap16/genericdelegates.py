@@ -14,7 +14,7 @@ from PyQt4.QtGui import *
 import richtextlineedit
 
 
-class GenericDelegate(QStyledItemDelegate):
+class GenericDelegate(QStyledItemDelegate): #泛型委托
 
     def __init__(self, parent=None):
         super(GenericDelegate, self).__init__(parent)
@@ -44,8 +44,7 @@ class GenericDelegate(QStyledItemDelegate):
         if delegate is not None:
             return delegate.createEditor(parent, option, index)
         else:
-            return QStyledItemDelegate.createEditor(self, parent, option,
-                                                    index)
+            return QStyledItemDelegate.createEditor(self, parent, option, index)
 
 
     def setEditorData(self, editor, index):
@@ -64,7 +63,7 @@ class GenericDelegate(QStyledItemDelegate):
             QStyledItemDelegate.setModelData(self, editor, model, index)
 
 
-class IntegerColumnDelegate(QStyledItemDelegate):
+class IntegerColumnDelegate(QStyledItemDelegate):   #整数委托
 
     def __init__(self, minimum=0, maximum=100, parent=None):
         super(IntegerColumnDelegate, self).__init__(parent)
@@ -85,15 +84,15 @@ class IntegerColumnDelegate(QStyledItemDelegate):
 
 
     def setModelData(self, editor, model, index):
-        editor.interpretText()
+        editor.interpretText()  #解释_文本
         model.setData(index, editor.value())
 
 
-class DateColumnDelegate(QStyledItemDelegate):
+class DateColumnDelegate(QStyledItemDelegate):  #日期委托
 
-    def __init__(self, minimum=QDate(),
-                 maximum=QDate.currentDate(),
-                 format="yyyy-MM-dd", parent=None):
+    def __init__(self, minimum=QDate(),         #最小值
+                 maximum=QDate.currentDate(),   #最大值
+                 format="yyyy-MM-dd", parent=None):#日期格式.
         super(DateColumnDelegate, self).__init__(parent)
         self.minimum = minimum
         self.maximum = maximum
@@ -105,7 +104,7 @@ class DateColumnDelegate(QStyledItemDelegate):
         dateedit.setDateRange(self.minimum, self.maximum)
         dateedit.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
         dateedit.setDisplayFormat(self.format)
-        dateedit.setCalendarPopup(True)
+        dateedit.setCalendarPopup(True) # CalendarPopup::日期_弹出
         return dateedit
 
 
@@ -118,7 +117,7 @@ class DateColumnDelegate(QStyledItemDelegate):
         model.setData(index, editor.date())
 
 
-class PlainTextColumnDelegate(QStyledItemDelegate):
+class PlainTextColumnDelegate(QStyledItemDelegate): #纯文本委托
 
     def __init__(self, parent=None):
         super(PlainTextColumnDelegate, self).__init__(parent)
@@ -138,7 +137,7 @@ class PlainTextColumnDelegate(QStyledItemDelegate):
         model.setData(index, editor.text())
 
 
-class RichTextColumnDelegate(QStyledItemDelegate):
+class RichTextColumnDelegate(QStyledItemDelegate):  #富文本委托
 
     def __init__(self, parent=None):
         super(RichTextColumnDelegate, self).__init__(parent)
@@ -146,10 +145,10 @@ class RichTextColumnDelegate(QStyledItemDelegate):
 
     def paint(self, painter, option, index):
         text = index.model().data(index, Qt.DisplayRole)
-        palette = QApplication.palette()
+        palette = QApplication.palette()    #palette::调色板
         document = QTextDocument()
         document.setDefaultFont(option.font)
-        if option.state & QStyle.State_Selected:
+        if option.state & QStyle.State_Selected:    #选项状态 是 被选择时.
             document.setHtml("<font color={}>{}</font>".format(
                     palette.highlightedText().color().name(), text))
         else:
@@ -160,7 +159,7 @@ class RichTextColumnDelegate(QStyledItemDelegate):
                  else QColor(index.model().data(index,
                              Qt.BackgroundColorRole)))
         painter.fillRect(option.rect, color)
-        painter.translate(option.rect.x(), option.rect.y())
+        painter.translate(option.rect.x(), option.rect.y()) #translate::转化(转化option.rect.x|y到painter)
         document.drawContents(painter)
         painter.restore()
 
