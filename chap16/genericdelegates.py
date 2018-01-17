@@ -159,7 +159,7 @@ class RichTextColumnDelegate(QStyledItemDelegate):  #富文本_列_委托
                  else QColor(index.model().data(index,
                              Qt.BackgroundColorRole)))
         painter.fillRect(option.rect, color)
-        painter.translate(option.rect.x(), option.rect.y()) #translate::转化(转化option.rect.x|y 坐标到painter.xy坐标.)
+        painter.translate(option.rect.x(), option.rect.y()) #translate::转化(转化option.rect.x|y 坐标 到painter.xy坐标.)
         document.drawContents(painter)
         painter.restore()   #restore ::恢复
 

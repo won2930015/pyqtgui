@@ -32,7 +32,7 @@ class CarHireLog(object):   #汽车_租用_日志.
         self.mileageout = mileageout    # int   里程数_out(租出时)
         self.returned = returned        # QDate 返回(归还日期)
         self.mileageback = mileageback  # int   里程数_back(归还时)
-        self.notes = notes              # HTML  注释
+        self.notes = notes              # HTML  备注
 
 
     def field(self, column):    # 字段|域
@@ -50,9 +50,9 @@ class CarHireLog(object):   #汽车_租用_日志.
             return self.mileageback
         elif column == NOTES:
             return self.notes
-        elif column == MILEAGE: #里程
+        elif column == MILEAGE:     #里程
             return self.mileage()
-        elif column == DAYS:    #天数
+        elif column == DAYS:        #天数
             return self.days()
         assert False
 
@@ -64,9 +64,9 @@ class CarHireLog(object):   #汽车_租用_日志.
 
     def days(self):
         return (0 if not self.returned.isValid()
-                  else self.hired.daysTo(self.returned))    #daysTo::天数To (返回 hired-- returned的天数.)
+                  else self.hired.daysTo(self.returned))    #daysTo::天数To ,返回 hired 至 returned的天数.
 
-
+    #__hash__, __eq__, __lt__ 是实现排序算法的基础.
     def __hash__(self): # hash::散列|哈希
         return super(CarHireLog, self).__hash__()
 
@@ -98,7 +98,7 @@ class CarHireModel(QAbstractTableModel):    #汽车_出租_模型.
         super(CarHireModel, self).__init__(parent)
         self.logs = []
 
-        # Generate fake data
+        # Generate fake data 生成伪数据
         import gzip
         import random
         import string
@@ -107,7 +107,7 @@ class CarHireModel(QAbstractTableModel):    #汽车_出租_模型.
         surnames = surname_data.decode("utf-8").splitlines()
         years = ("06 ", "56 ", "07 ", "57 ", "08 ", "58 ")
         titles = ("Ms ", "Mr ", "Ms ", "Mr ", "Ms ", "Mr ", "Dr ")    #Mr::女士, Ms::先生, Dr::未知????
-        notetexts = ("Returned <font color=red><b>damaged</b></font>",  #notetexts::注释_文本, Returned damaged::返回受损(车)
+        notetexts = ("Returned <font color=red><b>damaged</b></font>",  #notetexts::备注_文本, Returned damaged::返回受损(车)
                 "Returned with <i>empty fuel tank</i>",                 #返回 空油箱(车)
                 "Customer <b>complained</b> about the <u>engine</u>",   #Customer complained about the engine::客户 抱怨 发动机
                 "Customer <b>complained</b> about the <u>gears</u>",    #Customer complained about the gears ::客户 抱怨 齿轮箱
@@ -118,9 +118,9 @@ class CarHireModel(QAbstractTableModel):    #汽车_出租_模型.
             license = []    #license::执照
             for c in range(5):
                 license.append(random.choice(string.ascii_uppercase))   #uppercase::大写字母
-            license = ("".join(license[:2]) + random.choice(years) +    #生成执照
+            license = ("".join(license[:2]) + random.choice(years) +    #生成执照号
                        "".join(license[2:]))
-            customer = random.choice(titles) + random.choice(surnames)  #生成客户(名+性)
+            customer = random.choice(titles) + random.choice(surnames)  #生成客户(Ms|Mr|Dr+性)
             hired = today.addDays(-random.randint(0, 365))  #生成出租日期
             mileageout = random.randint(10000, 30000)   #生成里程(出租时)
             notes = ""
@@ -232,7 +232,7 @@ class HireDateColumnDelegate(genericdelegates.DateColumnDelegate):  #出租_日�
 
     def createEditor(self, parent, option, index):
         i = index.sibling(index.row(), RETURNED)    #sibling::兄弟
-        self.maximum = i.model().data(i, Qt.DisplayRole).addDays(-1)    #addDays(-1)::不设置最大的日期.
+        self.maximum = i.model().data(i, Qt.DisplayRole).addDays(-1)    #addDays(-1)::设置最大的出租日期为 Returned-1日.
         return genericdelegates.DateColumnDelegate.createEditor(
                 self, parent, option, index)
 
@@ -241,7 +241,7 @@ class ReturnDateColumnDelegate(genericdelegates.DateColumnDelegate):    #归还�
 
     def createEditor(self, parent, option, index):
         i = index.sibling(index.row(), HIRED)   #sibling::兄弟
-        self.minimum = i.model().data(i, Qt.DisplayRole).addDays(1) #addDays(-1)::不设置最大的日期.
+        self.minimum = i.model().data(i, Qt.DisplayRole).addDays(1) #addDays(1)::设置小归不日期为 Hire+1日.
         return genericdelegates.DateColumnDelegate.createEditor(
                 self, parent, option, index)
 
@@ -251,7 +251,7 @@ class MileageOutColumnDelegate(genericdelegates.IntegerColumnDelegate): #里程(
     def createEditor(self, parent, option, index):
         i = index.sibling(index.row(), MILEAGEBACK)
         maximum = int(i.model().data(i, Qt.DisplayRole))
-        self.maximum = 1000000 if maximum == 0 else maximum - 1
+        self.maximum = 1000000 if maximum == 0 else maximum - 1 #设置MileageOut栏最大里程数(租出)为::MileageBack-1
         return genericdelegates.IntegerColumnDelegate.createEditor(
                 self, parent, option, index)
 
@@ -260,7 +260,7 @@ class MileageBackColumnDelegate(genericdelegates.IntegerColumnDelegate):    #里
 
     def createEditor(self, parent, option, index):
         i = index.sibling(index.row(), MILEAGEOUT)
-        self.minimum = int(i.model().data(i, Qt.DisplayRole)) + 1
+        self.minimum = int(i.model().data(i, Qt.DisplayRole)) + 1   #设置MileageBack栏最小里程数(归还)为::MileageOut+1
         return genericdelegates.IntegerColumnDelegate.createEditor(
                 self, parent, option, index)
 
