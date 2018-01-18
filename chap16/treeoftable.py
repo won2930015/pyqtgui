@@ -15,16 +15,16 @@ from PyQt4.QtCore import *
 KEY, NODE = range(2)
 
 
-class BranchNode(object):
+class BranchNode(object):   #分支_点
 
     def __init__(self, name, parent=None):
         super(BranchNode, self).__init__()
         self.name = name
         self.parent = parent
-        self.children = []
+        self.children = []  #children::孩子们
 
 
-    def __lt__(self, other):
+    def __lt__(self, other):    #小于
         if isinstance(other, BranchNode):
             return self.orderKey() < other.orderKey()
         return False
@@ -38,29 +38,29 @@ class BranchNode(object):
         return self.name
 
 
-    def __len__(self):
+    def __len__(self):  #长度
         return len(self.children)
 
 
-    def childAtRow(self, row):
+    def childAtRow(self, row):  #孩子_在_行(输入ROW号返回对应的NODE)
         assert 0 <= row < len(self.children)
         return self.children[row][NODE]
         
 
-    def rowOfChild(self, child):
+    def rowOfChild(self, child):    #行_属于_孩子(输入NODE返回对应的ROW号)
         for i, item in enumerate(self.children):
             if item[NODE] == child:
                 return i
         return -1
 
 
-    def childWithKey(self, key):
+    def childWithKey(self, key):    #孩子_和_键
         if not self.children:
             return None
         # Causes a -3 deprecation warning. Solution will be to
         # reimplement bisect_left and provide a key function.
-        i = bisect.bisect_left(self.children, (key, None))
-        if i < 0 or i >= len(self.children):
+        i = bisect.bisect_left(self.children, (key, None))  #在有序表children中查找(key, None)，存在时返回(key, None)在左侧的位置，(key, None)不存在返回应该插入的位置.
+        if i < 0 or i >= len(self.children):    #超出有效范围时...
             return None
         if self.children[i][KEY] == key:
             return self.children[i][NODE]
