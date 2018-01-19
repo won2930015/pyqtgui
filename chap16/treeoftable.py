@@ -15,7 +15,7 @@ from PyQt4.QtCore import *
 KEY, NODE = range(2)
 
 
-class BranchNode(object):   #分支_点
+class BranchNode(object):   #分支_节点
 
     def __init__(self, name, parent=None):
         super(BranchNode, self).__init__()
@@ -54,7 +54,7 @@ class BranchNode(object):   #分支_点
         return -1
 
 
-    def childWithKey(self, key):    #孩子_和_键
+    def childWithKey(self, key):    #孩子_和_键 (输入KEY返回对应NODE)
         if not self.children:
             return None
         # Causes a -3 deprecation warning. Solution will be to
@@ -67,54 +67,54 @@ class BranchNode(object):   #分支_点
         return None
 
 
-    def insertChild(self, child):
+    def insertChild(self, child):   #插入_孩子
         child.parent = self
         bisect.insort(self.children, (child.orderKey(), child))
 
 
-    def hasLeaves(self):
+    def hasLeaves(self):    #有_叶节点::检查是否有叶节点.
         if not self.children:
             return False
         return isinstance(self.children[0], LeafNode)
 
 
-class LeafNode(object):
+class LeafNode(object): #叶_节点
 
-    def __init__(self, fields, parent=None):
+    def __init__(self, fields, parent=None):    #fields::域|字段
         super(LeafNode, self).__init__()
         self.parent = parent
         self.fields = fields
 
 
-    def orderKey(self):
+    def orderKey(self): #排序_键
         return "\t".join(self.fields).lower()
 
 
-    def toString(self, separator="\t"):
+    def toString(self, separator="\t"): #返回字符.
         return separator.join(self.fields)
 
 
-    def __len__(self):
+    def __len__(self):  #长度
         return len(self.fields)
 
 
     def asRecord(self):
-        record = []
-        branch = self.parent
+        record = []     #记录
+        branch = self.parent    #branch::分支
         while branch is not None:
-            record.insert(0, branch.toString())
+            record.insert(0, branch.toString()) #用 头插法 加入所有的祖先对象的KEY.
             branch = branch.parent
         assert record and not record[0]
         record = record[1:]
-        return record + self.fields
+        return record + self.fields #返回从 根 到 该叶节点 的路径(包含节点).
 
 
-    def field(self, column):
+    def field(self, column):    #域|字段.
         assert 0 <= column <= len(self.fields)
         return self.fields[column]
 
 
-class TreeOfTableModel(QAbstractItemModel):
+class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型
 
     def __init__(self, parent=None):
         super(TreeOfTableModel, self).__init__(parent)
@@ -123,7 +123,7 @@ class TreeOfTableModel(QAbstractItemModel):
         self.headers = []
 
 
-    def load(self, filename, nesting, separator): 
+    def load(self, filename, nesting, separator): #nesting::嵌套, separator::分隔符
         assert nesting > 0
         self.nesting = nesting
         self.root = BranchNode("")
@@ -131,7 +131,7 @@ class TreeOfTableModel(QAbstractItemModel):
         fh = None
         try:
             for line in open(filename, "rU", encoding="utf-8"):
-                if not line:
+                if not line:    #如果是空行 跳过..
                     continue
                 self.addRecord(line.split(separator), False)
         except IOError as e:
