@@ -23,7 +23,7 @@ class ServerModel(treeoftable.TreeOfTableModel):
 
 
     def data(self, index, role):
-        if role == Qt.DecorationRole:
+        if role == Qt.DecorationRole:   #DecorationRole::装饰角色(图标)?
             node = self.nodeFromIndex(index)
             if node is None:
                 return None
@@ -36,7 +36,7 @@ class ServerModel(treeoftable.TreeOfTableModel):
                     return None
                 if parent == "USA":
                     filename = "USA_" + filename
-                filename = os.path.join(os.path.dirname(__file__),
+                filename = os.path.join(os.path.dirname(__file__),  #"...\chap16\flags\filename.png"
                                         "flags", filename + ".png")
                 pixmap = QPixmap(filename)
                 if pixmap.isNull():
@@ -47,19 +47,19 @@ class ServerModel(treeoftable.TreeOfTableModel):
 
 class TreeOfTableWidget(QTreeView):
 
-    def __init__(self, filename, nesting, separator, parent=None):
+    def __init__(self, filename, nesting, separator, parent=None):  #nesting::嵌套, separator:分隔符
         super(TreeOfTableWidget, self).__init__(parent)
-        self.setSelectionBehavior(QTreeView.SelectItems)
-        self.setUniformRowHeights(True)
-        model = ServerModel(self)
+        self.setSelectionBehavior(QTreeView.SelectItems)    #setSelectionBehavior::设置_选择_行为, SelectItems::选择_项
+        self.setUniformRowHeights(True) #setUniformRowHeights::设置_统一_行_高度
+        model = ServerModel(self)   #服务器_模型P19_row
         self.setModel(model)
         try:
             model.load(filename, nesting, separator)
         except IOError as e:
             QMessageBox.warning(self, "Server Info - Error", e)
-        self.connect(self, SIGNAL("activated(QModelIndex)"),
+        self.connect(self, SIGNAL("activated(QModelIndex)"),    #???activated::激活(双击项时)
                      self.activated)
-        self.connect(self, SIGNAL("expanded(QModelIndex)"),
+        self.connect(self, SIGNAL("expanded(QModelIndex)"),     #???expanded::扩展(节点被展开时)
                      self.expanded)
         self.expanded()
 
@@ -97,7 +97,7 @@ class MainForm(QMainWindow):
         self.treeWidget = TreeOfTableWidget(filename, nesting,
                                             separator)
         self.treeWidget.model().headers = headers
-        self.setCentralWidget(self.treeWidget)
+        self.setCentralWidget(self.treeWidget)  #setCentralWidget::设置_中心_控件
 
         QShortcut(QKeySequence("Escape"), self, self.close)
         QShortcut(QKeySequence("Ctrl+Q"), self, self.close)
@@ -110,7 +110,7 @@ class MainForm(QMainWindow):
 
 
     def picked(self):
-        return self.treeWidget.currentFields()
+        return self.treeWidget.currentFields()  #currentFields::当前_域|字段
 
 
     def activated(self, fields):
@@ -127,8 +127,7 @@ if len(sys.argv) > 1:
     if nesting not in (1, 2, 3, 4):
         nesting = 3
 
-form = MainForm(os.path.join(os.path.dirname(__file__), "servers.txt"),
-                nesting, "*")
+form = MainForm(os.path.join(os.path.dirname(__file__), "servers.txt"), nesting, "*")
 form.resize(750, 550)
 form.show()
 app.exec_()

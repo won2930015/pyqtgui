@@ -28,7 +28,7 @@ class WaterQualityModel(QAbstractTableModel):   #WaterQualityModel::水_质_模�
     def __init__(self, filename):
         super(WaterQualityModel, self).__init__()
         self.filename = filename
-        self.results = []
+        self.results = []   #结果们
 
 
     def load(self):

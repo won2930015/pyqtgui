@@ -59,7 +59,7 @@ class BranchNode(object):   #分支_节点
             return None
         # Causes a -3 deprecation warning. Solution will be to
         # reimplement bisect_left and provide a key function.
-        i = bisect.bisect_left(self.children, (key, None))  #在有序表children中查找(key, None)，存在时返回(key, None)在左侧的位置，(key, None)不存在返回应该插入的位置.
+        i = bisect.bisect_left(self.children, (key, None))  #在有序表children中查找(key, None)元组，存在时返回(key, None)在左侧的位置，(key, None)不存在返回应该插入的位置.
         if i < 0 or i >= len(self.children):    #超出有效范围时...
             return None
         if self.children[i][KEY] == key:
@@ -109,12 +109,12 @@ class LeafNode(object): #叶_节点
         return record + self.fields #返回从 根 到 该叶节点 的路径(包含节点).
 
 
-    def field(self, column):    #域|字段.
+    def field(self, column):    #field::域|字段.
         assert 0 <= column <= len(self.fields)
         return self.fields[column]
 
 
-class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型
+class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItemModel::抽象_项_模型
 
     def __init__(self, parent=None):
         super(TreeOfTableModel, self).__init__(parent)
@@ -124,13 +124,13 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型
 
 
     def load(self, filename, nesting, separator): #nesting::嵌套, separator::分隔符
-        assert nesting > 0
+        assert nesting > 0  #断言 嵌套>0
         self.nesting = nesting
         self.root = BranchNode("")
         exception = None
         fh = None
         try:
-            for line in open(filename, "rU", encoding="utf-8"):
+            for line in open(filename, "rU", encoding="utf-8"): #rU 或 Ua 以读方式打开, 同时提供通用换行符支持 (PEP 278)
                 if not line:    #如果是空行 跳过..
                     continue
                 self.addRecord(line.split(separator), False)
@@ -139,7 +139,7 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型
         finally:
             if fh is not None:
                 fh.close()
-            self.reset()
+            self.reset()    #reset::重置
             for i in range(self.columns):
                 self.headers.append("Column #{}".format(i))
             if exception is not None:
