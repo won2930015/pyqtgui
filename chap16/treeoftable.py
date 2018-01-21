@@ -109,7 +109,7 @@ class LeafNode(object): #叶_节点
         return record + self.fields #返回从 根 到 该叶节点 的路径(包含节点).
 
 
-    def field(self, column):    #field::域|字段.
+    def field(self, column):    #field::域|字段.(返回叶节点的 域|字段)
         assert 0 <= column <= len(self.fields)
         return self.fields[column]
 
@@ -146,7 +146,7 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItem
                 raise exception
 
 
-    def addRecord(self, fields, callReset=True):
+    def addRecord(self, fields, callReset=True):    #处理...\..\servers.txt文本文件一行记录.
         assert len(fields) > self.nesting
         root = self.root
         branch = None
@@ -168,20 +168,20 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItem
 
 
     def asRecord(self, index):
-        leaf = self.nodeFromIndex(index)
+        leaf = self.nodeFromIndex(index)    #leaf::叶(返回叶节点)
         if leaf is not None and isinstance(leaf, LeafNode):
-            return leaf.asRecord()
+            return leaf.asRecord()  #返回从 根 到 该叶节点 的路径(包含节点).
         return []
 
 
-    def rowCount(self, parent):
+    def rowCount(self, parent): #返回总行数.
         node = self.nodeFromIndex(parent)
         if node is None or isinstance(node, LeafNode):
             return 0
         return len(node)
 
 
-    def columnCount(self, parent):
+    def columnCount(self, parent):  #返回总列数
         return self.columns
 
 
@@ -197,7 +197,7 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItem
         return node.field(index.column())
 
 
-    def headerData(self, section, orientation, role):
+    def headerData(self, section, orientation, role):   #section::节(表头的区段), orientation::方向
         if (orientation == Qt.Horizontal and
             role == Qt.DisplayRole):
             assert 0 <= section <= len(self.headers)
@@ -209,8 +209,7 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItem
         assert self.root
         branch = self.nodeFromIndex(parent)
         assert branch is not None
-        return self.createIndex(row, column,
-                                branch.childAtRow(row))
+        return self.createIndex(row, column, branch.childAtRow(row))
 
 
     def parent(self, child):
@@ -220,7 +219,7 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItem
         parent = node.parent
         if parent is None:
             return QModelIndex()
-        grandparent = parent.parent
+        grandparent = parent.parent #grandparent::祖父母
         if grandparent is None:
             return QModelIndex()
         row = grandparent.rowOfChild(parent)
@@ -228,8 +227,7 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItem
         return self.createIndex(row, 0, parent)
 
 
-    def nodeFromIndex(self, index):
-        return (index.internalPointer()
-                if index.isValid() else self.root)
-
+    def nodeFromIndex(self, index): #返回当前 项 的 叶节点
+        return (index.internalPointer() #internalPointer::内部_指针
+                if index.isValid() else self.root)  #当 index,isValid ==false 时返回 root.
 
