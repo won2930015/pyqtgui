@@ -23,7 +23,7 @@ class ServerModel(treeoftable.TreeOfTableModel):
 
 
     def data(self, index, role):
-        if role == Qt.DecorationRole:   #DecorationRole::装饰角色(图标)?
+        if role == Qt.DecorationRole:   #DecorationRole::修饰角色(图标)
             node = self.nodeFromIndex(index)
             if node is None:
                 return None
@@ -36,7 +36,7 @@ class ServerModel(treeoftable.TreeOfTableModel):
                     return None
                 if parent == "USA":
                     filename = "USA_" + filename
-                filename = os.path.join(os.path.dirname(__file__),  #"...\chap16\flags\filename.png"
+                filename = os.path.join(os.path.dirname(__file__),  #"...\chap16\flags\" +filename +".png"
                                         "flags", filename + ".png")
                 pixmap = QPixmap(filename)
                 if pixmap.isNull():
@@ -65,7 +65,7 @@ class TreeOfTableWidget(QTreeView):
 
 
     def currentFields(self):
-        return self.model().asRecord(self.currentIndex())
+        return self.model().asRecord(self.currentIndex())   #返回 root 到 叶节点的所有路径.
 
 
     def activated(self, index):
@@ -109,7 +109,7 @@ class MainForm(QMainWindow):
         self.statusBar().showMessage("Ready...", 5000)
 
 
-    def picked(self):
+    def picked(self):   #摘要
         return self.treeWidget.currentFields()  #currentFields::当前_域|字段
 
 
