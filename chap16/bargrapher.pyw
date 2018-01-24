@@ -30,7 +30,7 @@ class BarGraphModel(QAbstractListModel):
 
 
     def insertRows(self, row, count):
-        extra = row + count
+        extra = row + count #extra::额外
         if extra >= len(self.__data):
             self.beginInsertRows(QModelIndex(), row, row + count - 1)
             self.__data.extend([0] * (extra - len(self.__data) + 1))
@@ -40,14 +40,14 @@ class BarGraphModel(QAbstractListModel):
 
 
     def flags(self, index):
-        return (QAbstractTableModel.flags(self, index)|Qt.ItemIsEditable)
+        return (QAbstractTableModel.flags(self, index)|Qt.ItemIsEditable)   #ItemIsEditable::项_是_可编辑的
 
 
     def setData(self, index, value, role=Qt.DisplayRole):
         row = index.row()
         if not index.isValid() or 0 > row >= len(self.__data):
             return False
-        changed = False
+        changed = False #changed::改变
         if role == Qt.DisplayRole:
             value = int(value)
             self.__data[row] = value
@@ -56,14 +56,12 @@ class BarGraphModel(QAbstractListModel):
             if self.maxValue < value:
                 self.maxValue = value
             changed = True
-        elif role == Qt.UserRole:
+        elif role == Qt.UserRole:   #与颜色相关???
             self.__colors[row] = value
-            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                      index, index)
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
             changed = True
         if changed:
-            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                      index, index)
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
         return changed
 
 
@@ -74,11 +72,9 @@ class BarGraphModel(QAbstractListModel):
         if role == Qt.DisplayRole:
             return self.__data[row]
         if role == Qt.UserRole:
-            return self.__colors.get(row,
-                    QColor(Qt.red))
+            return self.__colors.get(row, QColor(Qt.red))   #当row没有设定颜色时返回 red(红)色.
         if role == Qt.DecorationRole:
-            color = QColor(self.__colors.get(row,
-                    QColor(Qt.red)))
+            color = QColor(self.__colors.get(row, QColor(Qt.red)))
             pixmap = QPixmap(20, 20)
             pixmap.fill(color)
             return pixmap
@@ -112,7 +108,7 @@ class BarGraphDelegate(QStyledItemDelegate):
 
 
     def setModelData(self, editor, model, index):
-        editor.interpretText()
+        editor.interpretText()  #interpretText::翻译_文本???
         model.setData(index, editor.value())
 
 
@@ -128,9 +124,8 @@ class BarGraphView(QWidget):
     def setModel(self, model):
         self.model = model
         self.connect(self.model,
-                SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                self.update)
-        self.connect(self.model, SIGNAL("modelReset()"), self.update)
+                SIGNAL("dataChanged(QModelIndex,QModelIndex)"), self.update)
+        self.connect(self.model, SIGNAL("modelReset()"), self.update)   #modelReset::模型_重置
 
 
     def sizeHint(self):
@@ -147,10 +142,9 @@ class BarGraphView(QWidget):
         if self.model is None:
             return
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.Antialiasing)    #setRenderHint::设置_渲染_提示, Antialiasing::反锯齿
         span = self.model.maxValue - self.model.minValue
-        painter.setWindow(0, 0, BarGraphView.WIDTH * self.model.rowCount(),
-                          span)
+        painter.setWindow(0, 0, BarGraphView.WIDTH * self.model.rowCount(), span)   #设置_window size.
         for row in range(self.model.rowCount()):
             x = row * BarGraphView.WIDTH
             index = self.model.index(row)
@@ -171,8 +165,8 @@ class MainForm(QDialog):
         self.listView.setModel(self.model)
         self.listView.setItemDelegate(BarGraphDelegate(0, 1000, self))
         self.listView.setMaximumWidth(100)
-        self.listView.setEditTriggers(QListView.DoubleClicked|
-                                      QListView.EditKeyPressed)
+        self.listView.setEditTriggers(QListView.DoubleClicked|  #setEditTriggers::设置_编辑_触发
+                                      QListView.EditKeyPressed) #EditKeyPressed::编辑_键_按下
         layout = QHBoxLayout()
         layout.addWidget(self.listView)
         layout.addWidget(self.barGraphView, 1)
