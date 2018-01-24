@@ -215,7 +215,7 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItem
     def parent(self, child):
         node = self.nodeFromIndex(child)
         if node is None:
-            return QModelIndex()
+            return QModelIndex()    #返回一个无效索引
         parent = node.parent
         if parent is None:
             return QModelIndex()
@@ -228,6 +228,6 @@ class TreeOfTableModel(QAbstractItemModel): #树_的_表格_模型, AbstractItem
 
 
     def nodeFromIndex(self, index): #返回当前 项 的 叶节点
-        return (index.internalPointer() #internalPointer::内部_指针(指向叶结点)
+        return (index.internalPointer() #internalPointer::内部_指针(指向叶结点|分支点)
                 if index.isValid() else self.root)  #当 index,isValid ==false 时返回 root.
 
