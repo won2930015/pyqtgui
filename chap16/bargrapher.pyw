@@ -30,7 +30,7 @@ class BarGraphModel(QAbstractListModel):
 
 
     def insertRows(self, row, count):
-        extra = row + count #extra::额外
+        extra = row + count #extra::额外(扩展)
         if extra >= len(self.__data):
             self.beginInsertRows(QModelIndex(), row, row + count - 1)
             self.__data.extend([0] * (extra - len(self.__data) + 1))
@@ -48,7 +48,7 @@ class BarGraphModel(QAbstractListModel):
         if not index.isValid() or 0 > row >= len(self.__data):
             return False
         changed = False #changed::改变
-        if role == Qt.DisplayRole:
+        if role == Qt.DisplayRole:  #DisplayRole::显示_角色
             value = int(value)
             self.__data[row] = value
             if self.minValue > value:
@@ -56,7 +56,7 @@ class BarGraphModel(QAbstractListModel):
             if self.maxValue < value:
                 self.maxValue = value
             changed = True
-        elif role == Qt.UserRole:   #与颜色相关???
+        elif role == Qt.UserRole:   #UserRole::用户_角色.与颜色相关???
             self.__colors[row] = value
             self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
             changed = True
@@ -72,8 +72,8 @@ class BarGraphModel(QAbstractListModel):
         if role == Qt.DisplayRole:
             return self.__data[row]
         if role == Qt.UserRole:
-            return self.__colors.get(row, QColor(Qt.red))   #当row没有设定颜色时返回 red(红)色.
-        if role == Qt.DecorationRole:
+            return self.__colors.get(row, QColor(Qt.red))   #当row没有设定颜色时,返回 red(红)色.
+        if role == Qt.DecorationRole:   #修饰_角色(图标).
             color = QColor(self.__colors.get(row, QColor(Qt.red)))
             pixmap = QPixmap(20, 20)
             pixmap.fill(color)
@@ -90,7 +90,7 @@ class BarGraphDelegate(QStyledItemDelegate):
 
 
     def paint(self, painter, option, index):
-        myoption = QStyleOptionViewItem(option)
+        myoption = QStyleOptionViewItem(option) #StyleOptionViewItem::样式_选项_视图_项
         myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)
         QStyledItemDelegate.paint(self, painter, myoption, index)
 
@@ -177,7 +177,7 @@ class MainForm(QDialog):
 
 
     def initialLoad(self):
-        # Generate fake data
+        # Generate fake data::生成_伪_数据
         count = 20
         self.model.insertRows(0, count - 1)
         for row in range(count):
