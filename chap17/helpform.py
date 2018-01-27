@@ -19,13 +19,13 @@ class HelpForm(QDialog):
     def __init__(self, page, parent=None):
         super(HelpForm, self).__init__(parent)
         self.setAttribute(Qt.WA_DeleteOnClose)  #setAttribute::设置_属性
-                                                #如果widget设置了Qt::WA_DeleteOnClose属性，widget将会被释放。
+                                                #如果widget设置了Qt.WA_DeleteOnClose属性，widget将会被释放。
                                                 #不管widget是否可见，关闭事件都会传递给widget。即接收到QCloseEvent事件后，
                                                 #除了调用hide()方法将窗口隐藏，同时会调用deleteLater()方法将窗口释放掉，不会再占用资源。
         self.setAttribute(Qt.WA_GroupLeader)    #组长?????群组控件的第一个???
 
         backAction = QAction(QIcon(":/back.png"), self.tr("&Back"), self)
-        backAction.setShortcut(QKeySequence.Back)
+        backAction.setShortcut(QKeySequence.Back)   #setShortcut::设置_快捷键
         homeAction = QAction(QIcon(":/home.png"), self.tr("&Home"), self)
         homeAction.setShortcut(self.tr("Home"))
         self.pageLabel = QLabel()
@@ -42,17 +42,16 @@ class HelpForm(QDialog):
         self.setLayout(layout)
 
         self.connect(backAction, SIGNAL("triggered()"),
-                     self.textBrowser, SLOT("backward()"))
+                     self.textBrowser, SLOT("backward()"))  #backward--QTextBrowser的内置方法???
         self.connect(homeAction, SIGNAL("triggered()"),
                      self.textBrowser, SLOT("home()"))
         self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
                      self.updatePageTitle)
 
-        self.textBrowser.setSearchPaths([":/"])
-        self.textBrowser.setSource(QUrl(page))
+        self.textBrowser.setSearchPaths([":/"]) #setSearchPaths::设置_搜索_路径
+        self.textBrowser.setSource(QUrl(page))  #setSource::设置_源
         self.resize(400, 600)
-        self.setWindowTitle(self.tr("{} Help").format(
-                QApplication.applicationName()))
+        self.setWindowTitle(self.tr("{} Help").format(QApplication.applicationName()))
 
 
     def updatePageTitle(self):
