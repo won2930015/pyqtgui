@@ -1,85 +1,103 @@
-#!/usr/bin/env python3
-# Copyright (c) 2008-10 Qtrac Ltd. All rights reserved.
-# This program or module is free software: you can redistribute it and/or
-# modify it under the terms of the GNU General Public License as published
-# by the Free Software Foundation, either version 2 of the License, or
-# version 3 of the License, or (at your option) any later version. It is
-# provided for educational purposes and is distributed in the hope that
-# it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
-# the GNU General Public License for more details.
+# -*- coding: utf-8 -*-
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-import ui_newimagedlg
+# Form implementation generated from reading ui file 'newimagedlg.ui'
+#
+# Created by: PyQt4 UI code generator 4.11.4
+#
+# WARNING! All changes made in this file will be lost!
 
+from PyQt4 import QtCore, QtGui
 
-class NewImageDlg(QDialog, ui_newimagedlg.Ui_NewImageDlg):
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
 
-    def __init__(self, parent=None):
-        super(NewImageDlg, self).__init__(parent)
-        self.setupUi(self)
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
-        self.color = Qt.red
-        for value, text in (
-                (Qt.SolidPattern, self.tr("Solid")),
-                (Qt.Dense1Pattern, self.tr("Dense #1")),
-                (Qt.Dense2Pattern, self.tr("Dense #2")),
-                (Qt.Dense3Pattern, self.tr("Dense #3")),
-                (Qt.Dense4Pattern, self.tr("Dense #4")),
-                (Qt.Dense5Pattern, self.tr("Dense #5")),
-                (Qt.Dense6Pattern, self.tr("Dense #6")),
-                (Qt.Dense7Pattern, self.tr("Dense #7")),
-                (Qt.HorPattern, self.tr("Horizontal")),
-                (Qt.VerPattern, self.tr("Vertical")),
-                (Qt.CrossPattern, self.tr("Cross")),
-                (Qt.BDiagPattern, self.tr("Backward Diagonal")),
-                (Qt.FDiagPattern, self.tr("Forward Diagonal")),
-                (Qt.DiagCrossPattern, self.tr("Diagonal Cross"))):
-            self.brushComboBox.addItem(text, value)
+class Ui_NewImageDlg(object):
+    def setupUi(self, NewImageDlg):
+        NewImageDlg.setObjectName(_fromUtf8("NewImageDlg"))
+        NewImageDlg.resize(287, 214)
+        self.gridlayout = QtGui.QGridLayout(NewImageDlg)
+        self.gridlayout.setMargin(9)
+        self.gridlayout.setSpacing(6)
+        self.gridlayout.setObjectName(_fromUtf8("gridlayout"))
+        self.buttonBox = QtGui.QDialogButtonBox(NewImageDlg)
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.NoButton|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
+        self.gridlayout.addWidget(self.buttonBox, 5, 1, 1, 2)
+        spacerItem = QtGui.QSpacerItem(269, 16, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridlayout.addItem(spacerItem, 4, 0, 1, 3)
+        self.colorLabel = QtGui.QLabel(NewImageDlg)
+        self.colorLabel.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.colorLabel.setFrameShadow(QtGui.QFrame.Raised)
+        self.colorLabel.setText(_fromUtf8(""))
+        self.colorLabel.setScaledContents(True)
+        self.colorLabel.setObjectName(_fromUtf8("colorLabel"))
+        self.gridlayout.addWidget(self.colorLabel, 3, 1, 1, 1)
+        self.label_3 = QtGui.QLabel(NewImageDlg)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.gridlayout.addWidget(self.label_3, 3, 0, 1, 1)
+        self.colorButton = QtGui.QPushButton(NewImageDlg)
+        self.colorButton.setObjectName(_fromUtf8("colorButton"))
+        self.gridlayout.addWidget(self.colorButton, 3, 2, 1, 1)
+        self.brushComboBox = QtGui.QComboBox(NewImageDlg)
+        self.brushComboBox.setObjectName(_fromUtf8("brushComboBox"))
+        self.gridlayout.addWidget(self.brushComboBox, 2, 1, 1, 2)
+        self.label_4 = QtGui.QLabel(NewImageDlg)
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.gridlayout.addWidget(self.label_4, 2, 0, 1, 1)
+        self.label = QtGui.QLabel(NewImageDlg)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.gridlayout.addWidget(self.label, 0, 0, 1, 1)
+        self.label_2 = QtGui.QLabel(NewImageDlg)
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.gridlayout.addWidget(self.label_2, 1, 0, 1, 1)
+        self.heightSpinBox = QtGui.QSpinBox(NewImageDlg)
+        self.heightSpinBox.setAlignment(QtCore.Qt.AlignRight)
+        self.heightSpinBox.setMaximum(512)
+        self.heightSpinBox.setMinimum(8)
+        self.heightSpinBox.setSingleStep(4)
+        self.heightSpinBox.setProperty("value", 64)
+        self.heightSpinBox.setObjectName(_fromUtf8("heightSpinBox"))
+        self.gridlayout.addWidget(self.heightSpinBox, 1, 1, 1, 1)
+        self.widthSpinBox = QtGui.QSpinBox(NewImageDlg)
+        self.widthSpinBox.setAlignment(QtCore.Qt.AlignRight)
+        self.widthSpinBox.setMaximum(512)
+        self.widthSpinBox.setMinimum(8)
+        self.widthSpinBox.setSingleStep(4)
+        self.widthSpinBox.setProperty("value", 64)
+        self.widthSpinBox.setObjectName(_fromUtf8("widthSpinBox"))
+        self.gridlayout.addWidget(self.widthSpinBox, 0, 1, 1, 1)
+        self.label_4.setBuddy(self.brushComboBox)
+        self.label.setBuddy(self.widthSpinBox)
+        self.label_2.setBuddy(self.heightSpinBox)
 
-        self.connect(self.colorButton, SIGNAL("clicked()"),
-                     self.getColor)
-        self.connect(self.brushComboBox, SIGNAL("activated(int)"),
-                     self.setColor)
-        self.setColor()
-        self.widthSpinBox.setFocus()
+        self.retranslateUi(NewImageDlg)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), NewImageDlg.accept)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), NewImageDlg.reject)
+        QtCore.QMetaObject.connectSlotsByName(NewImageDlg)
+        NewImageDlg.setTabOrder(self.widthSpinBox, self.heightSpinBox)
+        NewImageDlg.setTabOrder(self.heightSpinBox, self.brushComboBox)
+        NewImageDlg.setTabOrder(self.brushComboBox, self.colorButton)
+        NewImageDlg.setTabOrder(self.colorButton, self.buttonBox)
 
-
-    def getColor(self):
-        color = QColorDialog.getColor(Qt.black, self)
-        if color.isValid():
-            self.color = color
-            self.setColor()
-
-
-    def setColor(self):
-        pixmap = self._makePixmap(60, 30)
-        self.colorLabel.setPixmap(pixmap)
-
-
-    def image(self):
-        pixmap = self._makePixmap(self.widthSpinBox.value(),
-                                  self.heightSpinBox.value())
-        return QPixmap.toImage(pixmap)
-
-
-    def _makePixmap(self, width, height):
-        pixmap = QPixmap(width, height)
-        style = int(self.brushComboBox.itemData(
-                    self.brushComboBox.currentIndex()))
-        brush = QBrush(self.color, Qt.BrushStyle(style))
-        painter = QPainter(pixmap)
-        painter.fillRect(pixmap.rect(), Qt.white)
-        painter.fillRect(pixmap.rect(), brush)
-        return pixmap
-
-
-if __name__ == "__main__":
-    import sys
-
-    app = QApplication(sys.argv)
-    form = NewImageDlg()
-    form.show()
-    app.exec_()
+    def retranslateUi(self, NewImageDlg):
+        NewImageDlg.setWindowTitle(_translate("NewImageDlg", "Image Chooser - New Image", None))
+        self.label_3.setText(_translate("NewImageDlg", "Color", None))
+        self.colorButton.setText(_translate("NewImageDlg", "&Color...", None))
+        self.label_4.setText(_translate("NewImageDlg", "&Brush pattern:", None))
+        self.label.setText(_translate("NewImageDlg", "&Width:", None))
+        self.label_2.setText(_translate("NewImageDlg", "&Height:", None))
+        self.heightSpinBox.setSuffix(_translate("NewImageDlg", " px", None))
+        self.widthSpinBox.setSuffix(_translate("NewImageDlg", " px", None))
 
