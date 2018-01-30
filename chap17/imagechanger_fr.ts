@@ -7,23 +7,25 @@
         <location filename="helpform.py" line="27"/>
         <source>&amp;Back</source>
         <translatorcomment>后退</translatorcomment>
-        <translation>后退</translation>
+        <translation>后退(&amp;B)</translation>
     </message>
     <message>
         <location filename="helpform.py" line="29"/>
         <source>&amp;Home</source>
         <translatorcomment>主页</translatorcomment>
-        <translation>主页</translation>
+        <translation>主页(&amp;H)</translation>
     </message>
     <message>
         <location filename="helpform.py" line="30"/>
         <source>Home</source>
-        <translation></translation>
+        <translatorcomment>主页</translatorcomment>
+        <translation>主页(&amp;H)</translation>
     </message>
     <message>
         <location filename="helpform.py" line="54"/>
         <source>{} Help</source>
-        <translation></translation>
+        <translatorcomment>帮助</translatorcomment>
+        <translation>帮助</translation>
     </message>
 </context>
 <context>

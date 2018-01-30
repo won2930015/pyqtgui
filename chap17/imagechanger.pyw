@@ -31,30 +31,31 @@ class MainWindow(QMainWindow):
         self.image = QImage()
         self.dirty = False
         self.filename = None
-        self.mirroredvertically = False
-        self.mirroredhorizontally = False
+        self.mirroredvertically = False     #镜像_垂直
+        self.mirroredhorizontally = False   #镜像_水平
 
         self.imageLabel = QLabel()
         self.imageLabel.setMinimumSize(200, 200)
         self.imageLabel.setAlignment(Qt.AlignCenter)
-        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu) #setContextMenuPolicy::设置_上下文_菜单_策略
         self.setCentralWidget(self.imageLabel)
 
-        logDockWidget = QDockWidget("Log", self)
+        logDockWidget = QDockWidget("Log", self)    #QDockWidget::船坞控件
         logDockWidget.setObjectName("LogDockWidget")
-        logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea|
+        logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea|    #setAllowedAreas::设置_允许_区域
                                       Qt.RightDockWidgetArea)
         self.listWidget = QListWidget()
         logDockWidget.setWidget(self.listWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, logDockWidget)
+        self.addDockWidget(Qt.RightDockWidgetArea, logDockWidget)   #自带内置方法.
 
-        self.printer = None
+        self.printer = None #创建 打印器 变量.
 
         self.sizeLabel = QLabel()
-        self.sizeLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
-        status = self.statusBar()
-        status.setSizeGripEnabled(False)
-        status.addPermanentWidget(self.sizeLabel)
+        self.sizeLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)#setFrameStyle::设置_框架_样式,
+                                                                      # QFrame.StyledPanel::可变_面板,QFrame.Sunken::凹陷的
+        status = self.statusBar()   #创建 状态条.
+        status.setSizeGripEnabled(False) #设置_尽寸_调整_启用==False
+        status.addPermanentWidget(self.sizeLabel)   #addPermanentWidget::加入_永久_控件
         self.statusBar().showMessage(self.tr("Ready"), 5000)
 
         fileNewAction = self.createAction(self.tr("&New..."),
@@ -75,66 +76,64 @@ class MainWindow(QMainWindow):
         fileQuitAction = self.createAction(self.tr("&Quit"),
                 self.close, self.tr("Ctrl+Q"), "filequit",
                 self.tr("Close the application"))
-        editInvertAction = self.createAction(self.tr("&Invert"),
+        editInvertAction = self.createAction(self.tr("&Invert"),    #editInvertAction::编缉_反相_动作
                 self.editInvert, self.tr("Ctrl+I"), "editinvert",
                 self.tr("Invert the image's colors"), True,
                 "toggled(bool)")
-        editSwapRedAndBlueAction = self.createAction(
+        editSwapRedAndBlueAction = self.createAction(   #编辑_互换_红|蓝_动作
                 self.tr("Sw&ap Red and Blue"),
                 self.editSwapRedAndBlue, self.tr("Ctrl+A"), "editswap",
                 self.tr("Swap the image's red and blue "
                         "color components"), True, "toggled(bool)")
-        editZoomAction = self.createAction(self.tr("&Zoom..."),
+        editZoomAction = self.createAction(self.tr("&Zoom..."), #editZoomAction::编辑_缩放_动作
                 self.editZoom, self.tr("Alt+Z"), "editzoom",
                 self.tr("Zoom the image"))
-        editResizeAction = self.createAction(self.tr("&Resize..."),
+        editResizeAction = self.createAction(self.tr("&Resize..."), #editResizeAction ::编辑_调整尺寸_动作
                 self.editResize, self.tr("Ctrl+R"), "editresize",
                 self.tr("Resize the image"))
-        mirrorGroup = QActionGroup(self)
-        editUnMirrorAction = self.createAction(self.tr("&Unmirror"),
+        mirrorGroup = QActionGroup(self)    #镜像_组.
+        editUnMirrorAction = self.createAction(self.tr("&Unmirror"),    #editUnMirrorAction::编辑_取消_镜像_动作
                 self.editUnMirror, self.tr("Ctrl+U"), "editunmirror",
                 self.tr("Unmirror the image"), True, "toggled(bool)")
         mirrorGroup.addAction(editUnMirrorAction)
-        editMirrorHorizontalAction = self.createAction(
+        editMirrorHorizontalAction = self.createAction( #editMirrorHorizontalAction::编辑_镜像_水平_动作
                 self.tr("Mirror &Horizontally"),
                 self.editMirrorHorizontal, self.tr("Ctrl+H"),
                 "editmirrorhoriz",
                 self.tr("Horizontally mirror the image"), True,
                 "toggled(bool)")
         mirrorGroup.addAction(editMirrorHorizontalAction)
-        editMirrorVerticalAction = self.createAction(
+        editMirrorVerticalAction = self.createAction(   #editMirrorVerticalAction::编辑_镜像_垂直_动作
                 self.tr("Mirror &Vertically"), self.editMirrorVertical,
                 self.tr("Ctrl+V"), "editmirrorvert",
                 self.tr("Vertically mirror the image"), True,
                 "toggled(bool)")
         mirrorGroup.addAction(editMirrorVerticalAction)
-        editUnMirrorAction.setChecked(True)
-        helpAboutAction = self.createAction(
+        editUnMirrorAction.setChecked(True)     #setChecked::设置_选中 ==True
+        helpAboutAction = self.createAction(    #helpAboutAction::关于_帮助_动作
                 self.tr("&About Image Changer"), self.helpAbout)
-        helpHelpAction = self.createAction(self.tr("&Help"),
+        helpHelpAction = self.createAction(self.tr("&Help"),    #helpHelpAction::帮助_帮助_动作 ???
                 self.helpHelp, QKeySequence.HelpContents)
 
         self.fileMenu = self.menuBar().addMenu(self.tr("&File"))
         self.fileMenuActions = (fileNewAction, fileOpenAction,
                 fileSaveAction, fileSaveAsAction, None,
                 filePrintAction, fileQuitAction)
-        self.connect(self.fileMenu, SIGNAL("aboutToShow()"),
+        self.connect(self.fileMenu, SIGNAL("aboutToShow()"),    #关于_显示_时.
                      self.updateFileMenu)
         editMenu = self.menuBar().addMenu(self.tr("&Edit"))
         self.addActions(editMenu, (editInvertAction,
                 editSwapRedAndBlueAction, editZoomAction,
                 editResizeAction))
-        mirrorMenu = editMenu.addMenu(QIcon(":/editmirror.png"),
+        mirrorMenu = editMenu.addMenu(QIcon(":/editmirror.png"),    #加入子菜单::设置图标, 子菜单名.
                 self.tr("&Mirror"))
-        self.addActions(mirrorMenu, (editUnMirrorAction,
-                editMirrorHorizontalAction, editMirrorVerticalAction))
+        self.addActions(mirrorMenu, (editUnMirrorAction, editMirrorHorizontalAction, editMirrorVerticalAction))
         helpMenu = self.menuBar().addMenu(self.tr("&Help"))
         self.addActions(helpMenu, (helpAboutAction, helpHelpAction))
 
         fileToolbar = self.addToolBar("File")
-        fileToolbar.setObjectName("FileToolBar")
-        self.addActions(fileToolbar, (fileNewAction, fileOpenAction,
-                                      fileSaveAsAction))
+        fileToolbar.setObjectName("FileToolBar")    #setObjectName::设置_对象_名(设置文件工具条对象名.)
+        self.addActions(fileToolbar, (fileNewAction, fileOpenAction, fileSaveAsAction))
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolBar")
         self.addActions(editToolbar, (editInvertAction,
@@ -142,11 +141,11 @@ class MainWindow(QMainWindow):
                 editMirrorVerticalAction, editMirrorHorizontalAction))
         self.zoomSpinBox = QSpinBox()
         self.zoomSpinBox.setRange(1, 400)
-        self.zoomSpinBox.setSuffix(" %")
+        self.zoomSpinBox.setSuffix(" %")    #setSuffix::设置_后缀
         self.zoomSpinBox.setValue(100)
         self.zoomSpinBox.setToolTip(self.tr("Zoom the image"))
         self.zoomSpinBox.setStatusTip(self.zoomSpinBox.toolTip())
-        self.zoomSpinBox.setFocusPolicy(Qt.NoFocus)
+        self.zoomSpinBox.setFocusPolicy(Qt.NoFocus) #设置_焦点_策略
         self.connect(self.zoomSpinBox,
                      SIGNAL("valueChanged(int)"), self.showImage)
         editToolbar.addWidget(self.zoomSpinBox)
@@ -161,9 +160,9 @@ class MainWindow(QMainWindow):
 
         settings = QSettings()
         self.recentFiles = settings.value("RecentFiles") or []
-        self.restoreGeometry(settings.value("MainWindow/Geometry",
+        self.restoreGeometry(settings.value("MainWindow/Geometry",  #restoreGeometry::恢复_几何.
                 QByteArray()))
-        self.restoreState(settings.value("MainWindow/State",
+        self.restoreState(settings.value("MainWindow/State",    #restoreState::恢复_状态.
                 QByteArray()))
         
         self.setWindowTitle(self.tr("Image Changer"))
@@ -197,9 +196,9 @@ class MainWindow(QMainWindow):
 
 
     def closeEvent(self, event):
-        if self.okToContinue():
+        if self.okToContinue(): #okToContinue::确认_继续(退出时保存各种状态)
             settings = QSettings()
-            settings.setValue("LastFile", self.filename)
+            settings.setValue("LastFile", self.filename)    #最后_文件.
             settings.setValue("RecentFiles", self.recentFiles or [])
             settings.setValue("MainWindow/Geometry", self.saveGeometry())
             settings.setValue("MainWindow/State", self.saveState())
@@ -210,8 +209,8 @@ class MainWindow(QMainWindow):
     def okToContinue(self):
         if self.dirty:
             reply = QMessageBox.question(self,
-                            self.tr("Image Changer - Unsaved Changes"),
-                            self.tr("Save unsaved changes?"),
+                            self.tr("Image Changer - Unsaved Changes"), #图像_改变- 未保存改变
+                            self.tr("Save unsaved changes?"),   #保存 未何存 改变 ?
                             QMessageBox.Yes|QMessageBox.No|
                             QMessageBox.Cancel)
             if reply == QMessageBox.Cancel:
@@ -351,8 +350,8 @@ class MainWindow(QMainWindow):
         if self.image.isNull():
             return True
         fname = self.filename if self.filename is not None else "."
-        formats = (["*.{}".format(format.data().decode("ascii").lower())
-                   for format in QImageWriter.supportedImageFormats()])
+        formats = (["*.{}".format(format.data().decode("ascii").lower())    #生成:图像格式列表.
+                   for format in QImageWriter.supportedImageFormats()]) #supportedImageFormats::支持_图像_格式
         fname = QFileDialog.getSaveFileName(self,
                         self.tr("Image Changer - Save Image"), fname,
                         self.tr("Image files ({})").format(" ".join(formats)))
