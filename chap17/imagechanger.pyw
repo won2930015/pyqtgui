@@ -159,14 +159,14 @@ class MainWindow(QMainWindow):
                                  (editUnMirrorAction, True))
 
         settings = QSettings()
-        self.recentFiles = settings.value("RecentFiles") or []
+        self.recentFiles = settings.value("RecentFiles") or []  #最近_文件.
         self.restoreGeometry(settings.value("MainWindow/Geometry",  #restoreGeometry::恢复_几何.
-                QByteArray()))
+                QByteArray()))  #没有时返回::QByteArray 类量对象.
         self.restoreState(settings.value("MainWindow/State",    #restoreState::恢复_状态.
                 QByteArray()))
         
         self.setWindowTitle(self.tr("Image Changer"))
-        self.updateFileMenu()
+        self.updateFileMenu()   #更新_文件_菜单.
         QTimer.singleShot(0, self.loadInitialFile)
 
 
@@ -198,7 +198,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         if self.okToContinue(): #okToContinue::确认_继续(退出时保存各种状态)
             settings = QSettings()
-            settings.setValue("LastFile", self.filename)    #最后_文件.
+            settings.setValue("LastFile", self.filename)    #最后_文件名.
             settings.setValue("RecentFiles", self.recentFiles or [])
             settings.setValue("MainWindow/Geometry", self.saveGeometry())
             settings.setValue("MainWindow/State", self.saveState())
@@ -227,7 +227,7 @@ class MainWindow(QMainWindow):
             self.loadFile(fname)
 
 
-    def updateStatus(self, message):
+    def updateStatus(self, message):    #更新_状态.
         self.statusBar().showMessage(message, 5000)
         self.listWidget.addItem(message)
         if self.filename is not None:
@@ -237,12 +237,12 @@ class MainWindow(QMainWindow):
             self.setWindowTitle(self.tr("Image Changer - Unnamed[*]"))
         else:
             self.setWindowTitle(self.tr("Image Changer[*]"))
-        self.setWindowModified(self.dirty)
+        self.setWindowModified(self.dirty)  #setWindowModified::设置_窗口_修改 属性.
 
 
     def updateFileMenu(self):
-        self.fileMenu.clear()
-        self.addActions(self.fileMenu, self.fileMenuActions[:-1])
+        self.fileMenu.clear()   #clear清除
+        self.addActions(self.fileMenu, self.fileMenuActions[:-1])   #加入 0至 n-1项
         current = self.filename
         recentFiles = []
         for fname in self.recentFiles:
@@ -259,13 +259,14 @@ class MainWindow(QMainWindow):
                              self.loadFile)
                 self.fileMenu.addAction(action)
         self.fileMenu.addSeparator()
-        self.fileMenu.addAction(self.fileMenuActions[-1])
+        self.fileMenu.addAction(self.fileMenuActions[-1])   #加入最后一项
 
 
     def fileNew(self):
         if not self.okToContinue():
             return
-        dialog = newimagedlg.NewImageDlg(self)
+        dialog = newimagedlg.Ui_NewImageDlg(self)
+        #dialog = newimagedlg.NewImageDlg(self)
         if dialog.exec_():
             self.addRecentFile(self.filename)
             self.image = QImage()
@@ -307,7 +308,7 @@ class MainWindow(QMainWindow):
             self.filename = None
             image = QImage(fname)
             if image.isNull():
-                message = self.tr("Failed to read {}").format(fname)
+                message = self.tr("Failed to read {}").format(fname)    #Failed to read ::读_失败.
             else:
                 self.addRecentFile(fname)
                 self.image = QImage()
@@ -323,11 +324,11 @@ class MainWindow(QMainWindow):
             self.updateStatus(message)
 
 
-    def addRecentFile(self, fname):
+    def addRecentFile(self, fname): #加入_最近_文件
         if fname is None:
             return
         if fname not in self.recentFiles:
-            self.recentFiles = [fname] + self.recentFiles[:8]
+            self.recentFiles = [fname] + self.recentFiles[:8]   #记录最近打开的8+1个文件.
 
 
     def fileSave(self):
@@ -358,7 +359,7 @@ class MainWindow(QMainWindow):
         if fname:
             if "." not in fname:
                 fname += ".png"
-            self.addRecentFile(fname)
+            self.addRecentFile(fname)   #加入_最近_文件
             self.filename = fname
             return self.fileSave()
         return False
@@ -463,15 +464,15 @@ class MainWindow(QMainWindow):
                 self.updateStatus(self.tr("Resized to {}").format(size))
 
 
-    def showImage(self, percent=None):
+    def showImage(self, percent=None):  #显示_图像
         if self.image.isNull():
             return
-        if percent is None:
+        if percent is None: #percent::百份比
             percent = self.zoomSpinBox.value()
-        factor = percent / 100.0
+        factor = percent / 100.0    #factor::系数
         width = self.image.width() * factor
         height = self.image.height() * factor
-        image = self.image.scaled(width, height, Qt.KeepAspectRatio)
+        image = self.image.scaled(width, height, Qt.KeepAspectRatio)    #scale::比例,KeepAspectRatio::保持_纵横_比
         self.imageLabel.setPixmap(QPixmap.fromImage(image))
 
 
