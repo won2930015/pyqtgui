@@ -15,6 +15,7 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import helpform
+#import newimagedlg
 import newimagedlg
 import resizedlg
 import qrc_resources
@@ -286,7 +287,7 @@ class MainWindow(QMainWindow):
         dir = (os.path.dirname(self.filename)
                if self.filename is not None else ".")
         formats = (["*.{}".format(format.data().decode("ascii").lower())
-                   for format in QImageReader.supportedImageFormats()])
+                   for format in QImageReader.supportedImageFormats()]) #supportedImageFormats::支持_图像_格式.
         fname = QFileDialog.getOpenFileName(self,
                     self.tr("Image Changer - Choose Image"), dir,
                     self.tr("Image files ({})").format(" ".join(formats)))
