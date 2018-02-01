@@ -27,8 +27,8 @@ class Ui_NewImageDlg(object):
         NewImageDlg.setObjectName(_fromUtf8("NewImageDlg"))
         NewImageDlg.resize(287, 214)
         self.gridlayout = QtGui.QGridLayout(NewImageDlg)
-        self.gridlayout.setMargin(9)
-        self.gridlayout.setSpacing(6)
+        self.gridlayout.setMargin(9)    #setMargin::设置_边缘
+        self.gridlayout.setSpacing(6)   #setSpacing::设置_间隔
         self.gridlayout.setObjectName(_fromUtf8("gridlayout"))
         self.buttonBox = QtGui.QDialogButtonBox(NewImageDlg)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)

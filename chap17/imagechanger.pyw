@@ -265,8 +265,7 @@ class MainWindow(QMainWindow):
     def fileNew(self):
         if not self.okToContinue():
             return
-        dialog = newimagedlg.Ui_NewImageDlg(self)
-        #dialog = newimagedlg.NewImageDlg(self)
+        dialog = newimagedlg.NewImageDlg(self)
         if dialog.exec_():
             self.addRecentFile(self.filename)
             self.image = QImage()
