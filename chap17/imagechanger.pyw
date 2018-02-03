@@ -8,6 +8,9 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
+#相关列程   6-imagechanger.pyw,
+#         12-pagedesignet.pyw/multipedes.pyw(动画),
+#         13-printing.pyw,pythoneditor.pyw(python文本编辑器)
 
 import os
 import platform

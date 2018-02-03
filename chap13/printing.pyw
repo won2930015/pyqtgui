@@ -361,7 +361,7 @@ class Form(QDialog):
             font.setItalic(True)
             painter.setFont(font)
             option = QTextOption(Qt.AlignCenter)    #TextOption::文件选项
-            option.setWrapMode(QTextOption.WordWrap)    #自动换行
+            option.setWrapMode(QTextOption.WordWrap)    #setWrapMode::设置_循环_模式,WordWrap::自动(整字)换行
             painter.drawText(
                     QRectF(x, y, pageRect.width() - 2 * LeftMargin, 31),
                     "The contents of this letter are for information "
@@ -370,7 +370,7 @@ class Form(QDialog):
             page += 1
             if page <= len(self.statements):
                 self.printer.newPage()  #newPage::新页
-            painter.restore()  #restore::还原
+            painter.restore()  #restore::恢复/还原
 
 
 if __name__ == "__main__":
