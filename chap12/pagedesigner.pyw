@@ -29,8 +29,8 @@ Dirty = False
 
 class TextItemDlg(QDialog):     #自定义的文本项对话框...
 
-    #def __init__(self, item=None, position=None, scene=None, parent=None):下面是完整的定义.
-    def __init__(self, item: object = None, scene: object = None, position: object = None, parent: object = None) -> object:
+    def __init__(self, item=None, position=None, scene=None, parent=None):  #下面是完整的定义.
+    #def __init__(self, item: object = None, scene: object = None, position: object = None, parent: object = None) -> object:
         super(QDialog, self).__init__(parent)
 
         self.item = item            #项
@@ -191,11 +191,11 @@ class BoxItem(QGraphicsItem):
         wrapped = []
         menu = QMenu(self.parentWidget())
         for text, param in (
-                ("&Solid", Qt.SolidLine),
+                ("&Solid", Qt.SolidLine),   #实线
                 ("&Dashed", Qt.DashLine),   #破折_线
                 ("D&otted", Qt.DotLine),    #点_线
-                ("D&ashDotted", Qt.DashDotLine),
-                ("DashDo&tDotted", Qt.DashDotDotLine)):
+                ("D&ashDotted", Qt.DashDotLine),    #破折|点_线.
+                ("DashDo&tDotted", Qt.DashDotDotLine)): #破折|点|点_线
             wrapper = functools.partial(self.setStyle, param)   #偏函数:.partial(函数(), 参数1,参数2,...)
             wrapped.append(wrapper)
             menu.addAction(text, wrapper)
@@ -233,12 +233,12 @@ class BoxItem(QGraphicsItem):
             QGraphicsItem.keyPressEvent(self, event)
 
 
-class GraphicsView(QGraphicsView):  #扩展视图子类.
+class GraphicsView(QGraphicsView):  #扩展 图形视图 子类.
 
     def __init__(self, parent=None):
         super(GraphicsView, self).__init__(parent)
-        self.setDragMode(QGraphicsView.RubberBandDrag)  #.RubberBandDrag:拖动时显示 橡皮筋边框
-        self.setRenderHint(QPainter.Antialiasing)
+        self.setDragMode(QGraphicsView.RubberBandDrag)  #setDragMode::设置_拖拽_模式, RubberBandDrag::拖动时显示 橡皮筋边框
+        self.setRenderHint(QPainter.Antialiasing)       #RenderHint::渲染_提示
         self.setRenderHint(QPainter.TextAntialiasing)
 
 
@@ -257,7 +257,7 @@ class MainForm(QDialog):
         self.pasteOffset = 5    #粘贴_偏移
         self.prevPoint = QPoint()   # 前一个_节点
         self.addOffset = 5  #加入_偏移
-        self.borders = []
+        self.borders = []   #边框??
 
         self.printer = QPrinter(QPrinter.HighResolution)    #.HighResolution:高分辨率
         self.printer.setPageSize(QPrinter.Letter)
@@ -341,7 +341,7 @@ class MainForm(QDialog):
 
     def position(self):
         point = self.mapFromGlobal(QCursor.pos())   #将光标当前位置坐标转换成物理坐标point.
-        if not self.view.geometry().contains(point):    # if not  view.geometry(几何图形).contains(包含)point 时.
+        if not self.view.geometry().contains(point):    #geometry::几何图形,contains::包含, 当 视图.几何图形不包含point时执行...
             coord = random.randint(36, 144)
             point = QPoint(coord, coord)
         else:
@@ -411,7 +411,7 @@ class MainForm(QDialog):
         self.copiedItem.clear()
         self.pasteOffset = 5
         stream = QDataStream(self.copiedItem, QIODevice.WriteOnly)
-        self.writeItemToStream(stream, item)
+        self.writeItemToStream(stream, item)    #写项到→流::自定义函数方法.
 
 
     def cut(self):      #剪切
@@ -455,12 +455,12 @@ class MainForm(QDialog):
     def print_(self):   #打印
         dialog = QPrintDialog(self.printer)
         if dialog.exec_():
-            painter = QPainter(self.printer)
+            painter = QPainter(self.printer)    #将绘图器初始化到打印机上.
             painter.setRenderHint(QPainter.Antialiasing)
             painter.setRenderHint(QPainter.TextAntialiasing)
             self.scene.clearSelection()
             self.removeBorders()
-            self.scene.render(painter)      # render():渲染. PS:用 painter:打印机 当输出介质打印出屏幕内容.
+            self.scene.render(painter)      # render():渲染. PS:将 屏幕内容.渲染到[painter::绘图器]上→ 即打印输出屏幕内容.
             self.addBorders()
 
 
@@ -541,7 +541,7 @@ class MainForm(QDialog):
         type = ""
         position = QPointF()
         matrix = QMatrix()
-        type = stream.readQString()
+        type = stream.readQString() #readQString()::读出一段字符串类型.
         stream >> position >> matrix
         if offset:
             position += QPointF(offset, offset)
@@ -578,7 +578,7 @@ class MainForm(QDialog):
 
 app = QApplication(sys.argv)
 form = MainForm()
-rect = QApplication.desktop().availableGeometry()   #.availableGeometry:获取桌面可用_几何图形.
+rect = QApplication.desktop().availableGeometry()   #:获取桌面().availableGeometry可用_几何矩形.
 form.resize(int(rect.width() * 0.6), int(rect.height() * 0.9))
 form.show()
 app.exec_()
