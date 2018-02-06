@@ -385,7 +385,7 @@ class MainWindow(QMainWindow):
             painter.drawImage(0, 0, self.image)
 
 
-    def editInvert(self, on):
+    def editInvert(self, on):   #编辑_反相.
         if self.image.isNull():
             return
         self.image.invertPixels()
@@ -398,7 +398,7 @@ class MainWindow(QMainWindow):
     def editSwapRedAndBlue(self, on):
         if self.image.isNull():
             return
-        self.image = self.image.rgbSwapped()
+        self.image = self.image.rgbSwapped()    #rgbSwapped::rbg调换
         self.showImage()
         self.dirty = True
         self.updateStatus(self.tr("Swapped Red and Blue") if on else
@@ -417,7 +417,7 @@ class MainWindow(QMainWindow):
     def editMirrorHorizontal(self, on):
         if self.image.isNull():
             return
-        self.image = self.image.mirrored(True, False)
+        self.image = self.image.mirrored(True, False)   #.mirrored::镜像(水平,垂直)
         self.showImage()
         self.mirroredhorizontally = not self.mirroredhorizontally
         self.dirty = True
