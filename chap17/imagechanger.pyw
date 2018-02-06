@@ -38,10 +38,10 @@ class MainWindow(QMainWindow):
         self.mirroredvertically = False     #镜像_垂直
         self.mirroredhorizontally = False   #镜像_水平
 
-        self.imageLabel = QLabel()
+        self.imageLabel = QLabel()  #用于装载图像.
         self.imageLabel.setMinimumSize(200, 200)
         self.imageLabel.setAlignment(Qt.AlignCenter)
-        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu) #setContextMenuPolicy::设置_上下文_菜单_策略
+        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu) #setContextMenuPolicy::设置_上下文_菜单_策略, ActionsContextMenu::动作_上下文_菜单.
         self.setCentralWidget(self.imageLabel)
 
         logDockWidget = QDockWidget("Log", self)    #QDockWidget::船坞控件
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
         editResizeAction = self.createAction(self.tr("&Resize..."), #editResizeAction ::编辑_调整尺寸_动作
                 self.editResize, self.tr("Ctrl+R"), "editresize",
                 self.tr("Resize the image"))
-        mirrorGroup = QActionGroup(self)    #镜像_组.
+        mirrorGroup = QActionGroup(self)    #mirrorGroup::镜像_组.
         editUnMirrorAction = self.createAction(self.tr("&Unmirror"),    #editUnMirrorAction::编辑_取消_镜像_动作
                 self.editUnMirror, self.tr("Ctrl+U"), "editunmirror",
                 self.tr("Unmirror the image"), True, "toggled(bool)")
@@ -158,7 +158,7 @@ class MainWindow(QMainWindow):
                 editSwapRedAndBlueAction, editUnMirrorAction,
                 editMirrorVerticalAction, editMirrorHorizontalAction))
 
-        self.resetableActions = ((editInvertAction, False),
+        self.resetableActions = ((editInvertAction, False),     #resetableActions::复位_动作
                                  (editSwapRedAndBlueAction, False),
                                  (editUnMirrorAction, True))
 
@@ -187,7 +187,7 @@ class MainWindow(QMainWindow):
         if slot is not None:
             self.connect(action, SIGNAL(signal), slot)
         if checkable:
-            action.setCheckable(True)
+            action.setCheckable(True)   #setCheckable::设置_能_可选的
         return action
 
 
@@ -217,14 +217,14 @@ class MainWindow(QMainWindow):
                             self.tr("Save unsaved changes?"),   #保存 未何存 改变 ?
                             QMessageBox.Yes|QMessageBox.No|
                             QMessageBox.Cancel)
-            if reply == QMessageBox.Cancel:
+            if reply == QMessageBox.Cancel: #取消操作.
                 return False
             elif reply == QMessageBox.Yes:
                 return self.fileSave()
         return True
 
 
-    def loadInitialFile(self):
+    def loadInitialFile(self):  #装载_初始_文件.
         settings = QSettings()
         fname = settings.value("LastFile")
         if fname and QFile.exists(fname):
