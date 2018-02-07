@@ -18,7 +18,6 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import helpform
-#import newimagedlg
 import newimagedlg
 import resizedlg
 import qrc_resources
@@ -515,10 +514,10 @@ def main():
         locale = QLocale.system().name()    #locale::地区
         print(locale)
     qtTranslator = QTranslator()
-    if qtTranslator.load("qt_" + locale, ":/"):
+    if qtTranslator.load("qt_" + locale, ":/"): #需要设置准确文件名,qt_zh_CN.qm,如搜索失败是不会去搜索qt_zh.qm文件的.
         app.installTranslator(qtTranslator)
     appTranslator = QTranslator()
-    if appTranslator.load("imagechanger_" + locale, ":/"):
+    if appTranslator.load("imagechanger_" + locale, ":/"):   #需要设置准确文件名,imagechanger_zh_CN.qm,如搜索失败是不会去搜索imagechanger_zh.qm文件的.
         app.installTranslator(appTranslator)
 
     app.setOrganizationName("Qtrac Ltd.")   #设置_组织/机构_名

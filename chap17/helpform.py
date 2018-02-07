@@ -22,7 +22,7 @@ class HelpForm(QDialog):
                                                 #如果widget设置了Qt.WA_DeleteOnClose属性，widget将会被释放。
                                                 #不管widget是否可见，关闭事件都会传递给widget。即接收到QCloseEvent事件后，
                                                 #除了调用hide()方法将窗口隐藏，同时会调用deleteLater()方法将窗口释放掉，不会再占用资源。
-        self.setAttribute(Qt.WA_GroupLeader)    #组长?????群组控件的第一个???
+        self.setAttribute(Qt.WA_GroupLeader)    #p386
 
         backAction = QAction(QIcon(":/back.png"), self.tr("&Back"), self)
         backAction.setShortcut(QKeySequence.Back)   #setShortcut::设置_快捷键
@@ -48,7 +48,7 @@ class HelpForm(QDialog):
         self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
                      self.updatePageTitle)
 
-        self.textBrowser.setSearchPaths([":/"]) #setSearchPaths::设置_搜索_路径
+        self.textBrowser.setSearchPaths([":/"]) #setSearchPaths::设置_搜索_路径.p386
         self.textBrowser.setSource(QUrl(page))  #setSource::设置_源
         self.resize(400, 600)
         self.setWindowTitle(self.tr("{} Help").format(QApplication.applicationName()))
