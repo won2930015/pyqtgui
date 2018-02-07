@@ -506,13 +506,14 @@ def main():
     # or
     #   imagechanger.pyw LANG=de_DE.UTF-8
     # etc.
-    locale = None
+    locale = None   #locale::地区
     if len(sys.argv) > 1 and "=" in sys.argv[1]:
         key, value = sys.argv[1].split("=")
         if key == "LANG" and value:
             locale = value
     if locale is None:
-        locale = QLocale.system().name()
+        locale = QLocale.system().name()    #locale::地区
+        print(locale)
     qtTranslator = QTranslator()
     if qtTranslator.load("qt_" + locale, ":/"):
         app.installTranslator(qtTranslator)
@@ -520,9 +521,9 @@ def main():
     if appTranslator.load("imagechanger_" + locale, ":/"):
         app.installTranslator(appTranslator)
 
-    app.setOrganizationName("Qtrac Ltd.")
-    app.setOrganizationDomain("qtrac.eu")
-    app.setApplicationName(app.translate("main", "Image Changer"))
+    app.setOrganizationName("Qtrac Ltd.")   #设置_组织/机构_名
+    app.setOrganizationDomain("qtrac.eu")   #设置_组织/机构_领域
+    app.setApplicationName(app.translate("main", "Image Changer"))  #设置_应用_名
     app.setWindowIcon(QIcon(":/icon.png"))
     form = MainWindow()
     form.show()

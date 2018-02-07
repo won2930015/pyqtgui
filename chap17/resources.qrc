@@ -18,8 +18,8 @@
 <file alias="icon.png">images/icon.png</file>
 </qresource>
 <qresource>
-<file>qt_fr.qm</file>
-<file>imagechanger_fr.qm</file>
+<file>qt_zh.qm</file>
+<file>imagechanger_zh.qm</file>
 </qresource>
 <qresource>
 <file alias="editmenu.html">help/editmenu.html</file>
