@@ -514,10 +514,10 @@ def main():
         locale = QLocale.system().name()    #locale::地区
         print(locale)
     qtTranslator = QTranslator()
-    if qtTranslator.load("qt_" + locale, ":/"): #需要设置准确文件名,qt_zh_CN.qm,如搜索失败是不会去搜索qt_zh.qm文件的.
+    if qtTranslator.load("qt_" + locale, ":/"): #需要设置::QT语言家→→编辑→→翻译文件设置...→→目标语言::语言[Chinese],国家/地区[任意国家]
         app.installTranslator(qtTranslator)
     appTranslator = QTranslator()
-    if appTranslator.load("imagechanger_" + locale, ":/"):   #需要设置准确文件名,imagechanger_zh_CN.qm,如搜索失败是不会去搜索imagechanger_zh.qm文件的.
+    if appTranslator.load("imagechanger_" + locale, ":/"):   #如设置确定国家的→→目标语言::语言[Chinese],国家/地区[China]需要设置准确文件名,imagechanger_zh_CN.qm.如搜索失败是不会搜索imagechanger_zh.qm文件的.
         app.installTranslator(appTranslator)
 
     app.setOrganizationName("Qtrac Ltd.")   #设置_组织/机构_名

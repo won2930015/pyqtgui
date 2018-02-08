@@ -20,27 +20,27 @@ PORT = 9407
 SIZEOF_UINT16 = 2
 
 
-class BuildingServicesClient(QWidget):
+class BuildingServicesClient(QWidget):  #建立_服务_客户端
 
     def __init__(self, parent=None):
         super(BuildingServicesClient, self).__init__(parent)
 
         self.socket = QTcpSocket()
-        self.nextBlockSize = 0
-        self.request = None
+        self.nextBlockSize = 0  #下一_块_尺寸
+        self.request = None #请求
 
         roomLabel = QLabel("&Room")
         self.roomEdit = QLineEdit()
         roomLabel.setBuddy(self.roomEdit)
         regex = QRegExp(r"[0-9](?:0[1-9]|[12][0-9]|3[0-4])")
-        self.roomEdit.setValidator(QRegExpValidator(regex, self))
+        self.roomEdit.setValidator(QRegExpValidator(regex, self))   #setValidator::设置_验证器
         self.roomEdit.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
         dateLabel = QLabel("&Date")
-        self.dateEdit = QDateEdit()
+        self.dateEdit = QDateEdit() #创建日期编缉控件.
         dateLabel.setBuddy(self.dateEdit)
         self.dateEdit.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
         self.dateEdit.setDate(QDate.currentDate().addDays(1))
-        self.dateEdit.setDisplayFormat("yyyy-MM-dd")
+        self.dateEdit.setDisplayFormat("yyyy-MM-dd")    #setDisplayFormat::设置_显示_格式
         responseLabel = QLabel("Response")
         self.responseLabel = QLabel()
         self.responseLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
