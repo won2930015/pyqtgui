@@ -9,20 +9,21 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import bisect
-import collections
+import bisect       #导入二分模块
+import collections  #导入集合模块
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtNetwork import *
 
-PORT = 9407
-SIZEOF_UINT16 = 2
-MAX_BOOKINGS_PER_DAY = 5
+PORT = 9407         #端口号
+SIZEOF_UINT16 = 2   #2表示两字节
+MAX_BOOKINGS_PER_DAY = 5    #最大_预订_天数
 
 # Key = date, value = list of room IDs
-Bookings = collections.defaultdict(list)
-
+Bookings = collections.defaultdict(list)        #https://www.cnblogs.com/herbert/archive/2013/01/09/2852843.html
+                                                #collections::集合, defaultdict::默认_字典(KEY:value对)
+                                                #创建Bookings为一个字典列表. -.-????
 def printBookings():
     for key in sorted(Bookings):
         print(key, Bookings[key])
@@ -33,17 +34,17 @@ class Socket(QTcpSocket):
 
     def __init__(self, parent=None):
         super(Socket, self).__init__(parent)
-        self.connect(self, SIGNAL("readyRead()"), self.readRequest)
-        self.connect(self, SIGNAL("disconnected()"), self.deleteLater)
-        self.nextBlockSize = 0
+        self.connect(self, SIGNAL("readyRead()"), self.readRequest) #readyRead()::准备_读 信号
+        self.connect(self, SIGNAL("disconnected()"), self.deleteLater)  #disconnected()::断开 信号
+        self.nextBlockSize = 0  #下一_块_尺寸
 
 
-    def readRequest(self):
+    def readRequest(self):  #readRequest::读_请求
         stream = QDataStream(self)
         stream.setVersion(QDataStream.Qt_4_2)
 
         if self.nextBlockSize == 0:
-            if self.bytesAvailable() < SIZEOF_UINT16:
+            if self.bytesAvailable() < SIZEOF_UINT16:   #bytesAvailable()::字节_可用 [返回 字节可用数值<SIZEOF_UINT16时 返回]
                 return
             self.nextBlockSize = stream.readUInt16()
         if self.bytesAvailable() < self.nextBlockSize:
@@ -61,7 +62,7 @@ class Socket(QTcpSocket):
                 bookings = Bookings[date.toPyDate()]
             if len(bookings) < MAX_BOOKINGS_PER_DAY:
                 if uroom in bookings:
-                    self.sendError("Cannot accept duplicate booking")
+                    self.sendError("Cannot accept duplicate booking")   #不能接受重复预订.
                 else:
                     bisect.insort(bookings, uroom)
                     self.sendReply(action, room, date)

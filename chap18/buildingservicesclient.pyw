@@ -8,6 +8,7 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
+#=====单线程版=====
 
 import sys
 from PyQt4.QtCore import *
@@ -123,7 +124,7 @@ class BuildingServicesClient(QWidget):  #构建_服务_客户端
         stream.writeQString(action) #写入 动作
         stream.writeQString(room)   #写入 房号
         stream << date      #加入 日期
-        stream.device().seek(0) #P398③
+        stream.device().seek(0) #移动到stream开始位置,P398③
         stream.writeUInt16(self.request.size() - SIZEOF_UINT16) #size()::返回值以字节为单位.P398④
         self.updateUi()
         if self.socket.isOpen():    #isOpen()::套接字是否打开.P398⑤
@@ -133,27 +134,27 @@ class BuildingServicesClient(QWidget):  #构建_服务_客户端
                                                         #触发socket::connected信号ROW:74↑,执行sendRequest()方法↓
 
 
-    def sendRequest(self):      #当该方法完成时会执行serverHasStopped()/serverHasError()
+    def sendRequest(self):      #当该方法完成时没有错误并且服务器没有关闭即会给出响应此时执行readResponse()否则执行serverHasStopped()/serverHasError()
         self.responseLabel.setText("Sending request...")
         self.nextBlockSize = 0
         self.socket.write(self.request) #向 套接字 写入 请求.
         self.request = None
         
 
-    def readResponse(self):
+    def readResponse(self):     #读_响应
         stream = QDataStream(self.socket)
         stream.setVersion(QDataStream.Qt_4_2)
 
         while True:
-            if self.nextBlockSize == 0:
-                if self.socket.bytesAvailable() < SIZEOF_UINT16:    #bytesAvailable::可用_字节
+            if self.nextBlockSize == 0: #==0表示已发送完数据,等代响应.
+                if self.socket.bytesAvailable() < SIZEOF_UINT16:    #bytesAvailable()::字节_可用 [返回socket字节可用数值<SIZEOF_UINT16时跳出]
                     break
-                self.nextBlockSize = stream.readUInt16()
-            if self.socket.bytesAvailable() < self.nextBlockSize:
+                self.nextBlockSize = stream.readUInt16()    #读入头数据[UInt16]
+            if self.socket.bytesAvailable() < self.nextBlockSize:   #数据字节数值不一致时跳出.
                 break
-            action = stream.readQString()
-            room = stream.readQString()
-            date = QDate()
+            action = stream.readQString()   #读入动作
+            room = stream.readQString()     #读入房号
+            date = QDate()  #创建日期对象.
             if action != "ERROR":
                 stream >> date
             if action == "ERROR":
