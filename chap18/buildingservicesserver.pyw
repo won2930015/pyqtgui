@@ -14,7 +14,7 @@ import collections  #导入集合模块
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4.QtNetwork import *
+from PyQt4.QtNetwork import *   #包含QTcpSocket(),QUdpSocket()等网络模块.
 
 PORT = 9407         #端口号
 SIZEOF_UINT16 = 2   #2表示两字节
@@ -44,22 +44,22 @@ class Socket(QTcpSocket):
         stream.setVersion(QDataStream.Qt_4_2)
 
         if self.nextBlockSize == 0:
-            if self.bytesAvailable() < SIZEOF_UINT16:   #bytesAvailable()::字节_可用 [返回 字节可用数值<SIZEOF_UINT16时 返回]
+            if self.bytesAvailable() < SIZEOF_UINT16:   #bytesAvailable()::有效_字节 [返回 有效字节数值<SIZEOF_UINT16时 返回]
                 return
             self.nextBlockSize = stream.readUInt16()
-        if self.bytesAvailable() < self.nextBlockSize:  #数据字节数值不一致时 返回.
+        if self.bytesAvailable() < self.nextBlockSize:  #有效字节数值 与 读取的数值 不一致时 返回.
             return
 
-        action = stream.readQString()   #读 动作
+        action = stream.readQString()   #读取'动作[BOOK/UNBOOK]'
         date = QDate()          #创建日期对象.
         if action in ("BOOK", "UNBOOK"):
-            room = stream.readQString() #读 房间号
-            stream >> date              #读 日期
+            room = stream.readQString()     #读取 房间号
+            stream >> date              #读取 日期
             bookings = Bookings.get(date.toPyDate())    #获得给定日期[date]的预订清单, toPyDate::去_计算_日期.
-            uroom = room
+            uroom = room    #uroom::房间副本[为什么要设置副本不太明白用意.]
         if action == "BOOK":
             if bookings is None:
-                bookings = Bookings[date.toPyDate()]    #如果是空的再次获得给定日期的预定清单.
+                bookings = Bookings[date.toPyDate()]    #如果是空列表的再次获得给定日期的预定清单列表.
             if len(bookings) < MAX_BOOKINGS_PER_DAY:    #MAX_BOOKINGS_PER_DAY::最大_预订_每_天[一天最大预订房间数]
                 if uroom in bookings:
                     self.sendError("Cannot accept duplicate booking")   #不能接受重复预订.
@@ -71,12 +71,12 @@ class Socket(QTcpSocket):
                                date.toString(Qt.ISODate)))
         elif action == "UNBOOK":
             if bookings is None or uroom not in bookings:
-                self.sendError("Cannot unbook nonexistent booking")
+                self.sendError("Cannot unbook nonexistent booking")     #不能取消不存在的预订.
             else:
                 bookings.remove(uroom)
                 self.sendReply(action, room, date)  #sendReply::发送_答复
         else:
-            self.sendError("Unrecognized request")
+            self.sendError("Unrecognized request")  #未识别的请求
         printBookings()
 
 
@@ -140,7 +140,7 @@ class BuildingServicesDlg(QPushButton):     #构建_服务_窗口
 
 
     def loadBookings(self):
-        # Generate fake data
+        # Generate fake data    创建伪数据
         import random
 
         today = QDate.currentDate()

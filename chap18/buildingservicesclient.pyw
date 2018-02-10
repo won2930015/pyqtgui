@@ -126,15 +126,15 @@ class BuildingServicesClient(QWidget):  #构建_服务_客户端
         stream << date      #加入 日期
         stream.device().seek(0) #移动到stream开始位置,P398③
         stream.writeUInt16(self.request.size() - SIZEOF_UINT16) #size()::返回值以字节为单位.P398④
-        self.updateUi()
-        if self.socket.isOpen():    #isOpen()::套接字是否打开.P398⑤
+        self.updateUi()     #目的是将 BOOK/UNBOOK 两个按钮设置为不可用.
+        if self.socket.isOpen():    #isOpen()::是否打开[检查套接字是否已打开(上一次没有关闭)].P398⑤
             self.socket.close()
         self.responseLabel.setText("Connecting to server...")
         self.socket.connectToHost("localhost", PORT)    #执行connectToHost::连接_到_主机/宿主
-                                                        #触发socket::connected信号ROW:74↑,执行sendRequest()方法↓
+                                                        #触发socket::connected信号[ROW:75↑],执行sendRequest()方法↓
 
 
-    def sendRequest(self):      #当该方法完成时没有错误并且服务器没有关闭即会给出响应此时执行readResponse()否则执行serverHasStopped()/serverHasError()
+    def sendRequest(self):      #当该方法完成时没有错误并且服务器没有关闭即会返回响应此时执行readResponse()否则执行serverHasStopped()/serverHasError()
         self.responseLabel.setText("Sending request...")
         self.nextBlockSize = 0
         self.socket.write(self.request) #向 套接字 写入 请求.
@@ -147,10 +147,10 @@ class BuildingServicesClient(QWidget):  #构建_服务_客户端
 
         while True:
             if self.nextBlockSize == 0: #==0表示已发送完数据,等代响应.
-                if self.socket.bytesAvailable() < SIZEOF_UINT16:    #bytesAvailable()::字节_可用 [返回socket字节可用数值<SIZEOF_UINT16时跳出]
+                if self.socket.bytesAvailable() < SIZEOF_UINT16:    #bytesAvailable()::有效_字节 [接收到socket的有效字节值<SIZEOF_UINT16的值[2]时跳出]
                     break
-                self.nextBlockSize = stream.readUInt16()    #读入头数据[UInt16]
-            if self.socket.bytesAvailable() < self.nextBlockSize:   #数据字节数值不一致时跳出.
+                self.nextBlockSize = stream.readUInt16()    #读入头数据[UInt16(返回数据的尺寸)]
+            if self.socket.bytesAvailable() < self.nextBlockSize:   #有效字节值 与 返回数据的尺寸的值 不一致时跳出.
                 break
             action = stream.readQString()   #读入动作
             room = stream.readQString()     #读入房号
