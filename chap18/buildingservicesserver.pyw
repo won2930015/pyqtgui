@@ -121,7 +121,7 @@ class BuildingServicesDlg(QPushButton):     #构建_服务_窗口
     def __init__(self, parent=None):
         super(BuildingServicesDlg, self).__init__(
                 "&Close Server", parent)
-        self.setWindowFlags(Qt.WindowStaysOnTopHint)    #WindowStaysOnTopHint::窗口_停留_到_顶部_提示[窗口顶置显示]
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)    #WindowStaysOnTopHint::窗口_停留_到_顶部_提示[窗口顶置提示]
 
         self.loadBookings()
         self.tcpServer = TcpServer(self)
@@ -153,7 +153,7 @@ class BuildingServicesDlg(QPushButton):     #构建_服务_窗口
                 bookings = Bookings[date.toPyDate()]
                 if len(bookings) >= MAX_BOOKINGS_PER_DAY:
                     continue
-                bisect.insort(bookings, "{0:1d}{1:02d}".format(
+                bisect.insort(bookings, "{0:1d}{1:02d}".format(     #{0:1d}::一位整数, {1:02d}::两位整数前面不足位数用0填充.
                               floor, room))
         printBookings()
 
