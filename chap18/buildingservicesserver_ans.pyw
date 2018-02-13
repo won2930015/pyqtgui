@@ -52,8 +52,8 @@ class Socket(QTcpSocket):
 
         action = stream.readQString()   #读取'动作[BOOK/UNBOOK]'
         date = QDate()          #创建日期对象.
-        if action in ("BOOK", "UNBOOK", "BOOKINGSONDATE",
-                      "BOOKINGSFORROOM"):
+        if action in ("BOOK", "UNBOOK", "BOOKINGSONDATE",       #BOOKINGSONDATE::某一日期全部预订.
+                      "BOOKINGSFORROOM"):   #BOOKINGSFORROOM::特定房间的所有预订日期
             room = stream.readQString()     #读取 房间号
             stream >> date              #读取 日期
             bookings = Bookings.get(date.toPyDate())    #获得给定日期[date]的预订清单, toPyDate::去_计算_日期.
@@ -76,14 +76,14 @@ class Socket(QTcpSocket):
             else:
                 bookings.remove(uroom)
                 self.sendReply(action, room, date)  #sendReply::发送_答复
-        elif action == "BOOKINGSONDATE":
+        elif action == "BOOKINGSONDATE":    #BOOKINGSONDATE::某一日期全部预订.
             bookings = Bookings.get(date.toPyDate())
             if bookings is not None:
                 self.sendReply(action, ", ".join(bookings), date)
             else:
                 self.sendError("there are no rooms booked on {}"
                         .format(date.toString(Qt.ISODate)))
-        elif action == "BOOKINGSFORROOM":
+        elif action == "BOOKINGSFORROOM":       #BOOKINGSFORROOM::特定房间的所有预订日期
             dates = []
             for date, bookings in Bookings.items():
                 if room in bookings:

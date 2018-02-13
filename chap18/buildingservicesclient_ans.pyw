@@ -176,7 +176,7 @@ class BuildingServicesClient(QWidget):  #构建_服务_客户端
             action = stream.readQString()   #读入动作
             room = stream.readQString()     #读入房号
             date = QDate()  #创建日期对象.
-            if action == "BOOKINGSFORROOM":
+            if action == "BOOKINGSFORROOM":     #BOOKINGSFORROOM::特定房间的所有预订日期
                 dates = []
                 for x in range(stream.readInt32()):
                     stream >> date
@@ -192,10 +192,10 @@ class BuildingServicesClient(QWidget):  #构建_服务_客户端
             elif action == "UNBOOK":
                 msg = "Unbooked room {} for {}".format(room,
                         date.toString(Qt.ISODate))
-            elif action == "BOOKINGSONDATE":
+            elif action == "BOOKINGSONDATE":        #BOOKINGSONDATE::某一日期全部预订.
                 msg = "Rooms booked on {}: {}".format(
                         date.toString(Qt.ISODate), room)
-            elif action == "BOOKINGSFORROOM":
+            elif action == "BOOKINGSFORROOM":       #BOOKINGSFORROOM::特定房间的所有预订日期
                 msg = "Room {} is booked on: {}".format(room,
                         dates)
             self.responseLabel.setText(msg)
