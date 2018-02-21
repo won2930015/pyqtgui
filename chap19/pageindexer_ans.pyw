@@ -9,19 +9,18 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import collections
-import os
+import collections      #导入_集合模块
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import walker_ans as walker
 
 
-def isAlive(qobj):
+def isAlive(qobj):  #is_活着的
     import sip
     try:
         sip.unwrapinstance(qobj)
-    except RuntimeError:
+    except RuntimeError:        #RuntimeError::运行时错误.
         return False
     return True
 
@@ -37,48 +36,61 @@ class Form(QDialog):
         self.commonWords = set()
         self.lock = QReadWriteLock()
         self.path = QDir.homePath()
+
         pathLabel = QLabel("Indexing path:")
         self.pathLabel = QLabel()
-        self.pathLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
+        self.pathLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   #StyledPanel::可变面板 ,Sunken::凹陷
+
         self.pathButton = QPushButton("Set &Path...")
-        self.pathButton.setAutoDefault(False)
+        self.pathButton.setAutoDefault(False)   #设置_自动_默认
+
         findLabel = QLabel("&Find word:")
         self.findEdit = QLineEdit()
         findLabel.setBuddy(self.findEdit)
+
         commonWordsLabel = QLabel("&Common words:")
         self.commonWordsListWidget = QListWidget()
         commonWordsLabel.setBuddy(self.commonWordsListWidget)
+
         filesLabel = QLabel("Files containing the &word:")
         self.filesListWidget = QListWidget()
         filesLabel.setBuddy(self.filesListWidget)
+
         filesIndexedLabel = QLabel("Files indexed")
         self.filesIndexedLCD = QLCDNumber()
-        self.filesIndexedLCD.setSegmentStyle(QLCDNumber.Flat)
+        self.filesIndexedLCD.setSegmentStyle(QLCDNumber.Flat)   #setSegmentStyle::设置_ 线段_标式 ,Flat::扁平的
+
         wordsIndexedLabel = QLabel("Words indexed")
         self.wordsIndexedLCD = QLCDNumber()
         self.wordsIndexedLCD.setSegmentStyle(QLCDNumber.Flat)
+
         commonWordsLCDLabel = QLabel("Common words")
         self.commonWordsLCD = QLCDNumber()
         self.commonWordsLCD.setSegmentStyle(QLCDNumber.Flat)
+
         self.statusLabel = QLabel("Click the 'Set Path' "
                                   "button to start indexing")
-        self.statusLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
+        self.statusLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)    #setFrameStyle::设置_框架_样式
 
         topLayout = QHBoxLayout()
         topLayout.addWidget(pathLabel)
-        topLayout.addWidget(self.pathLabel, 1)
+        topLayout.addWidget(self.pathLabel, 1)  #1::代表可扩展.
         topLayout.addWidget(self.pathButton)
         topLayout.addWidget(findLabel)
-        topLayout.addWidget(self.findEdit, 1)
+        topLayout.addWidget(self.findEdit, 1)   #1::代表可扩展.
+
         leftLayout = QVBoxLayout()
         leftLayout.addWidget(filesLabel)
         leftLayout.addWidget(self.filesListWidget)
+
         rightLayout = QVBoxLayout()
         rightLayout.addWidget(commonWordsLabel)
         rightLayout.addWidget(self.commonWordsListWidget)
+
         middleLayout = QHBoxLayout()
-        middleLayout.addLayout(leftLayout, 1)
+        middleLayout.addLayout(leftLayout, 1)   #1::代表可扩展.
         middleLayout.addLayout(rightLayout)
+
         bottomLayout = QHBoxLayout()
         bottomLayout.addWidget(filesIndexedLabel)
         bottomLayout.addWidget(self.filesIndexedLCD)
@@ -87,6 +99,7 @@ class Form(QDialog):
         bottomLayout.addWidget(commonWordsLCDLabel)
         bottomLayout.addWidget(self.commonWordsLCD)
         bottomLayout.addStretch()
+
         layout = QVBoxLayout()
         layout.addLayout(topLayout)
         layout.addLayout(middleLayout)
@@ -123,8 +136,8 @@ class Form(QDialog):
             self.pathButton.setEnabled(True)
             return
         self.statusLabel.setText("Scanning directories...")
-        QApplication.processEvents() # Needed for Windows
-        self.path = QDir.toNativeSeparators(path)
+        QApplication.processEvents() # Needed for Windows   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)
+        self.path = QDir.toNativeSeparators(path)       #toNativeSeparators::to_本地化_分隔符-->将默认的'/'分隔符转换成windows的'\'分隔符.
         self.findEdit.setFocus()
         self.pathLabel.setText(self.path)
         self.statusLabel.clear()
@@ -132,7 +145,7 @@ class Form(QDialog):
         self.fileCount = 0
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
-        nofilesfound = True
+        nofilesfound = True     #nofilesfound::没_文件_找到
         files = []
         index = 0
         for root, dirs, fnames in os.walk(self.path):
@@ -183,7 +196,7 @@ class Form(QDialog):
             self.mutex.unlock()
         word = word.lower()
         if " " in word:
-            word = word.split()[0]
+            word = word.split()[0]  #如果词组有空白字符分隔,查找空白字符前的单词.
         try:
             self.lock.lockForRead()
             found = word in self.commonWords
@@ -210,7 +223,7 @@ class Form(QDialog):
             finally:
                 self.mutex.unlock()
             return
-        files = [QDir.toNativeSeparators(name) for name in
+        files = [QDir.toNativeSeparators(name) for name in      #toNativeSeparators::to_本地化_分隔符-->将默认的'/'转换成winodows的'\'.
                  sorted(files, key=str.lower)]
         try:
             self.mutex.lock()

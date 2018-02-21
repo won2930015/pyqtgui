@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 # Copyright (c) 2008-10 Qtrac Ltd. All rights reserved.
 # This program or module is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as published
@@ -17,13 +17,13 @@ from PyQt4.QtCore import *
 
 class Walker(QThread):
 
-    COMMON_WORDS_THRESHOLD = 250
+    COMMON_WORDS_THRESHOLD = 250    #共同_单词_阈值
     MIN_WORD_LEN = 3
     MAX_WORD_LEN = 25
-    INVALID_FIRST_OR_LAST = frozenset("0123456789_")
-    STRIPHTML_RE = re.compile(r"<[^>]*?>", re.IGNORECASE|re.MULTILINE)
-    ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")
-    SPLIT_RE = re.compile(r"\W+", re.IGNORECASE|re.MULTILINE)
+    INVALID_FIRST_OR_LAST = frozenset("0123456789_")  #INVALID_FIRST_OR_LAST::无效_头_或_尾 ,创建不可变集合-->frozenset({'4', '2', '_', '1', '9', '7', '5', '3', '6', '8', '0'})
+    STRIPHTML_RE = re.compile(r"<[^>]*?>", re.IGNORECASE|re.MULTILINE)      #re.IGNORECASE::忽略大小写 ,re.MULTILINE::跨多行
+    ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")   #(exp)::匹配exp,并捕获文本到自动命名的组里 ,\w::匹配字母，数字，下划线 ,\d::匹配数字.
+    SPLIT_RE = re.compile(r"\W+", re.IGNORECASE|re.MULTILINE)       #\W+::匹配1至任意多个不是字母，数字，下划线 的字符
 
     def __init__(self, index, lock, files, filenamesForWords,
                  commonWords, parent=None):
@@ -34,8 +34,8 @@ class Walker(QThread):
         self.filenamesForWords = filenamesForWords
         self.commonWords = commonWords
         self.stopped = False
-        self.mutex = QMutex()
-        self.completed = False
+        self.mutex = QMutex()   #QMutex::互斥体
+        self.completed = False  #completed::完整的
 
 
     def stop(self):
@@ -57,16 +57,16 @@ class Walker(QThread):
     def run(self):
         self.processFiles()
         self.stop()
-        self.emit(SIGNAL("finished(bool,int)"), self.completed,
+        self.emit(SIGNAL("finished(bool,int)"), self.completed,      #finished::完成的.
                   self.index)
 
 
     def processFiles(self):
-        def unichrFromEntity(match):
-            text = match.group(match.lastindex)
-            if text.isdigit():
+        def unichrFromEntity(match):    #unichrFromEntity::统一字符从实体??? ,match::匹配
+            text = match.group(match.lastindex)     #lastindex::最后_索引
+            if text.isdigit():  #isdigit::is_数字
                 return chr(int(text))
-            u = html.entities.name2codepoint.get(text)
+            u = html.entities.name2codepoint.get(text)  #entities::实体 ,name2codepoint::名字 转 码点 ,实体=='€ № ‰ '等等 ,将实体字符名 转换成对应的uni16进制数值
             return chr(u) if u is not None else ""
 
         for fname in self.files:
