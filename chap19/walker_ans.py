@@ -78,7 +78,7 @@ class Walker(QThread):
                 fh = open(fname, "r", encoding="utf-8",
                           errors="ignore")
                 text = fh.read()
-            except EnvironmentError as e:
+            except EnvironmentError as e:       #EnvironmentError::环境_错误
                 sys.stderr.write("Error: {}\n".format(e))
                 continue
             finally:

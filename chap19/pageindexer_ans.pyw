@@ -11,6 +11,7 @@
 
 import collections      #导入_集合模块
 import sys
+import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import walker_ans as walker
@@ -114,7 +115,7 @@ class Form(QDialog):
         self.setWindowTitle("Page Indexer")
 
 
-    def stopWalkers(self):
+    def stopWalkers(self):  #停止所有线程.
         for walker in self.walkers:
             if isAlive(walker) and walker.isRunning():
                 walker.stop()
@@ -136,7 +137,7 @@ class Form(QDialog):
             self.pathButton.setEnabled(True)
             return
         self.statusLabel.setText("Scanning directories...")
-        QApplication.processEvents() # Needed for Windows   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)
+        QApplication.processEvents() # Needed for Windows   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)
         self.path = QDir.toNativeSeparators(path)       #toNativeSeparators::to_本地化_分隔符-->将默认的'/'分隔符转换成windows的'\'分隔符.
         self.findEdit.setFocus()
         self.pathLabel.setText(self.path)
@@ -152,18 +153,18 @@ class Form(QDialog):
             for name in [name for name in fnames
                          if name.endswith((".htm", ".html"))]:
                 files.append(os.path.join(root, name))
-                if len(files) == 1000:
+                if len(files) == 1000:      #文件每达1000个建立一个线程.
                     self.processFiles(index, files[:])
                     files = []
                     index += 1
                     nofilesfound = False
-        if files:
+        if files:   #不足1000个文件也用一个线程处理.
             self.processFiles(index, files[:])
             nofilesfound = False
         if nofilesfound:
             self.finishedIndexing()
             self.statusLabel.setText(
-                    "No HTML files found in the given path")
+                    "No HTML files found in the given path")    #给出的路径没有找到HTML文件.
 
 
     def processFiles(self, index, files):
@@ -219,7 +220,7 @@ class Form(QDialog):
             try:
                 self.mutex.lock()
                 self.statusLabel.setText("No indexed file contains "
-                        "the word '{}'".format(word))
+                        "the word '{}'".format(word))           #没有文件包含单词{}.
             finally:
                 self.mutex.unlock()
             return
@@ -229,7 +230,7 @@ class Form(QDialog):
             self.mutex.lock()
             self.filesListWidget.addItems(files)
             self.statusLabel.setText(
-                    "{} indexed files contain the word '{}'".format(
+                    "{} indexed files contain the word '{}'".format(        #{}个文件包含单词{}.
                     len(files), word))
         finally:
             self.mutex.unlock()
@@ -272,10 +273,10 @@ class Form(QDialog):
 
 
     def finished(self, completed, index):
-        done = False
+        done = False        #done::已完成
         if self.walkers:
             self.completed[index] = True
-            if all(self.completed):
+            if all(self.completed):     #all(x)参数x对象的所有元素不为0、''、False或者x为空对象，则返回True，否则返回False
                 try:
                     self.mutex.lock()
                     self.statusLabel.setText("Finished")
@@ -310,7 +311,7 @@ class Form(QDialog):
         self.wordsIndexedLCD.display(len(self.filenamesForWords))
         self.commonWordsLCD.display(len(self.commonWords))
         self.pathButton.setEnabled(True)
-        QApplication.processEvents() # Needed for Windows
+        QApplication.processEvents() # Needed for Windows   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)
 
 
 app = QApplication(sys.argv)
