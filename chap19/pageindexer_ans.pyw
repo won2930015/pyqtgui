@@ -20,7 +20,7 @@ import walker_ans as walker
 def isAlive(qobj):  #is_活着的
     import sip
     try:
-        sip.unwrapinstance(qobj)
+        sip.unwrapinstance(qobj)    #unwrapinstance::解_包_实例.::解包对象得到指针(实例的引用).
     except RuntimeError:        #RuntimeError::运行时错误.
         return False
     return True
@@ -129,7 +129,7 @@ class Form(QDialog):
     def setPath(self):
         self.stopWalkers()
         self.pathButton.setEnabled(False)
-        path = QFileDialog.getExistingDirectory(self,
+        path = QFileDialog.getExistingDirectory(self,       #getExistingDirectory::获得_存在_目录
                     "Choose a Path to Index", self.path)
         if not path:
             self.statusLabel.setText("Click the 'Set Path' "
@@ -144,12 +144,12 @@ class Form(QDialog):
         self.statusLabel.clear()
         self.filesListWidget.clear()
         self.fileCount = 0
-        self.filenamesForWords = collections.defaultdict(set)
+        self.filenamesForWords = collections.defaultdict(set)   #创建字典value为set().
         self.commonWords = set()
         nofilesfound = True     #nofilesfound::没_文件_找到
         files = []
         index = 0
-        for root, dirs, fnames in os.walk(self.path):
+        for root, dirs, fnames in os.walk(self.path):   #os.walk(self.path)::历遍path下所有文件夹|文件.
             for name in [name for name in fnames
                          if name.endswith((".htm", ".html"))]:
                 files.append(os.path.join(root, name))
@@ -170,14 +170,14 @@ class Form(QDialog):
     def processFiles(self, index, files):
         thread = walker.Walker(index, self.lock, files,
                 self.filenamesForWords, self.commonWords, self)
-        self.connect(thread, SIGNAL("indexed(QString,int)"), self.indexed)
-        self.connect(thread, SIGNAL("finished(bool,int)"), self.finished)
+        self.connect(thread, SIGNAL("indexed(QString,int)"), self.indexed)  #walker每历遍一个文件触发一次些信号.
+        self.connect(thread, SIGNAL("finished(bool,int)"), self.finished)   #walker完成所有文件历遍时角发此信号.(这里一个walker代表了一个线程)
         self.connect(thread, SIGNAL("finished()"),
-                     thread, SLOT("deleteLater()"))
+                     thread, SLOT("deleteLater()")) #触发deleteLater槽::册除完成的线程节省内存.
         self.walkers.append(thread)
         self.completed.append(False)
         thread.start()
-        thread.wait(300) # Needed for Windows
+        thread.wait(300) # Needed for Windows ,wait(300)::等待(300豪秒)
 
 
     def find(self):
@@ -220,7 +220,7 @@ class Form(QDialog):
             try:
                 self.mutex.lock()
                 self.statusLabel.setText("No indexed file contains "
-                        "the word '{}'".format(word))           #没有文件包含单词{}.
+                        "the word '{}'".format(word))           #没有索引文件包含这单词{}.
             finally:
                 self.mutex.unlock()
             return
@@ -230,13 +230,13 @@ class Form(QDialog):
             self.mutex.lock()
             self.filesListWidget.addItems(files)
             self.statusLabel.setText(
-                    "{} indexed files contain the word '{}'".format(        #{}个文件包含单词{}.
+                    "{} indexed files contain the word '{}'".format(        #{}个索引文件包含单词{}.
                     len(files), word))
         finally:
             self.mutex.unlock()
 
 
-    def indexed(self, fname, index):
+    def indexed(self, fname, index):    #walker每历遍完一个文件时执行此函数.
         try:
             self.mutex.lock()
             self.statusLabel.setText(fname)
@@ -272,7 +272,7 @@ class Form(QDialog):
                 self.mutex.unlock()
 
 
-    def finished(self, completed, index):
+    def finished(self, completed, index):       #walker历遍完所文件时执行此函数.
         done = False        #done::已完成
         if self.walkers:
             self.completed[index] = True
