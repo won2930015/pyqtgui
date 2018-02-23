@@ -98,10 +98,10 @@ class Form(QDialog):
         self.setLayout(layout)
 
         self.walker = walker.Walker(self.lock, self)
-        self.connect(self.walker, SIGNAL("indexed(QString)"), self.indexed)
-        self.connect(self.walker, SIGNAL("finished(bool)"), self.finished)
+        self.connect(self.walker, SIGNAL("indexed(QString)"), self.indexed) #每历遍完一个文件,触发此信号.
+        self.connect(self.walker, SIGNAL("finished(bool)"), self.finished)  #历遍完所有文件触发此信号.(此例是单线程版所以只有一个walker实例)
         self.connect(self.pathButton, SIGNAL("clicked()"), self.setPath)
-        self.connect(self.findEdit, SIGNAL("returnPressed()"), self.find)
+        self.connect(self.findEdit, SIGNAL("returnPressed()"), self.find)   #returnPressed::回车(输入)_按下
         self.setWindowTitle("Page Indexer")
 
 
@@ -165,14 +165,14 @@ class Form(QDialog):
         self.fileCount += 1
         if self.fileCount % 25 == 0:
             self.filesIndexedLCD.display(self.fileCount)
-            with QReadLocker(self.lock):
+            with QReadLocker(self.lock):    #使用上下文管理器with处理,完成后自动解锁.
                 indexedWordCount = len(self.filenamesForWords)
                 commonWordCount = len(self.commonWords)
             self.wordsIndexedLCD.display(indexedWordCount)
             self.commonWordsLCD.display(commonWordCount)
         elif self.fileCount % 101 == 0:
             self.commonWordsListWidget.clear()
-            with QReadLocker(self.lock):
+            with QReadLocker(self.lock):    #使用上下文管理器with处理,完成后自动解锁.
                 words = self.commonWords.copy()
             self.commonWordsListWidget.addItems(sorted(words))
 

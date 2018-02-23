@@ -14,13 +14,13 @@
 
 class Balloon(object):
 
-    unique_colors = set()
+    unique_colors = set()       #唯一_颜色
 
     def __init__(self, color):
         self.color = color
         Balloon.unique_colors.add(color)
 
-    @staticmethod
+    @staticmethod   #静态方法::https://www.zhihu.com/question/20021164
     def uniqueColorCount():
         return len(Balloon.unique_colors)
 

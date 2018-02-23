@@ -32,7 +32,7 @@ def valid(text, chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"):
     return "".join(result)
 
 
-def charcount(text):
+def charcount(text):    #返回字符数
     """Returns a dictionary with character counts for each letter in text
 
     The text is lowercased. Any whitespace character's count is given
@@ -79,7 +79,7 @@ def charcount(text):
     for char in text.lower():
         if char in stats:
             stats[char] += 1
-        elif char.isspace():
+        elif char.isspace():    #isspace::is_空格
             stats["whitespace"] += 1
         else:
             stats["others"] += 1
@@ -107,13 +107,13 @@ def integer(number):
     0
     """
     try:
-        x = round(float(number))
+        x = round(float(number))    #round::四舍五入
     except ValueError:
         x = 0
     return x
 
 
-def incrementString(text="AAAA"):
+def incrementString(text="AAAA"):   #增量字符串
     """Returns the text incremented by one letter
 
     The text must be alphabetic or a ValueError is raised.
@@ -142,12 +142,12 @@ def incrementString(text="AAAA"):
     Traceback (most recent call last):
     ValueError: text must be purely alphabetic
     """
-    if not text.isalpha():
+    if not text.isalpha():  #isalpha::是否字母
         raise ValueError("text must be purely alphabetic")
     OrdA = ord("A")
     OrdZ = ord("Z")
     changed = False
-    values = [ord(c) for c in reversed(text.upper())]
+    values = [ord(c) for c in reversed(text.upper())]   #reversed::翻转 ,upper::上面的，上部的；较高的(转换大写?)
     for i in range(len(values)):
         if values[i] < OrdZ:
             values[i] += 1
@@ -160,7 +160,7 @@ def incrementString(text="AAAA"):
     return "".join([chr(v) for v in reversed(values)])
 
 
-def leapyears(yearlist):
+def leapyears(yearlist):        #leap years::润年-->计算润年
     """Returns a generator that returns the leap years in yearlist
 
     >>> years = [1600, 1604, 1700, 1704, 1800, 1900, 1996, 2000, 2004]

@@ -67,7 +67,7 @@ class Walker(QThread):
             u = html.entities.name2codepoint.get(text)  #entities::实体 ,name2codepoint::名字 转 码点 ,实体=='€ № ‰ ' ,将实体字符名 转换成对应的16进制数值
             return chr(u) if u is not None else ""
 
-        for root, dirs, files in os.walk(path): #os.walk(path)::遍历文件夹下的所有文件
+        for root, dirs, files in os.walk(path): #os.walk(path)::遍历path文件夹下的所有文件
             if self.isStopped():
                 return
             for name in [name for name in files
@@ -97,14 +97,14 @@ class Walker(QThread):
                         self.MAX_WORD_LEN and
                         word[0] not in self.INVALID_FIRST_OR_LAST and
                         word[-1] not in self.INVALID_FIRST_OR_LAST):
-                        with QReadLocker(self.lock):
+                        with QReadLocker(self.lock):    #ReadLocker::读锁处理器_函数-->使用with打开ReadLocker函数,处理上下文,完成后自动解锁.
                             new = word not in self.commonWords
                         if new:
                             words.add(word)
                 if self.isStopped():
                     return
                 for word in words:
-                    with QWriteLocker(self.lock):
+                    with QWriteLocker(self.lock):   #WriteLocker::写锁处理器_函数-->使用with打开WriteLocker函数,处理上下文,完成后自动解锁.
                         files = self.filenamesForWords[word]
                         if len(files) > self.COMMON_WORDS_THRESHOLD:
                             del self.filenamesForWords[word]
