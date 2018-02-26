@@ -24,7 +24,7 @@ class Form(QDialog):
         self.fileCount = 0
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
-        self.lock = QReadWriteLock()
+        self.lock = QReadWriteLock()    #读写锁用于保护共享数据.主线程读保护,次线程写保护.
         self.path = QDir.homePath()
 
         pathLabel = QLabel("Indexing path:")
@@ -97,7 +97,7 @@ class Form(QDialog):
         layout.addWidget(self.statusLabel)
         self.setLayout(layout)
 
-        self.walker = walker.Walker(self.lock, self)
+        self.walker = walker.Walker(self.lock, self)    #创建walker次线程对象.
         self.connect(self.walker, SIGNAL("indexed(QString)"), self.indexed) #每历遍完一个文件,触发此信号.
         self.connect(self.walker, SIGNAL("finished(bool)"), self.finished)  #历遍完所有文件触发此信号.(此例是单线程版所以只有一个walker实例)
         self.connect(self.pathButton, SIGNAL("clicked()"), self.setPath)
@@ -109,7 +109,7 @@ class Form(QDialog):
         self.pathButton.setEnabled(False)
         if self.walker.isRunning():
             self.walker.stop()
-            self.walker.wait()
+            self.walker.wait()  #wait::等候--> 锁定到线程结束运行为止.即:run()方法返回才解锁.
         path = QFileDialog.getExistingDirectory(self,
                     "Choose a Path to Index", self.path)
         if not path:
@@ -127,7 +127,7 @@ class Form(QDialog):
         self.commonWords = set()
         self.walker.initialize(self.path,
                 self.filenamesForWords, self.commonWords)
-        self.walker.start()
+        self.walker.start() #start::启动次线程walker.
 
 
     def find(self):
@@ -160,7 +160,7 @@ class Form(QDialog):
                 len(files), word))
 
 
-    def indexed(self, fname):
+    def indexed(self, fname):   #每历遍完一个文件执行此方法.
         self.statusLabel.setText(fname)
         self.fileCount += 1
         if self.fileCount % 25 == 0:
@@ -177,7 +177,7 @@ class Form(QDialog):
             self.commonWordsListWidget.addItems(sorted(words))
 
 
-    def finished(self, completed):
+    def finished(self, completed):      #历遍所有文件时执行此方法.
         self.statusLabel.setText("Indexing complete"
                                  if completed else "Stopped")
         self.finishedIndexing()

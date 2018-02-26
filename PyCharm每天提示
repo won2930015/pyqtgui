@@ -174,3 +174,5 @@ Ctrl+Shift+ Backspace(导航|最后编辑位置)把你带回最后一个地方�
 译文：
 Ctrl+Shift+Backspace(导航最后的编辑位置)会让你回到上次修改代码的地方。
 按Ctrl+Shift+Backspace几次会让你更深入地了解你的变化历史。
+
+译文：Ctrl+E(查看最近的文件)带来了最近访问过的文件的弹出列表。选择所需的文件并按Enter键打开它。

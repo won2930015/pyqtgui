@@ -35,7 +35,7 @@ class Form(QDialog):
         self.fileCount = 0
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
-        self.lock = QReadWriteLock()
+        self.lock = QReadWriteLock()    #读写锁用于保护共享数据.主线程读保护,次线程写保护.
         self.path = QDir.homePath()
 
         pathLabel = QLabel("Indexing path:")

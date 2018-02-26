@@ -9,7 +9,8 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import html.entities
+import html.entities        #entities::实体 ,将html实体转换成unicdoe字符.
+import os
 import re
 import sys
 from PyQt4.QtCore import *
@@ -34,7 +35,7 @@ class Walker(QThread):
         self.filenamesForWords = filenamesForWords
         self.commonWords = commonWords
         self.stopped = False
-        self.mutex = QMutex()   #QMutex::互斥体
+        self.mutex = QMutex()   #QMutex::互斥体-->一般用于保护 私有变量 不被别的次线程读写.
         self.completed = False  #completed::完整的
 
 
@@ -62,11 +63,12 @@ class Walker(QThread):
 
 
     def processFiles(self):
-        def unichrFromEntity(match):    #unichrFromEntity::统一字符从实体??? ,match::匹配
+        def unichrFromEntity(match):    #unichrFromEntity::统一字符从实体(从实体转变为统一字符) ,match::匹配
             text = match.group(match.lastindex)     #lastindex::最后_索引
-            if text.isdigit():  #isdigit::is_数字
+            if text.isdigit():  #isdigit::is_数字-->是实体码点 时.
                 return chr(int(text))
-            u = html.entities.name2codepoint.get(text)  #entities::实体 ,name2codepoint::名字 转 码点 ,实体=='€ № ‰ '等等 ,将实体字符名 转换成对应的uni16进制数值
+            u = html.entities.name2codepoint.get(text)  #entities::实体 ,name2codepoint::实体名称 转 实体码点 ,实体=='€ № ‰ ' ,将实体字符名 转换成对应的unicode16进制数值
+                                                        #http://blog.csdn.net/ownfire/article/details/53941723
             return chr(u) if u is not None else ""
 
         for fname in self.files:
