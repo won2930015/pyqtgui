@@ -8,12 +8,15 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
+#########################
+#######  主线程  ########
+########################
 
 import collections      #导入_集合模块
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import walker_26 as walker
+import walker_26 as walker  #导入次线程 walker
 
 
 class Form(QDialog):

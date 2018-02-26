@@ -8,6 +8,10 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
+##########################
+########  次线程  ########
+#########################
+
 
 import html.entities        #entities::实体 ,将html实体转换成unicdoe字符.
 import os

@@ -14,7 +14,7 @@ import sys
 import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import walker_ans as walker
+import walker_ans as walker #导入次线程 walker
 
 
 def isAlive(qobj):  #is_活着的
