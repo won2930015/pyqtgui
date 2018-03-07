@@ -6,6 +6,10 @@ Answers to the exercises in Chapter 1.
     two         5           juliet      foxtrot
     three       3           13          11          36
 
+
+
+
+
 sum() cannot be applied to dictionary two since it doesn't contain
 numbers.
 
