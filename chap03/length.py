@@ -81,10 +81,10 @@ class Length(object):
                     break
             else:
                 raise ValueError("need an amount and a unit")
-            self.__amount /= Length.convert[unit]
+            self.__amount /= Length.convert[unit]       #将单位转换成 米(M)储存.
 
 
-    def set(self, length):
+    def set(self, length):  #设置长度
         """Sets the length to the new given length
 
         >>> x = Length("3m")
@@ -97,7 +97,7 @@ class Length(object):
         self.__init__(length)
 
 
-    def to(self, unit):
+    def to(self, unit): #转换单位
         """Returns the length as a float in the given unit.
 
         >>> x = Length("10mi")
@@ -116,7 +116,7 @@ class Length(object):
         return self.__amount * Length.convert[unit]
 
 
-    def copy(self):
+    def copy(self): #复制
         """Returns a unique copy of the length
 
         >>> x = Length("2m")
@@ -139,7 +139,7 @@ class Length(object):
 
 
     @staticmethod
-    def units():
+    def units():    #units::返回所有单位.
         return Length.convert.keys()
 
 
