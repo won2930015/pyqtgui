@@ -12,7 +12,7 @@
 """Provides the Rectangle example classes.
 """
 
-class Rectangle(object):
+class Rectangle(object):        #使用java范式定义的类
 
     def __init__(self, width, height):
         self.width = width
@@ -49,7 +49,7 @@ class Rectangle(object):
         return "Rectangle({}, {})".format(self.width, self.height)
 
 
-class Rectangle(object):
+class Rectangle(object):    #用property(属性)函数,定义只读属性area
 
     def __init__(self, width, height):
         self.width = width
@@ -75,7 +75,7 @@ class Rectangle(object):
         return "Rectangle({}, {})".format(self.width, self.height)
 
 
-class Rectangle(object):
+class Rectangle(object):    #用property(属性)函数,定义 只读属性 area(), 读写属性 height(), width()
 
     def __init__(self, width, height):
         self.__width = width

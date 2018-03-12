@@ -28,6 +28,8 @@ def simplify(text, space=" \t\r\n\f", delete=""):
     'Washington DC'
     >>> simplify(" disemvoweled ", delete="aeiou")
     'dsmvwld'
+    >>> simplify("t  a")
+    't a'
     """
     result = []
     word = ""
@@ -42,7 +44,7 @@ def simplify(text, space=" \t\r\n\f", delete=""):
             word += char
     if word:
         result.append(word)
-    return " ".join(result)
+    return " ".join(result) #返回时每组单词用空格连接.
 
 
 def simplified(text, delete=""):
@@ -64,7 +66,7 @@ def simplified(text, delete=""):
     for char in text:
         if char in delete:
             continue
-        elif char.isspace():
+        elif char.isspace():    #isspace::is空格 ==" \t\r\n\f"这些多是空格.
             if word:
                 result.append("".join(word))
                 word = []
