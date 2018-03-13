@@ -290,7 +290,7 @@ class OrderedDict(object):
         return [(key, self.__dict[key]) for key in self.__keys]
 
 
-    def __iter__(self):     #for x in y:
+    def __iter__(self):     #for x in k:也是调用__iter__()方法
         """Returns an iterator over the dictionary's keys
 
         >>> d = OrderedDict(dict(s=1, a=2, n=3, i=4, t=5, y=6))
@@ -458,7 +458,7 @@ class OrderedDict(object):
         """
         pieces = []
         for key in self.__keys:
-            pieces.append("{0!r}: {1!r}".format(key, self.__dict[key]))
+            pieces.append("{0!r}: {1!r}".format(key, self.__dict[key])) #参考书本P72 .append("%r,%r" %(key, self.__dict[key]))
         return "OrderedDict({{{0}}})".format(", ".join(pieces))
 
 
