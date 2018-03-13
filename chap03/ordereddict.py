@@ -29,7 +29,7 @@ class OrderedDict(object):
     method.
     """
 
-    def __init__(self, dictionary=None):
+    def __init__(self, dictionary=None):    #初始化只接受字典型的变量:例:{'s':1, 'a':2, 'n'=3},dict(s=1, a=2, n=3)
         """Initializes with a shallow copy of the given dictionary
 
         >>> d = OrderedDict(dict(s=1, a=2, n=3, i=4, t=5, y=6))
@@ -52,10 +52,9 @@ class OrderedDict(object):
                 self.__keys = sorted(self.__dict.keys())
 
 
-    def update(self, dictionary=None, **kwargs):
+    def update(self, dictionary=None, **kwargs):    #更新:按受字典,键值对斌值
         """Updates this dictionary with another dictionary and/or with
         keyword key=value pairs
-
 
         >>> d = OrderedDict(dict(s=1, a=2, n=3, i=4, t=5))
         >>> d.update(dict(a=4, z=-4))
@@ -77,7 +76,7 @@ class OrderedDict(object):
             pass
         elif isinstance(dictionary, OrderedDict):
             self.__dict.update(dictionary.__dict)
-        elif (isinstance(dictionary, dict) or 
+        elif (isinstance(dictionary, dict) or       #如果是字典型 或 键值对字符串字时执行
               not hasattr(dictionary, "items")):
             self.__dict.update(dictionary)
         else:
@@ -101,7 +100,7 @@ class OrderedDict(object):
         >>> e.items()
         [('E', 21), ('I', 21), ('K', 21), ('L', 21), ('Y', 21)]
         """
-        dictionary = cls()
+        dictionary = cls()  #创建实例
         for key in iterable:
             dictionary[key] = value
         return dictionary
@@ -188,7 +187,7 @@ class OrderedDict(object):
         return self.__dict.get(key, value)
 
 
-    def setdefault(self, key, value):
+    def setdefault(self, key, value):   #设置默认值.当KEY存在时返回key的值,不存在时设置值为value并返回该值.
         """If key is in the dictionary, returns its value;
         otherwise adds the key with the given value which is also
         returned
@@ -291,7 +290,7 @@ class OrderedDict(object):
         return [(key, self.__dict[key]) for key in self.__keys]
 
 
-    def __iter__(self):
+    def __iter__(self):     #for x in y:
         """Returns an iterator over the dictionary's keys
 
         >>> d = OrderedDict(dict(s=1, a=2, n=3, i=4, t=5, y=6))
@@ -333,7 +332,7 @@ class OrderedDict(object):
             yield key, self.__dict[key]
 
 
-    def has_key(self, key):
+    def has_key(self, key): #has_key::有_键?
         """Returns True if key is in the dictionary; otherwise returns
         False. Use in instead.
 
@@ -346,7 +345,7 @@ class OrderedDict(object):
         return key in self.__dict
 
 
-    def __contains__(self, key):
+    def __contains__(self, key):    #实现>> a in d:
         """Returns True if key is in the dictionary; otherwise returns
         False
 
@@ -359,7 +358,7 @@ class OrderedDict(object):
         return key in self.__dict
 
 
-    def __len__(self):
+    def __len__(self):  # K = OrderedDict(), len(K)
         """Returns the number of items in the dictionary
 
         >>> d = OrderedDict(dict(s=1, a=2, n=3, i=4, t=5, y=6))
@@ -376,7 +375,7 @@ class OrderedDict(object):
         return len(self.__dict)
 
 
-    def __delitem__(self, key):
+    def __delitem__(self, key): # K = OrderedDict(), del K[key]
         """Deletes the item with the given key from the dictionary
 
         >>> d = OrderedDict(dict(s=1, a=2, n=3, i=4, t=5, y=6))
@@ -406,7 +405,7 @@ class OrderedDict(object):
         del self.__keys[i]
 
 
-    def __getitem__(self, key):
+    def __getitem__(self, key): # K = OrderedDict(), value=K[key]
         """Returns the value of the item with the given key
 
         >>> d = OrderedDict(dict(s=1, a=2, n=3, i=4, t=5, y=6))
@@ -422,7 +421,7 @@ class OrderedDict(object):
         return self.__dict[key]
 
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value):  # K = OrderedDict(), k[key]=value
         """If key is in the dictionary, sets its value to value;
         otherwise adds the key to the dictionary with the given value
 
@@ -440,7 +439,7 @@ class OrderedDict(object):
         self.__dict[key] = value
 
 
-    def __repr__(self):
+    def __repr__(self): #返回eval()可用字符串.
         """Returns an eval()-able string representation of the
         dictionary
 
