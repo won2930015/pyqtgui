@@ -12,12 +12,12 @@
 """Provides the Item example classes.
 """
 
-class Item(object):
+class Item(object):  #项
 
     def __init__(self, artist, title, year=None):
-        self.__artist = artist
-        self.__title = title
-        self.__year = year
+        self.__artist = artist  #artist::艺术家
+        self.__title = title    #title::标题
+        self.__year = year      #year::年代
 
 
     def artist(self):
@@ -51,17 +51,17 @@ class Item(object):
         return "{} by {}{}".format(self.__title, self.__artist, year)
 
 
-class Painting(Item):
+class Painting(Item):   #油画
 
     def __init__(self, artist, title, year=None):
         super(Painting, self).__init__(artist, title, year)
 
 
-class Sculpture(Item):
+class Sculpture(Item):  #雕塑
 
     def __init__(self, artist, title, year=None, material=None):
         super(Sculpture, self).__init__(artist, title, year)
-        self.__material = material
+        self.__material = material  #material::材料
 
 
     def material(self):
@@ -76,13 +76,13 @@ class Sculpture(Item):
         materialString = ""
         if self.__material is not None:
             materialString = " ({})".format(self.__material)
-        return "{}{}".format(super(Sculpture, self).__str__(),
+        return "{}{}".format(super(Sculpture, self).__str__(),  #调用父类__str__()方法.注意:不能调用str(self)会导至无限递归
                                materialString)
 
 
-class Dimension(object):
+class Dimension(object):    #Dimension::尺寸|规格
 
-    def __init__(self, width, height, depth=None):
+    def __init__(self, width, height, depth=None):      #depth::深度
         self.__width = width
         self.__height = height
         self.__depth = depth
@@ -112,8 +112,8 @@ class Dimension(object):
         self.__depth = depth
 
 
-    def area(self):
-        raise NotImplemented
+    def area(self): #area::面积
+        raise NotImplemented        #NotImplemented::未执行 ???
 
 
     def volume(self):
