@@ -12,7 +12,7 @@
 """Provides the Dimension example classes.
 """
 
-class Dimension(object):
+class Dimension(object):    #规格
 
     def area(self):
         raise NotImplementedError("Dimension.area()")
@@ -26,12 +26,12 @@ class Dimension(object):
 class Item(object):
 
     def __init__(self, artist, title, year=None):
-        self.__artist = artist
-        self.__title = title
-        self.__year = year
+        self.__artist = artist  #艺术家
+        self.__title = title    #标题
+        self.__year = year      #年代
 
 
-    def artist(self):
+    def artist(self):   ##艺术家
         return self.__artist
 
 
@@ -39,7 +39,7 @@ class Item(object):
         self.__artist = artist
 
 
-    def title(self):
+    def title(self):    #标题
         return self.__title
 
 
@@ -47,7 +47,7 @@ class Item(object):
         self.__title = title
 
 
-    def year(self):
+    def year(self): #年代
         return self.__year
 
 
@@ -62,7 +62,7 @@ class Item(object):
         return "{} by {}{}".format(self.__title, self.__artist, year)
 
 
-class Painting(Item, Dimension):
+class Painting(Item, Dimension):    #多重继承
 
     def __init__(self, artist, title, year=None, width=None,
                  height=None):
@@ -81,14 +81,14 @@ class Painting(Item, Dimension):
         return None
 
 
-class Sculpture(Item, Dimension):
+class Sculpture(Item, Dimension):   #多重继承
 
     def __init__(self, artist, title, year=None, material=None):
         super(Sculpture, self).__init__(artist, title, year)
         self.__material = material
 
 
-    def material(self):
+    def material(self): #材料
         return self.__material
 
 
@@ -100,7 +100,7 @@ class Sculpture(Item, Dimension):
         material = ""
         if self.__material is not None:
             material = " ({})".format(self.__material)
-        return "{1}{2}".format(super(Sculpture, self).__str__(), material)
+        return "{1}{2}".format(super(Sculpture, self).__str__(), material)  #调用基类__str__()方法.PS:这里不要调用str(self)会导至无限递归.
 
 
 if __name__ == "__main__":

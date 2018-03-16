@@ -116,7 +116,7 @@ class Dimension(object):    #Dimension::尺寸|规格
         raise NotImplemented        #NotImplemented::未执行 ???
 
 
-    def volume(self):
+    def volume(self):   #volume::体积
         raise NotImplemented
 
 
