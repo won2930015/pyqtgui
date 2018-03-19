@@ -3,9 +3,8 @@ Answers to the exercises in Chapter 1.
 1. dictionary  function
                 len()       max()       min()       sum()
     one         6           36          1           91
-    two         5           juliet      foxtrot
-    three       3           13          11          36
-
+    two         5           juliet      foxtrot             #字典类型应用于max(),min()时当 键(key)是字符:取首字符的码值进行比较;应用于sum()时返回为''
+    three       3           13          11          36      #字典类型应用于sum()时,当键(key)是数值:返回 键(key)数值的总和.当 键(key)是 字符时返回''
 
 
 
@@ -17,6 +16,8 @@ numbers.
 2. The first time, v1 and v2 will be the same because they share the
    same list of dictionary keys. The second time they will differ
    because each has its own independent copy of the dictionary's keys.
+   第一次，v1和v2是相同的因为它们共享。相同的字典键列表。
+   第二次他们会有所不同。因为每一个都有它自己独立的字典的键。
 
 
 3. The format string is "<%+7.2f>". The angle brackets have no special
@@ -25,4 +26,6 @@ numbers.
    positions, and includes in its count the decimal place and decimal
    digits and the sign, so in this case with 2 decimal digits, the whole
    number part, including the sign, will occupy 4 character positions.
-
+   格式字符串“<%+7.2f>”。尖括号没有什么特别的。
+   意义和简单的打印原样;+表示打印符号(+或-);7表示数字应该占7个字符位置，包括小数点和十进制数。
+   数字和符号，在这个例子中有两个十进制数字，整数字部分，包括符号+，将占据4个字符位置。
