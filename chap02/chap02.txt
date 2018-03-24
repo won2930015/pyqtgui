@@ -1,1 +1,2 @@
 2.3 函数frange.py
+2.3.2 关键参数simplified.py
