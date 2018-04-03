@@ -111,6 +111,7 @@ QLineEdit[mandatory="1"] {
                 self.companyEdit.setProperty("mandatory", 1)
         elif mandatory:
             self.companyEdit.setProperty("mandatory", 0)
+
         if (mandatory !=
             bool(int(self.companyEdit.property("mandatory")))): #如果companyEdit的[mandatory]属性改变: 重新应用样式表.
             self.setStyleSheet(ContactDlg.StyleSheet)
