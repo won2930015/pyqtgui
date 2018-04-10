@@ -15,12 +15,13 @@ from PyQt4.QtGui import *
 
 
 class Form(QDialog):
+    '''Dial控件value值 与 spinbox控件value值联动.'''
 
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
 
-        dial = QDial()
-        dial.setNotchesVisible(True)
+        dial = QDial()  # 创建Dial控件
+        dial.setNotchesVisible(True)  # 读置_刻度_可见(True)
         spinbox = QSpinBox()
 
         layout = QHBoxLayout()
@@ -34,6 +35,8 @@ class Form(QDialog):
 
 
 class Form2(QDialog):
+    '''Dial控件value值 与 spinbox控件value值 联动.
+    控件,信号,控件,槽 形式.'''
 
     def __init__(self, parent=None):
         super(Form2, self).__init__(parent)
@@ -47,7 +50,7 @@ class Form2(QDialog):
         layout.addWidget(spinbox)
         self.setLayout(layout)
 
-        self.connect(dial, SIGNAL("valueChanged(int)"),
+        self.connect(dial, SIGNAL("valueChanged(int)"),  # 控件,信号,控件,槽 ::形式.
                      spinbox, SLOT("setValue(int)"))
         self.connect(spinbox, SIGNAL("valueChanged(int)"),
                      dial, SLOT("setValue(int)"))
@@ -55,6 +58,7 @@ class Form2(QDialog):
 
 
 class ZeroSpinBox(QSpinBox):
+    '''自定义spinbox,当value为0时发射atzero信号.'''
 
     zeros = 0
 
@@ -70,6 +74,7 @@ class ZeroSpinBox(QSpinBox):
 
 
 class Form3(QDialog):
+    '''显示zerospinbox value为0的次数.'''
 
     def __init__(self, parent=None):
         super(Form3, self).__init__(parent)
@@ -96,6 +101,7 @@ class Form3(QDialog):
 
 
 class Form4(QDialog):
+    '''当lineedit.text()内容改变时print(text)'''
 
     def __init__(self, parent=None):
         super(Form4, self).__init__(parent)
@@ -117,6 +123,7 @@ class Form4(QDialog):
 
 
 class TaxRate(QObject):
+    '''税率:当默认税率与自定义税率不一致时发射 rateChanged信号.'''
 
     def __init__(self):
         super(TaxRate, self).__init__()
@@ -130,7 +137,7 @@ class TaxRate(QObject):
     def setRate(self, rate):
         if rate != self.__rate:
             self.__rate = rate
-            self.emit(SIGNAL("rateChanged"), self.__rate)
+            self.emit(SIGNAL("rateChanged"), self.__rate)  #自定义短路信号.
 
 
 def rateChanged(value):

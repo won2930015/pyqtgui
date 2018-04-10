@@ -8,6 +8,8 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
+# http://www.bankofcanada.ca/en/markets/csv/exchange_eng.csv,文件已失效!
+
 
 import sys
 import urllib.request
@@ -53,7 +55,7 @@ class Form(QDialog):
         from_ = self.fromComboBox.currentText()
         amount = ((self.rates[from_] / self.rates[to]) *
                   self.fromSpinBox.value())
-        self.toLabel.setText("{0:.2f}".format(amount))
+        self.toLabel.setText("{0:.2f}".format(amount))  #以某种货币为计算单位.
 
 
     def getdata(self): # Idea taken from the Python Cookbook
@@ -61,10 +63,10 @@ class Form(QDialog):
         try:
             date = "Unknown"
             data = urllib.request.urlopen("http://www.bankofcanada.ca"
-                    "/en/markets/csv/exchange_eng.csv").read()
+                    "/en/markets/csv/exchange_eng.csv").read()  #  读网上汇率数据,文件已失效!
             for line in data.decode("utf-8", "replace").split("\n"):
                 line = line.rstrip()
-                if not line or line.startswith(("#", "Closing ")):
+                if not line or line.startswith(("#", "Closing ")):  #跳过"#", "Closing "这些行.
                     continue
                 fields = line.split(",")
                 if line.startswith("Date "):
