@@ -64,7 +64,7 @@ class Form(QDialog):
             date = "Unknown"
             data = urllib.request.urlopen("http://www.bankofcanada.ca"
                     "/en/markets/csv/exchange_eng.csv").read()  #  读网上汇率数据,文件已失效!
-            for line in data.decode("utf-8", "replace").split("\n"):
+            for line in data.decode("utf-8", "replace").split("\n"):  # 如果遇到Unicode 错误应用replace(忽略)策略
                 line = line.rstrip()
                 if not line or line.startswith(("#", "Closing ")):  #跳过"#", "Closing "这些行.
                     continue

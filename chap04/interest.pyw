@@ -15,6 +15,7 @@ from PyQt4.QtGui import *
 
 
 class Form(QDialog):
+    '''计算复利'''
 
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)

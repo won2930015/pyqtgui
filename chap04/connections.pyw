@@ -18,11 +18,18 @@ from PyQt4.QtGui import *
 class Form(QDialog):
 
     def __init__(self, parent=None):
-        super(Form, self).__init__(parent)
+        '''将两个以上的信号连接到同一槽的三种方法
+        1.偏函数
+        2.匿名函数
+        3.self.sender()'''
 
+        super(Form, self).__init__(parent)
         button1 = QPushButton("One")
+
         button2 = QPushButton("Two")
+
         button3 = QPushButton("Three")
+
         button4 = QPushButton("Four")
         button5 = QPushButton("Five")
         self.label = QLabel("Click a button...")
@@ -38,13 +45,13 @@ class Form(QDialog):
         self.setLayout(layout)
 
         self.connect(button1, SIGNAL("clicked()"), self.one)
-        self.button2callback = functools.partial(self.anyButton, "Two")
+        self.button2callback = functools.partial(self.anyButton, "Two")  # 偏函数
         self.connect(button2, SIGNAL("clicked()"),
                      self.button2callback)
-        self.button3callback = lambda who="Three": self.anyButton(who)
+        self.button3callback = lambda who="Three": self.anyButton(who)  # 匿名函数
         self.connect(button3, SIGNAL("clicked()"),
                      self.button3callback)
-        self.connect(button4, SIGNAL("clicked()"), self.clicked)
+        self.connect(button4, SIGNAL("clicked()"), self.clicked)  # button = self.sender()
         self.connect(button5, SIGNAL("clicked()"), self.clicked)
 
         self.setWindowTitle("Connections")
