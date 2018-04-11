@@ -90,6 +90,8 @@ class Form(QDialog):
 
 
     def setPenInline(self):
+        '''手工编写弹出式模态对话框'''
+
         widthLabel = QLabel("&Width:")
         widthSpinBox = QSpinBox()
         widthLabel.setBuddy(widthSpinBox)
@@ -127,7 +129,7 @@ class Form(QDialog):
                      form, SLOT("reject()"))
         form.setWindowTitle("Pen Properties")
 
-        if form.exec_():
+        if form.exec_():  # exec_()以模态对话框显示窗口.
             self.width = widthSpinBox.value()
             self.beveled = beveledCheckBox.isChecked()
             self.style = styleComboBox.currentText()
@@ -135,6 +137,8 @@ class Form(QDialog):
 
 
     def setPenProperties(self):
+        '''用预定义简易窗口实现模态对话框'''
+
         dialog = PenPropertiesDlg(self)
         dialog.widthSpinBox.setValue(self.width)
         dialog.beveledCheckBox.setChecked(self.beveled)
