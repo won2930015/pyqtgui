@@ -59,7 +59,7 @@ class NumberFormatDlg(QDialog):
     def accept(self):
         class ThousandsError(Exception): pass
         class DecimalError(Exception): pass
-        Punctuation = frozenset(" ,;:.")
+        Punctuation = frozenset(" ,;:.")  # 原封集::不变的只读集.
 
         thousands = self.thousandsEdit.text()
         decimal = self.decimalMarkerEdit.text()

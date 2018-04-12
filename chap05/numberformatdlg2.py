@@ -14,27 +14,28 @@ from PyQt4.QtGui import *
 
 
 class NumberFormatDlg(QDialog):
+    '''采用 预防式验证 +提后更新 的 标准窗口'''
 
     def __init__(self, format, parent=None):
         super(NumberFormatDlg, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setAttribute(Qt.WA_DeleteOnClose)  # 设置为窗口退出即删除所占用的内存.即切底删除!
 
         punctuationRe = QRegExp(r"[ ,;:.]")
 
         thousandsLabel = QLabel("&Thousands separator")
         self.thousandsEdit = QLineEdit(format["thousandsseparator"])
         thousandsLabel.setBuddy(self.thousandsEdit)
-        self.thousandsEdit.setMaxLength(1)
-        self.thousandsEdit.setValidator(
+        self.thousandsEdit.setMaxLength(1)  # 设置_最大(字符)长度 ==1
+        self.thousandsEdit.setValidator(  # 设置_过滤器 ==正则_过滤器
                 QRegExpValidator(punctuationRe, self))
 
         decimalMarkerLabel = QLabel("Decimal &marker")
         self.decimalMarkerEdit = QLineEdit(format["decimalmarker"])
         decimalMarkerLabel.setBuddy(self.decimalMarkerEdit)
-        self.decimalMarkerEdit.setMaxLength(1)
-        self.decimalMarkerEdit.setValidator(
+        self.decimalMarkerEdit.setMaxLength(1)  # 设置_最大长度
+        self.decimalMarkerEdit.setValidator(  # 设置_过滤器==正则_过滤器
                 QRegExpValidator(punctuationRe, self))
-        self.decimalMarkerEdit.setInputMask("X")
+        self.decimalMarkerEdit.setInputMask("X")  # 设置_输入掩码::掩码"X"==接受任意字符.
 
         decimalPlacesLabel = QLabel("&Decimal places")
         self.decimalPlacesSpinBox = QSpinBox()
@@ -48,7 +49,7 @@ class NumberFormatDlg(QDialog):
         buttonBox = QDialogButtonBox(QDialogButtonBox.Apply|
                                      QDialogButtonBox.Close)
 
-        self.format = format
+        self.format = format  # 将本地变量self.format绑定到参数format所指向的对象.
 
         grid = QGridLayout()
         grid.addWidget(thousandsLabel, 0, 0)
@@ -61,7 +62,7 @@ class NumberFormatDlg(QDialog):
         grid.addWidget(buttonBox, 4, 0, 1, 2)
         self.setLayout(grid)
 
-        self.connect(buttonBox.button(QDialogButtonBox.Apply),
+        self.connect(buttonBox.button(QDialogButtonBox.Apply),  # 指定QDialogButtonBox中的特定按钮的信号关联到自定义槽函数.
                      SIGNAL("clicked()"), self.apply)
         self.connect(buttonBox, SIGNAL("rejected()"),
                      self, SLOT("reject()"))
@@ -85,7 +86,7 @@ class NumberFormatDlg(QDialog):
             self.decimalMarkerEdit.setFocus()
             return
 
-        self.format["thousandsseparator"] = thousands
+        self.format["thousandsseparator"] = thousands   # 间接更新 变量参数format所指向的对象.
         self.format["decimalmarker"] = decimal
         self.format["decimalplaces"] = (
                 self.decimalPlacesSpinBox.value())

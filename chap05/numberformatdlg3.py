@@ -14,24 +14,25 @@ from PyQt4.QtGui import *
 
 
 class NumberFormatDlg(QDialog):
+    '''实现智能对话框,数据动态更新.'''
 
     def __init__(self, format, callback, parent=None):
         super(NumberFormatDlg, self).__init__(parent)
 
-        punctuationRe = QRegExp(r"[ ,;:.]")
+        punctuationRe = QRegExp(r"[ ,;:.]")  # 定义正则表达式
         thousandsLabel = QLabel("&Thousands separator")
         self.thousandsEdit = QLineEdit(format["thousandsseparator"])
         thousandsLabel.setBuddy(self.thousandsEdit)
-        self.thousandsEdit.setMaxLength(1)
-        self.thousandsEdit.setValidator(QRegExpValidator(
+        self.thousandsEdit.setMaxLength(1)  # 设置(字符)最大长度
+        self.thousandsEdit.setValidator(QRegExpValidator(  # 设置正则过滤器.
                 punctuationRe, self))
         decimalMarkerLabel = QLabel("Decimal &marker")
         self.decimalMarkerEdit = QLineEdit(format["decimalmarker"])
         decimalMarkerLabel.setBuddy(self.decimalMarkerEdit)
-        self.decimalMarkerEdit.setMaxLength(1)
-        self.decimalMarkerEdit.setValidator(QRegExpValidator(
+        self.decimalMarkerEdit.setMaxLength(1)  # 设置(字符)最大长度
+        self.decimalMarkerEdit.setValidator(QRegExpValidator(  # 设置正则过滤器.
                 punctuationRe, self))
-        self.decimalMarkerEdit.setInputMask("X")
+        self.decimalMarkerEdit.setInputMask("X")  # 设置输入掩码::掩码"X"==任意字符
         decimalPlacesLabel = QLabel("&Decimal places")
         self.decimalPlacesSpinBox = QSpinBox()
         decimalPlacesLabel.setBuddy(self.decimalPlacesSpinBox)
@@ -40,8 +41,8 @@ class NumberFormatDlg(QDialog):
         self.redNegativesCheckBox = QCheckBox("&Red negative numbers")
         self.redNegativesCheckBox.setChecked(format["rednegatives"])
 
-        self.format = format
-        self.callback = callback
+        self.format = format  # 将本地变量self.format绑定到参数format所指向的对象.
+        self.callback = callback  # ==主文件numbers.refreshTable()
 
         grid = QGridLayout()
         grid.addWidget(thousandsLabel, 0, 0)
@@ -78,10 +79,12 @@ class NumberFormatDlg(QDialog):
 
 
     def apply(self):
+        '''小数位数/显示红名,数据变更时将动态更新数据表'''
+
         self.format["thousandsseparator"] = self.thousandsEdit.text()
         self.format["decimalmarker"] = self.decimalMarkerEdit.text()
         self.format["decimalplaces"] = self.decimalPlacesSpinBox.value()
         self.format["rednegatives"] = self.redNegativesCheckBox.isChecked()
-        self.callback()
+        self.callback()  # ==主文件numbers.refreshTable()
 
 
