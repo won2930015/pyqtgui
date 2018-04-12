@@ -29,12 +29,12 @@ class Form(QDialog):
         super(Form, self).__init__(parent)
 
         self.numberFormatDlg = None
-        self.format = dict(thousandsseparator=",", decimalmarker=".",
-                decimalplaces=2, rednegatives=False)
+        self.format = dict(thousandsseparator=",", decimalmarker=".",  # thousandsseparator::千位分隔符号 ,decimalmarker::小数点标识
+                decimalplaces=2, rednegatives=False)  # decimalplaces::小数保留位数 ,rednegatives::开启红名
         self.numbers = {}
         for x in range(self.X_MAX):
             for y in range(self.Y_MAX):
-                self.numbers[(x, y)] = (10000 * random.random()) - 5000
+                self.numbers[(x, y)] = (10000 * random.random()) - 5000  #生成60*26的随机数值表
 
         self.table = QTableWidget()
         formatButton1 = QPushButton("Set Number Format... (&Modal)")
@@ -61,17 +61,17 @@ class Form(QDialog):
         self.refreshTable()
 
 
-    def refreshTable(self):
+    def refreshTable(self):  # 更新表
         self.table.clear()
-        self.table.setColumnCount(self.X_MAX)
-        self.table.setRowCount(self.Y_MAX)
-        self.table.setHorizontalHeaderLabels(
-                list(string.ascii_uppercase))
+        self.table.setColumnCount(self.X_MAX)  # 设置_列
+        self.table.setRowCount(self.Y_MAX)  # 设置_行
+        self.table.setHorizontalHeaderLabels(  # 设置_水平头_标签
+                list(string.ascii_uppercase))  # .ascii_uppercase::.ascii_大写字母
         for x in range(self.X_MAX):
             for y in range(self.Y_MAX):
-                fraction, whole = math.modf(self.numbers[(x, y)])
-                sign = "-" if whole < 0 else ""
-                whole = "{}".format(int(math.floor(abs(whole))))
+                fraction, whole = math.modf(self.numbers[(x, y)])  # fraction::分数, whole::整数 ,modf()::浮点数分解函数
+                sign = "-" if whole < 0 else ""  # 整数小于的加 -号.
+                whole = "{}".format(int(math.floor(abs(whole))))  #向下取整::
                 digits = []
                 for i, digit in enumerate(reversed(whole)):
                     if i and i % 3 == 0:

@@ -114,22 +114,22 @@ class Form(QDialog):
         buttonLayout.addWidget(okButton)
         buttonLayout.addWidget(cancelButton)
         layout = QGridLayout()
-        layout.addWidget(widthLabel, 0, 0)
+        layout.addWidget(widthLabel, 0, 0)  #将控件加入到布局.
         layout.addWidget(widthSpinBox, 0, 1)
         layout.addWidget(beveledCheckBox, 0, 2)
         layout.addWidget(styleLabel, 1, 0)
         layout.addWidget(styleComboBox, 1, 1, 1, 2)
         layout.addLayout(buttonLayout, 2, 0, 1, 3)
 
-        form = QDialog()
-        form.setLayout(layout)
+        form = QDialog()  #创建对话框实例.
+        form.setLayout(layout)  #设置布局
         self.connect(okButton, SIGNAL("clicked()"),
                      form, SLOT("accept()"))
         self.connect(cancelButton, SIGNAL("clicked()"),
                      form, SLOT("reject()"))
         form.setWindowTitle("Pen Properties")
 
-        if form.exec_():  # exec_()以模态对话框显示窗口.
+        if form.exec_():  # exec_(),以模态方式显示 对话框窗口.
             self.width = widthSpinBox.value()
             self.beveled = beveledCheckBox.isChecked()
             self.style = styleComboBox.currentText()
@@ -144,7 +144,7 @@ class Form(QDialog):
         dialog.beveledCheckBox.setChecked(self.beveled)
         dialog.styleComboBox.setCurrentIndex(
                 dialog.styleComboBox.findText(self.style))
-        if dialog.exec_():
+        if dialog.exec_():  # exec_(),以模态方式显示 对话框窗口.
             self.width = dialog.widthSpinBox.value()
             self.beveled = dialog.beveledCheckBox.isChecked()
             self.style = dialog.styleComboBox.currentText()

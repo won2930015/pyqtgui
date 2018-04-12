@@ -15,7 +15,7 @@ from PyQt4.QtGui import *
 
 
 class Form(QDialog):
-    '''计算复利'''
+    '''习题 计算复利'''
 
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
@@ -24,12 +24,14 @@ class Form(QDialog):
         self.principalSpinBox = QDoubleSpinBox()
         self.principalSpinBox.setRange(1, 1000000000)
         self.principalSpinBox.setValue(1000)
-        self.principalSpinBox.setPrefix("$ ")
+        self.principalSpinBox.setPrefix("$ ")  # setPrefix::设置前缀.
+
         rateLabel = QLabel("Rate:")
         self.rateSpinBox = QDoubleSpinBox()
         self.rateSpinBox.setRange(1, 100)
         self.rateSpinBox.setValue(5)
-        self.rateSpinBox.setSuffix(" %")
+        self.rateSpinBox.setSuffix(" %")  # setSuffix::设置后缀
+
         yearsLabel = QLabel("Years:")
         self.yearsComboBox = QComboBox()
         self.yearsComboBox.addItem("1 year")
@@ -65,7 +67,7 @@ class Form(QDialog):
         principal = self.principalSpinBox.value()
         rate = self.rateSpinBox.value()
         years = self.yearsComboBox.currentIndex() + 1
-        amount = principal * ((1 + (rate / 100.0)) ** years)
+        amount = principal * ((1 + (rate / 100.0)) ** years)  #设计算 复利公式.
         self.amountLabel.setText("$ {0:.2f}".format(amount))
 
 
