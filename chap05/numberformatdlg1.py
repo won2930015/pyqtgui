@@ -15,6 +15,7 @@ from PyQt4.QtGui import *
 
 
 class NumberFormatDlg(QDialog):
+    '''模态窗口+提交后验证方式.'''
 
     def __init__(self, format, parent=None):
         super(NumberFormatDlg, self).__init__(parent)
@@ -59,7 +60,7 @@ class NumberFormatDlg(QDialog):
     def accept(self):
         class ThousandsError(Exception): pass
         class DecimalError(Exception): pass
-        Punctuation = frozenset(" ,;:.")  # 原封集::不变的只读集.
+        Punctuation = frozenset(" ,;:.")  # 原封集::不变只读集.
 
         thousands = self.thousandsEdit.text()
         decimal = self.decimalMarkerEdit.text()
@@ -83,12 +84,12 @@ class NumberFormatDlg(QDialog):
                 raise DecimalError("The decimal marker must be a "
                                    "punctuation symbol.")
         except ThousandsError as e:
-            QMessageBox.warning(self, "Thousands Separator Error", e)
+            QMessageBox.warning(self, "Thousands Separator Error", str(e))
             self.thousandsEdit.selectAll()
             self.thousandsEdit.setFocus()
             return
         except DecimalError as e:
-            QMessageBox.warning(self, "Decimal Marker Error", e)
+            QMessageBox.warning(self, "Decimal Marker Error", str(e))
             self.decimalMarkerEdit.selectAll()
             self.decimalMarkerEdit.setFocus()
             return

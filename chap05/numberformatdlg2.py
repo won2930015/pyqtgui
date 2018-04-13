@@ -14,7 +14,7 @@ from PyQt4.QtGui import *
 
 
 class NumberFormatDlg(QDialog):
-    '''采用 预防式验证 +提后更新 的 标准窗口'''
+    '''采用 预防式验证 +提交后更新 的 标准窗口'''
 
     def __init__(self, format, parent=None):
         super(NumberFormatDlg, self).__init__(parent)
