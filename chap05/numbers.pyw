@@ -103,6 +103,7 @@ class Form(QDialog):
 
 
     def setNumberFormat2(self):
+        '''非模态弹出窗口+提交后更新'''
         dialog = numberformatdlg2.NumberFormatDlg(self.format, self)
         self.connect(dialog, SIGNAL("changed"), self.refreshTable)
         dialog.show()
@@ -114,7 +115,7 @@ class Form(QDialog):
                     self.format, self.refreshTable, self)
         self.numberFormatDlg.show()
         self.numberFormatDlg.raise_()  # raise_::提升?提升为顶层窗口???
-        self.numberFormatDlg.activateWindow()  # 激活窗口.
+        self.numberFormatDlg.activateWindow()  # 激活窗口,获得光标.
 
 
 app = QApplication(sys.argv)

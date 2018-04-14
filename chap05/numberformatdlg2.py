@@ -35,7 +35,7 @@ class NumberFormatDlg(QDialog):
         self.decimalMarkerEdit.setMaxLength(1)  # 设置_最大长度
         self.decimalMarkerEdit.setValidator(  # 设置_过滤器==正则_过滤器
                 QRegExpValidator(punctuationRe, self))
-        self.decimalMarkerEdit.setInputMask("X")  # 设置_输入掩码::掩码"X"==接受任意字符.
+        self.decimalMarkerEdit.setInputMask("X")  # 设置_输入掩码::掩码"X"==接受任意字符,是必须需要的.
 
         decimalPlacesLabel = QLabel("&Decimal places")
         self.decimalPlacesSpinBox = QSpinBox()
@@ -86,7 +86,7 @@ class NumberFormatDlg(QDialog):
             self.decimalMarkerEdit.setFocus()
             return
 
-        self.format["thousandsseparator"] = thousands   # 间接更新 变量参数format所指向的对象.
+        self.format["thousandsseparator"] = thousands   #52 self.format = format::间接更新 参数format所指向的对象.
         self.format["decimalmarker"] = decimal
         self.format["decimalplaces"] = (
                 self.decimalPlacesSpinBox.value())
