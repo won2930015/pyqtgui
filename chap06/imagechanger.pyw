@@ -10,13 +10,13 @@
 # the GNU General Public License for more details.
 
 import os
-import platform
+import platform  # 包含系统所有信息.
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import helpform
-import newimagedlg
-import qrc_resources
+import helpform  # 导入自定义窗口
+import newimagedlg  # 同上
+import qrc_resources  # 引用资源文件.
 
 
 __version__ = "1.0.1"
@@ -39,13 +39,13 @@ class MainWindow(QMainWindow):
         self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.setCentralWidget(self.imageLabel)
 
-        logDockWidget = QDockWidget("Log", self)
-        logDockWidget.setObjectName("LogDockWidget")
-        logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea|
+        logDockWidget = QDockWidget("Log", self)  # 创建停靠控件Log::只停靠在QMainWindow或者浮在桌面顶层
+        logDockWidget.setObjectName("LogDockWidget")  #设置对象名.
+        logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea|  # 设置可停靠区域.
                                       Qt.RightDockWidgetArea)
         self.listWidget = QListWidget()
-        logDockWidget.setWidget(self.listWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, logDockWidget)
+        logDockWidget.setWidget(self.listWidget)  # 加入控件到停靠窗口.
+        self.addDockWidget(Qt.RightDockWidgetArea, logDockWidget)  # 窗体实例对象加入停靠窗口.
 
         self.printer = None
 
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         self.sizeLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         status = self.statusBar()
         status.setSizeGripEnabled(False)
-        status.addPermanentWidget(self.sizeLabel)
+        status.addPermanentWidget(self.sizeLabel)  # 状态栏加入永久控件.
 
         fileNewAction = self.createAction("&New...", self.fileNew,
                 QKeySequence.New, "filenew", "Create an image file")
@@ -69,21 +69,21 @@ class MainWindow(QMainWindow):
                 QKeySequence.Print, "fileprint", "Print the image")
         fileQuitAction = self.createAction("&Quit", self.close,
                 "Ctrl+Q", "filequit", "Close the application")
-        editInvertAction = self.createAction("&Invert",
+        editInvertAction = self.createAction("&Invert",  # 反相动作
                 self.editInvert, "Ctrl+I", "editinvert",
                 "Invert the image's colors", True, "toggled(bool)")
-        editSwapRedAndBlueAction = self.createAction("Sw&ap Red and Blue",
+        editSwapRedAndBlueAction = self.createAction("Sw&ap Red and Blue",  # 交换红蓝
                 self.editSwapRedAndBlue, "Ctrl+A", "editswap",
                 "Swap the image's red and blue color components", True,
                 "toggled(bool)")
         editZoomAction = self.createAction("&Zoom...", self.editZoom,
                 "Alt+Z", "editzoom", "Zoom the image")
-        mirrorGroup = QActionGroup(self)
+        mirrorGroup = QActionGroup(self)  # 镜像群组
         editUnMirrorAction = self.createAction("&Unmirror",
                 self.editUnMirror, "Ctrl+U", "editunmirror",
                 "Unmirror the image", True, "toggled(bool)")
         mirrorGroup.addAction(editUnMirrorAction)
-        editMirrorHorizontalAction = self.createAction(
+        editMirrorHorizontalAction = self.createAction(  # 水平镜像.
                 "Mirror &Horizontally", self.editMirrorHorizontal,
                 "Ctrl+H", "editmirrorhoriz",
                 "Horizontally mirror the image", True, "toggled(bool)")
@@ -92,7 +92,7 @@ class MainWindow(QMainWindow):
                 "Mirror &Vertically", self.editMirrorVertical,
                 "Ctrl+V", "editmirrorvert",
                 "Vertically mirror the image", True, "toggled(bool)")
-        mirrorGroup.addAction(editMirrorVerticalAction)
+        mirrorGroup.addAction(editMirrorVerticalAction)  # 垂直镜像.
         editUnMirrorAction.setChecked(True)
         helpAboutAction = self.createAction("&About Image Changer",
                 self.helpAbout)
@@ -103,7 +103,7 @@ class MainWindow(QMainWindow):
         self.fileMenuActions = (fileNewAction, fileOpenAction,
                 fileSaveAction, fileSaveAsAction, None, filePrintAction,
                 fileQuitAction)
-        self.connect(self.fileMenu, SIGNAL("aboutToShow()"),
+        self.connect(self.fileMenu, SIGNAL("aboutToShow()"),  # aboutToShow::菜单即将显示时发出的信号.
                      self.updateFileMenu)
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (editInvertAction,
@@ -115,7 +115,7 @@ class MainWindow(QMainWindow):
         helpMenu = self.menuBar().addMenu("&Help")
         self.addActions(helpMenu, (helpAboutAction, helpHelpAction))
 
-        fileToolbar = self.addToolBar("File")
+        fileToolbar = self.addToolBar("File")  # 创建工具条(默认可在主窗口上下左右停靠.)
         fileToolbar.setObjectName("FileToolBar")
         self.addActions(fileToolbar, (fileNewAction, fileOpenAction,
                                       fileSaveAsAction))
@@ -135,16 +135,16 @@ class MainWindow(QMainWindow):
                      SIGNAL("valueChanged(int)"), self.showImage)
         editToolbar.addWidget(self.zoomSpinBox)
 
-        self.addActions(self.imageLabel, (editInvertAction,
+        self.addActions(self.imageLabel, (editInvertAction,  # 加入弹出上下文菜单动作选项.
                 editSwapRedAndBlueAction, editUnMirrorAction,
                 editMirrorVerticalAction, editMirrorHorizontalAction))
 
-        self.resetableActions = ((editInvertAction, False),
+        self.resetableActions = ((editInvertAction, False),  # 重置动作组,用于特定动作组的重置
                                  (editSwapRedAndBlueAction, False),
                                  (editUnMirrorAction, True))
 
-        settings = QSettings()
-        self.recentFiles = settings.value("RecentFiles") or []
+        settings = QSettings()  # 创建配置文件对象.
+        self.recentFiles = settings.value("RecentFiles") or []  # TODO::了解QSettings()详细用法.
         self.restoreGeometry(settings.value("MainWindow/Geometry",
                 QByteArray()))
         self.restoreState(settings.value("MainWindow/State",
@@ -168,7 +168,7 @@ class MainWindow(QMainWindow):
         if slot is not None:
             self.connect(action, SIGNAL(signal), slot)
         if checkable:
-            action.setCheckable(True)
+            action.setCheckable(True)  # 设置成可复选的.
         return action
 
 
@@ -183,10 +183,10 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         if self.okToContinue():
             settings = QSettings()
-            settings.setValue("LastFile", self.filename)
-            settings.setValue("RecentFiles", self.recentFiles or [])
-            settings.setValue("MainWindow/Geometry", self.saveGeometry())
-            settings.setValue("MainWindow/State", self.saveState())
+            settings.setValue("LastFile", self.filename)  # 设置最后文件
+            settings.setValue("RecentFiles", self.recentFiles or [])  # 设置最近打开文件.
+            settings.setValue("MainWindow/Geometry", self.saveGeometry())  # 保存窗口几何.
+            settings.setValue("MainWindow/State", self.saveState())  # 保存窗口状态.
         else:
             event.ignore()
 
@@ -221,7 +221,7 @@ class MainWindow(QMainWindow):
             self.setWindowTitle("Image Changer - Unnamed[*]")
         else:
             self.setWindowTitle("Image Changer[*]")
-        self.setWindowModified(self.dirty)
+        self.setWindowModified(self.dirty)  # 设置窗口修改.
 
 
     def updateFileMenu(self):
@@ -240,7 +240,7 @@ class MainWindow(QMainWindow):
                         fname).fileName()), self)
                 action.setData(fname)
                 self.connect(action, SIGNAL("triggered()"),
-                             self.loadFile)
+                             self.loadFile)  # todo::-->281 loadFile
                 self.fileMenu.addAction(action)
         self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.fileMenuActions[-1])
@@ -279,7 +279,7 @@ class MainWindow(QMainWindow):
 
 
     def loadFile(self, fname=None):
-        if fname is None:
+        if fname is None:  # TODO::从最近用过文件动作列表中调用,不会传递文件名.
             action = self.sender()
             if isinstance(action, QAction):
                 fname = action.data()
@@ -320,7 +320,7 @@ class MainWindow(QMainWindow):
         if self.filename is None:
             return self.fileSaveAs()
         else:
-            if self.image.save(self.filename, None):
+            if self.image.save(self.filename, None):  # todo::第二参数是指定要保存的格式.例:self.image.save(self.filename, 'PNG')
                 self.updateStatus("Saved as {}".format(self.filename))
                 self.dirty = False
                 return True
@@ -352,7 +352,7 @@ class MainWindow(QMainWindow):
         if self.image.isNull():
             return
         if self.printer is None:
-            self.printer = QPrinter(QPrinter.HighResolution)
+            self.printer = QPrinter(QPrinter.HighResolution)  # 高分辨率
             self.printer.setPageSize(QPrinter.Letter)
         form = QPrintDialog(self.printer, self)
         if form.exec_():

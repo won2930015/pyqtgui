@@ -30,7 +30,7 @@ class StringListDlg(QDialog):
         self.listWidget = QListWidget()
         if stringlist is not None:
             self.listWidget.addItems(stringlist)
-            self.listWidget.setCurrentRow(0)
+            self.listWidget.setCurrentRow(0)  # 设置_当前行 == 0
         buttonLayout = QVBoxLayout()
         for text, slot in (("&Add...", self.add),
                            ("&Edit...", self.edit),
@@ -62,12 +62,12 @@ class StringListDlg(QDialog):
 
 
     def edit(self):
-        row = self.listWidget.currentRow()
-        item = self.listWidget.item(row)
+        row = self.listWidget.currentRow()  # 返回当前 row(int.)
+        item = self.listWidget.item(row)  # 取当前行
         if item is not None:
             title = "Edit {}".format(self.name)
             string, ok = QInputDialog.getText(self, title, title,
-                    QLineEdit.Normal, item.text())
+                    QLineEdit.Normal, item.text())  # https://blog.csdn.net/liang19890820/article/details/52044639
             if ok and string:
                 item.setText(string)
 
@@ -82,18 +82,18 @@ class StringListDlg(QDialog):
                 self.name, item.text()),
                 QMessageBox.Yes|QMessageBox.No)
         if reply == QMessageBox.Yes:
-            item = self.listWidget.takeItem(row)
+            item = self.listWidget.takeItem(row)  # takeItem::拿走_项
             del item
 
-
+    #上移一行
     def up(self):
-        row = self.listWidget.currentRow()
+        row = self.listWidget.currentRow()  # 获得当前行号
         if row >= 1:
             item = self.listWidget.takeItem(row)
             self.listWidget.insertItem(row - 1, item)
-            self.listWidget.setCurrentItem(item)
+            self.listWidget.setCurrentItem(item)  # 设置为当前项.
 
-
+    #下移一行
     def down(self):
         row = self.listWidget.currentRow()
         if row < self.listWidget.count() - 1:
