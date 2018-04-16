@@ -18,10 +18,10 @@ class HelpForm(QDialog):
 
     def __init__(self, page, parent=None):
         super(HelpForm, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)
-        self.setAttribute(Qt.WA_GroupLeader)
+        self.setAttribute(Qt.WA_DeleteOnClose)  # 关闭后删除窗口占用内存.
+        self.setAttribute(Qt.WA_GroupLeader)  # todo:: Qt.WA_GroupLeader??这个属性已经被弃用。(pyqt5)使用QWidget::windowModality代替。
 
-        backAction = QAction(QIcon(":/back.png"), "&Back", self)
+        backAction = QAction(QIcon(":/back.png"), "&Back", self)  # QAction(QObject) |QAction(str, QObject) |QAction(QIcon, str, QObject)
         backAction.setShortcut(QKeySequence.Back)
         homeAction = QAction(QIcon(":/home.png"), "&Home", self)
         homeAction.setShortcut("Home")
