@@ -44,9 +44,12 @@ class MainWindow(QMainWindow):
         logDockWidget.setObjectName("LogDockWidget")
         logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea|
                                       Qt.RightDockWidgetArea)
+        logDockWidget.setFeatures(QDockWidget.DockWidgetMovable|QDockWidget.DockWidgetFloatable)  # 设置为 可移动,可悬浮
         self.listWidget = QListWidget()
         logDockWidget.setWidget(self.listWidget)
         self.addDockWidget(Qt.RightDockWidgetArea, logDockWidget)
+
+        logDockWidget.show()
 
         self.printer = None
 
@@ -156,6 +159,7 @@ class MainWindow(QMainWindow):
                 QByteArray()))
         self.restoreState(settings.value("MainWindow/State",
                 QByteArray()))
+        logDockWidget.show()  # todo::解决浮动窗口关闭后不能现显示问题.
         
         self.setWindowTitle("Image Changer")
         self.updateFileMenu()
