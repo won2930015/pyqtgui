@@ -152,7 +152,7 @@ class MainWindow(QMainWindow):
         
         self.setWindowTitle("Image Changer")
         self.updateFileMenu()
-        QTimer.singleShot(0, self.loadInitialFile)
+        QTimer.singleShot(0, self.loadInitialFile)  # 零时单触发. P137
 
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
@@ -279,7 +279,7 @@ class MainWindow(QMainWindow):
 
 
     def loadFile(self, fname=None):
-        if fname is None:  # TODO::从最近用过文件动作列表中调用,不会传递文件名.
+        if fname is None:  # TODO::从'文件菜单'<最近用过文件>动作列表中调用,不会传递文件名.所以为None!
             action = self.sender()
             if isinstance(action, QAction):
                 fname = action.data()
