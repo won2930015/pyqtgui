@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.imageLabel)
 
         logDockWidget = QDockWidget("Log", self)  # 创建停靠控件Log::只停靠在QMainWindow或者浮在桌面顶层
-        logDockWidget.setObjectName("LogDockWidget")  #设置对象名.
+        logDockWidget.setObjectName("LogDockWidget")  # 设置对象名.用于保存位置 /大小等状态.
         logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea|  # 设置可停靠区域.
                                       Qt.RightDockWidgetArea)
         self.listWidget = QListWidget()
@@ -115,12 +115,14 @@ class MainWindow(QMainWindow):
         helpMenu = self.menuBar().addMenu("&Help")
         self.addActions(helpMenu, (helpAboutAction, helpHelpAction))
 
-        fileToolbar = self.addToolBar("File")  # 创建工具条(默认可在主窗口上下左右停靠.)
-        fileToolbar.setObjectName("FileToolBar")
+        fileToolbar = self.addToolBar("File")  # 创建file工具条(默认可在主窗口上下左右停靠.)
+        fileToolbar.setObjectName("FileToolBar")  # 设置工具栏对象名称,用于保存工具栏状态.
         self.addActions(fileToolbar, (fileNewAction, fileOpenAction,
                                       fileSaveAsAction))
-        editToolbar = self.addToolBar("Edit")
-        editToolbar.setObjectName("EditToolBar")
+        editToolbar = self.addToolBar("Edit")  # 创建edit工具条(默认可在主窗口上下左右停靠.)
+        editToolbar.setObjectName("EditToolBar")  # 设置工具栏对象名称,用于保存工具栏状态.
+
+
         self.addActions(editToolbar, (editInvertAction,
                 editSwapRedAndBlueAction, editUnMirrorAction,
                 editMirrorVerticalAction, editMirrorHorizontalAction))
@@ -135,8 +137,10 @@ class MainWindow(QMainWindow):
                      SIGNAL("valueChanged(int)"), self.showImage)
         editToolbar.addWidget(self.zoomSpinBox)
 
+        separator = QAction(self)  # 创建分隔符动作,separator
+        separator.setSeparator(True)
         self.addActions(self.imageLabel, (editInvertAction,  # 加入弹出上下文菜单动作选项.
-                editSwapRedAndBlueAction, editUnMirrorAction,
+                editSwapRedAndBlueAction,  separator,editUnMirrorAction,
                 editMirrorVerticalAction, editMirrorHorizontalAction))
 
         self.resetableActions = ((editInvertAction, False),  # 重置动作组,用于特定动作组的重置
