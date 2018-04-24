@@ -47,7 +47,15 @@ class FindAndReplaceDlg(QDialog,
         findText = self.findLineEdit.text()
         if self.syntaxComboBox.currentText() == "Literal":
             findText = re.escape(findText)
+            # re.escape(pattern) 对字符串中所有可能被解释为正则运算符【().*-/\】的字符进行转义.
+
         flags = re.MULTILINE|re.DOTALL|re.UNICODE
+        # re.I(re.IGNORECASE)::忽略大小写，括号内是完整的写法
+        # re.M(re.MULTILINE)::多行模式，改变 ^ 和$的行为
+        # re.S(re.DOTALL)::点可以匹配任意字符，包括换行符
+        # re.L(re.LOCALE)::做本地化识别的匹配，不推荐使用
+        # re.U(re.UNICODE)::使用\w \W \s \S \d \D使用取决于unicode定义的字符属性。在python3中默认使用该flag
+        # re.X(re.VERBOSE)::冗长模式，该模式下pattern字符串可以是多行的，忽略空白字符，并可以添加注释
         if not self.caseCheckBox.isChecked():
             flags |= re.IGNORECASE
         if self.wholeCheckBox.isChecked():

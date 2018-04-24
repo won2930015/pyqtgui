@@ -57,7 +57,7 @@ class TicketOrderDlg(QDialog,
 
 
     def result(self):
-        when = self.whenDateTimeEdit.dateTime().toPyDateTime()
+        when = self.whenDateTimeEdit.dateTime().toPyDateTime()  # 返回Py格式时间日期.
         return (self.customerLineEdit.text(), when,
                 self.priceSpinBox.value(), self.quantitySpinBox.value())
 
