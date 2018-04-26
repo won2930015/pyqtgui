@@ -525,8 +525,8 @@ class MovieContainer(object):
                            "ACQUIRED='{}'>\n".format(movie.year,
                            movie.minutes,
                            movie.acquired.toString(Qt.ISODate))) \
-                       << "<TITLE>" << Qt.escape(movie.title) \ #Qt.escape(movie.title)转义为适合的xml字符。
-                       << "</TITLE>\n<NOTES>"
+                       << "<TITLE>" << Qt.escape(movie.title) \
+                       << "</TITLE>\n<NOTES>"  # Qt.escape(movie.title)转义为适合的xml字符。
                 if movie.notes:
                     stream << "\n" << Qt.escape(
                             encodedNewlines(movie.notes))
@@ -546,14 +546,14 @@ class MovieContainer(object):
 
 
     def importDOM(self, fname):
-        dom = QDomDocument() #创建Dom对象
+        dom = QDomDocument()  # 创建Dom对象
         error = None
         fh = None
         try:
-            fh = QFile(fname) #创建文件对象
-            if not fh.open(QIODevice.ReadOnly): #设置只读
+            fh = QFile(fname)  # 创建文件对象
+            if not fh.open(QIODevice.ReadOnly):  # 设置只读
                 raise IOError(fh.errorString())
-            if not dom.setContent(fh): #设置dom内容为fh
+            if not dom.setContent(fh):  # 设置dom内容为fh
                 raise ValueError("could not parse XML")
         except (IOError, OSError, ValueError) as e:
             error = "Failed to import: {}".format(e)
@@ -588,15 +588,15 @@ class MovieContainer(object):
             </MOVIE>
         </MOVIES>
         '''
-        root = dom.documentElement() #引用内容元素
-        if root.tagName() != "MOVIES": #根.标签名!='MOVIES'时
+        root = dom.documentElement()  # 引用内容元素
+        if root.tagName() != "MOVIES":  # 根.标签名!='MOVIES'时
             raise ValueError("not a Movies XML file")
         self.clear(False)
-        node = root.firstChild() # 第一孩子
+        node = root.firstChild()  # 第一孩子
         while not node.isNull():
-            if node.toElement().tagName() == "MOVIE":  #toElement：to元素
+            if node.toElement().tagName() == "MOVIE":  # toElement：to元素
                 self.readMovieNode(node.toElement())
-            node = node.nextSibling() #下一兄弟
+            node = node.nextSibling()  # 下一兄弟
 
 
     def readMovieNode(self, element):
@@ -604,7 +604,7 @@ class MovieContainer(object):
             child = node.firstChild()
             text = ""
             while not child.isNull():
-                if child.nodeType() == QDomNode.TextNode: #判断节点类型。
+                if child.nodeType() == QDomNode.TextNode:  # 判断节点类型。
                     text += child.toText().data()
                 child = child.nextSibling()
             return text.strip()
@@ -636,12 +636,12 @@ class MovieContainer(object):
         error = None
         fh = None
         try:
-            handler = SaxMovieHandler(self) #Sax_电影_处理器
-            parser = QXmlSimpleReader()     #parser-解析器，QXmlSimpleReader-xml_简单_读取器
-            parser.setContentHandler(handler) #设置内容处理器
-            parser.setErrorHandler(handler) #设置错误处理器
+            handler = SaxMovieHandler(self)  # Sax_电影_处理器
+            parser = QXmlSimpleReader()     # parser-解析器，QXmlSimpleReader-xml_简单_读取器
+            parser.setContentHandler(handler)  # 设置内容处理器
+            parser.setErrorHandler(handler)  # 设置错误处理器
             fh = QFile(fname)
-            input = QXmlInputSource(fh) #xml输入源
+            input = QXmlInputSource(fh)  # xml输入源
             self.clear(False)
             if not parser.parse(input):
                 raise ValueError(handler.error)
@@ -674,8 +674,8 @@ class SaxMovieHandler(QXmlDefaultHandler):
         self.title = None
         self.notes = None
 
-
-    def startElement(self, namespaceURI, localName, qName, attributes): #遇到开始元素时执行.如:<MOVIE>,<TITLE>,<NOTES>等
+    # 遇到开始元素时执行.如:<MOVIE>,<TITLE>,<NOTES>等
+    def startElement(self, namespaceURI, localName, qName, attributes):
         if qName == "MOVIE":
             self.clear()
             self.year = int(attributes.value("YEAR"))
@@ -694,8 +694,8 @@ class SaxMovieHandler(QXmlDefaultHandler):
         self.text += text
         return True
 
-
-    def endElement(self, namespaceURI, localName, qName): #遇到关闭元素时执行.如：</MOVIE>,</TITLE>,</NOTES>等
+    # 遇到关闭元素时执行.如：</MOVIE>,</TITLE>,</NOTES>等
+    def endElement(self, namespaceURI, localName, qName):
         if qName == "MOVIE":
             if (self.year is None or self.minutes is None or
                 self.acquired is None or self.title is None or
@@ -711,8 +711,8 @@ class SaxMovieHandler(QXmlDefaultHandler):
             self.notes = self.text.strip()
         return True
 
-
-    def fatalError(self, exception): #致命错误
+    # 致命错误
+    def fatalError(self, exception):
         self.error = "parse error at line {} column {}: {}".format(
                 exception.lineNumber(), exception.columnNumber(),
                 exception.message())
