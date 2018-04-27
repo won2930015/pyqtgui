@@ -17,7 +17,7 @@ from PyQt4.QtXml import *
 
 CODEC = "utf-8"
 NEWPARA = chr(0x2029)
-NEWLINE = chr(0x2028)
+NEWLINE = chr(0x2028)  # 换行符的十六进制代码.
 DATEFORMAT = "ddd MMM d, yyyy"
 
 
@@ -29,7 +29,7 @@ def decodedNewlines(text):
     return text.replace(NEWPARA, "\n\n").replace(NEWLINE, "\n")
 
 
-
+# 电影对象
 class Movie(object):
     """A Movie object holds the details of a movie.
     
@@ -42,8 +42,8 @@ class Movie(object):
     is held as a QDate.
     """
 
-    UNKNOWNYEAR = 1890
-    UNKNOWNMINUTES = 0
+    UNKNOWNYEAR = 1890  # 未知年份
+    UNKNOWNMINUTES = 0  # 未知分钟
 
     def __init__(self, title=None, year=UNKNOWNYEAR,
                  minutes=UNKNOWNMINUTES, acquired=None, notes=None):
@@ -54,7 +54,7 @@ class Movie(object):
                                   else QDate.currentDate())
         self.notes = notes
 
-
+#  电影_容器
 class MovieContainer(object):
     """A MovieContainer holds a set of Movie objects.
 
@@ -65,8 +65,8 @@ class MovieContainer(object):
     method.
     """
 
-    MAGIC_NUMBER = 0x3051E
-    FILE_VERSION = 100
+    MAGIC_NUMBER = 0x3051E  # 魔数
+    FILE_VERSION = 100  # 文件号
 
 
     def __init__(self):
@@ -85,8 +85,8 @@ class MovieContainer(object):
         elif text.startswith("the "):
             text = text[4:]
         parts = text.split(" ", 1)
-        if parts[0].isdigit():
-            text = "{0:08d} ".format(int(parts[0]))
+        if parts[0].isdigit():  # isdigit::is数字
+            text = "{0:08d} ".format(int(parts[0]))  # 例00000018::反回8位数字序号不足位用0填充.
             if len(parts) > 1:
                 text += parts[1]
         return "{}\t{}".format(text.replace(" ", ""), year)
