@@ -16,8 +16,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtXml import *
 
 CODEC = "utf-8"
-NEWPARA = chr(0x2029)
-NEWLINE = chr(0x2028)  # 换行符的十六进制代码.
+NEWPARA = chr(0x2029)  # xml分隔符
+NEWLINE = chr(0x2028)  # xml换行符
 DATEFORMAT = "ddd MMM d, yyyy"
 
 
@@ -29,7 +29,7 @@ def decodedNewlines(text):
     return text.replace(NEWPARA, "\n\n").replace(NEWLINE, "\n")
 
 
-# 电影对象
+# 电影_对象类
 class Movie(object):
     """A Movie object holds the details of a movie.
     
@@ -54,7 +54,8 @@ class Movie(object):
                                   else QDate.currentDate())
         self.notes = notes
 
-#  电影_容器
+
+#  电影_容器类
 class MovieContainer(object):
     """A MovieContainer holds a set of Movie objects.
 
@@ -65,16 +66,14 @@ class MovieContainer(object):
     method.
     """
 
-    MAGIC_NUMBER = 0x3051E  # 魔数
-    FILE_VERSION = 100  # 文件号
-
+    MAGIC_NUMBER = 0x3051E  # 文件魔数号
+    FILE_VERSION = 100  # 文件版本号
 
     def __init__(self):
         self.__fname = ""
         self.__movies = []
         self.__movieFromId = {}
         self.__dirty = False
-
 
     def key(self, title, year):
         text = title.lower()
@@ -86,19 +85,16 @@ class MovieContainer(object):
             text = text[4:]
         parts = text.split(" ", 1)
         if parts[0].isdigit():  # isdigit::is数字
-            text = "{0:08d} ".format(int(parts[0]))  # 例00000018::反回8位数字序号不足位用0填充.
+            text = "{0:08d} ".format(int(parts[0]))  # 例00000018::返回8位整数序号不足位用0填充.
             if len(parts) > 1:
                 text += parts[1]
         return "{}\t{}".format(text.replace(" ", ""), year)
 
-
     def isDirty(self):
         return self.__dirty
 
-
     def setDirty(self, dirty=True):
         self.__dirty = dirty
-
 
     def clear(self, clearFilename=True):
         self.__movies = []
@@ -107,16 +103,14 @@ class MovieContainer(object):
             self.__fname = ""
         self.__dirty = False
 
-
     def movieFromId(self, id):
         """Returns the movie with the given Python ID."""
-        return self.__movieFromId[id]
+        return self.__movieFromId[id]  # 字典,返回value
 
-
+    #按索引返回列表项
     def movieAtIndex(self, index):
         """Returns the index-th movie."""
-        return self.__movies[index][1]
-
+        return self.__movies[index][1]  # 返回索引的列表项 的第二个元素movie ##.__movies[[key,movie],...]
 
     def add(self, movie):
         """Adds the given movie to the list if it isn't already
@@ -129,7 +123,6 @@ class MovieContainer(object):
         self.__dirty = True
         return True
 
-
     def delete(self, movie):
         """Deletes the given movie from the list and returns True;
         returns False if the movie isn't in the list."""
@@ -141,7 +134,6 @@ class MovieContainer(object):
         del self.__movieFromId[id(movie)]
         self.__dirty = True
         return True
-
 
     def updateMovie(self, movie, title, year, minutes=None, notes=None):
         if minutes is not None:
@@ -157,28 +149,22 @@ class MovieContainer(object):
             self.__movies.sort()
         self.__dirty = True
 
-
     def __iter__(self):
         for pair in iter(self.__movies):
             yield pair[1]
 
-
     def __len__(self):
         return len(self.__movies)
-
 
     def setFilename(self, fname):
         self.__fname = fname
 
-
     def filename(self):
         return self.__fname
-
 
     @staticmethod
     def formats():
         return "*.mqb *.mpb *.mqt *.mpt"
-
 
     def save(self, fname=""):
         if fname:
@@ -193,7 +179,6 @@ class MovieContainer(object):
             return self.saveText()
         return False, "Failed to save: invalid file extension"
 
-
     def load(self, fname=""):
         if fname:
             self.__fname = fname
@@ -207,7 +192,6 @@ class MovieContainer(object):
             return self.loadText()
         return False, "Failed to load: invalid file extension"
 
-
     def saveQDataStream(self):
         error = None
         file = None
@@ -216,9 +200,9 @@ class MovieContainer(object):
             if not file.open(QIODevice.WriteOnly):
                 raise IOError(file.errorString())
             stream = QDataStream(file)
-            stream.writeInt32(MovieContainer.MAGIC_NUMBER)
-            stream.writeInt32(MovieContainer.FILE_VERSION)
-            stream.setVersion(QDataStream.Qt_4_2)
+            stream.writeInt32(MovieContainer.MAGIC_NUMBER)  # 写入文件魔数号
+            stream.writeInt32(MovieContainer.FILE_VERSION)  # 写入文件版本号
+            stream.setVersion(QDataStream.Qt_4_2)  # 设置数据流版本
             for key, movie in self.__movies:
                 stream.writeQString(movie.title)
                 stream.writeInt16(movie.year)
@@ -237,7 +221,6 @@ class MovieContainer(object):
             return True, "Saved {} movie records to {}".format(
                     len(self.__movies),
                     QFileInfo(self.__fname).fileName())
-
 
     def loadQDataStream(self):
         error = None
@@ -277,13 +260,12 @@ class MovieContainer(object):
                     len(self.__movies),
                     QFileInfo(self.__fname).fileName())
 
-
     def savePickle(self):
         error = None
         fh = None
         try:
-            fh = gzip.open(self.__fname, "wb")
-            pickle.dump(self.__movies, fh, 2)
+            fh = gzip.open(self.__fname, "wb")  # w:写，b:二进制模式
+            pickle.dump(self.__movies, fh, 2)  # todo::https://blog.csdn.net/sxingming/article/details/52164249
         except EnvironmentError as e:
             error = "Failed to save: {}".format(e)
         finally:
@@ -296,12 +278,11 @@ class MovieContainer(object):
                     len(self.__movies),
                     QFileInfo(self.__fname).fileName())
 
-
     def loadPickle(self):
         error = None
         fh = None
         try:
-            fh = gzip.open(self.__fname, "rb")
+            fh = gzip.open(self.__fname, "rb")  # r:读，b:二进制模式
             self.clear(False)
             self.__movies = pickle.load(fh)
             for key, movie in self.__movies:
@@ -317,7 +298,6 @@ class MovieContainer(object):
             return True, "Loaded {} movie records from {}".format(
                     len(self.__movies),
                     QFileInfo(self.__fname).fileName())
-
 
     def saveQTextStream(self):
         error = None
@@ -347,7 +327,6 @@ class MovieContainer(object):
             return True, "Saved {} movie records to {}".format(
                     len(self.__movies),
                     QFileInfo(self.__fname).fileName())
-
 
     def loadQTextStream(self):
         error = None
@@ -415,7 +394,6 @@ class MovieContainer(object):
                     len(self.__movies),
                     QFileInfo(self.__fname).fileName())
 
-
     def saveText(self):
         error = None
         fh = None
@@ -441,12 +419,11 @@ class MovieContainer(object):
                     len(self.__movies),
                     QFileInfo(self.__fname).fileName())
 
-
     def loadText(self):
         error = None
         fh = None
         try:
-            fh = open(self.__fname, "rU", encoding=CODEC) #'rU'U=utf8????
+            fh = open(self.__fname, "rU", encoding=CODEC)  # rU 或 Ua 以读方式打开, 同时提供通用换行符支持 (PEP 278)
             self.clear(False)
             lino = 0
             while True:
@@ -507,7 +484,7 @@ class MovieContainer(object):
                     len(self.__movies),
                     QFileInfo(self.__fname).fileName())
 
-
+    # 导出为 xml 文件
     def exportXml(self, fname):
         error = None
         fh = None
@@ -517,7 +494,7 @@ class MovieContainer(object):
                 raise IOError(fh.errorString())
             stream = QTextStream(fh)
             stream.setCodec(CODEC)
-            stream << ("<?xml version='1.0' encoding='{}'?>\n"
+            stream << ("<?xml version='1.0' encoding='{}'?>\n"   # 写mxl文件头
                        "<!DOCTYPE MOVIES>\n"
                        "<MOVIES VERSION='1.0'>\n".format(CODEC))
             for key, movie in self.__movies:
@@ -528,8 +505,8 @@ class MovieContainer(object):
                        << "<TITLE>" << Qt.escape(movie.title) \
                        << "</TITLE>\n<NOTES>"  # Qt.escape(movie.title)转义为适合的xml字符。
                 if movie.notes:
-                    stream << "\n" << Qt.escape(
-                            encodedNewlines(movie.notes))
+                    stream << "\n" << Qt.escape(  # 字符转义.
+                            encodedNewlines(movie.notes))  # 将notes字段分隔符,换行符\n\n,\n转换成 mxl格式的分隔符,换行符 row18 -row28
                 stream << "\n</NOTES>\n</MOVIE>\n"
             stream << "</MOVIES>\n"
         except EnvironmentError as e:
@@ -544,7 +521,7 @@ class MovieContainer(object):
                     len(self.__movies),
                     QFileInfo(fname).fileName())
 
-
+    # 用dom方式解析mxl文件::(将文件载入内存后解析,较耗内存)
     def importDOM(self, fname):
         dom = QDomDocument()  # 创建Dom对象
         error = None
@@ -571,19 +548,18 @@ class MovieContainer(object):
         return True, "Imported {} movie records from {}".format(
                     len(self.__movies), QFileInfo(fname).fileName())
 
-
     def populateFromDOM(self, dom):
         '''
         xml文件结构
         <MOVIES>
-            <MOVIE>
-                YEAR
+            <MOVIE>  # 1
+                YEAR      # 属性
                 MINUTES
                 ACQUIRED
-                <TITLE></TITLE>
+                <TITLE></TITLE>  # 节点
                 <NOTES></NOTES>
             </MOVIE>
-            <MOVIE>
+            <MOVIE>  # 2
                 ......
             </MOVIE>
         </MOVIES>
@@ -598,8 +574,8 @@ class MovieContainer(object):
                 self.readMovieNode(node.toElement())
             node = node.nextSibling()  # 下一兄弟
 
-
     def readMovieNode(self, element):
+
         def getText(node):
             child = node.firstChild()
             text = ""
@@ -631,13 +607,13 @@ class MovieContainer(object):
         self.add(Movie(title, year, minutes, acquired,
                        decodedNewlines(notes)))
 
-
+    # 用SAX方式解析mxl文件
     def importSAX(self, fname):
         error = None
         fh = None
         try:
             handler = SaxMovieHandler(self)  # Sax_电影_处理器
-            parser = QXmlSimpleReader()     # parser-解析器，QXmlSimpleReader-xml_简单_读取器
+            parser = QXmlSimpleReader()     # parser::解析器，QXmlSimpleReader-xml_简单_读取器
             parser.setContentHandler(handler)  # 设置内容处理器
             parser.setErrorHandler(handler)  # 设置错误处理器
             fh = QFile(fname)
@@ -666,7 +642,6 @@ class SaxMovieHandler(QXmlDefaultHandler):
         self.text = ""
         self.error = None
 
-
     def clear(self):
         self.year = None
         self.minutes = None
@@ -689,7 +664,7 @@ class SaxMovieHandler(QXmlDefaultHandler):
             self.text = ""
         return True
 
-
+    # 在两相标签之间一有文本,就执行此方法.(用于读取 <TITLE></TITLE> ; <NOTES></NOTES>  # 节点的文件.
     def characters(self, text):
         self.text += text
         return True
