@@ -243,7 +243,7 @@ class MovieContainer(object):
                 acquired = QDate.fromString(stream.readQString(),
                                             Qt.ISODate)
                 location = ""
-                if new:  # 如果是文件版本时执行.
+                if new:  # 如果是新版本的文件时执行.
                     location = stream.readQString()
                 notes = stream.readQString()
                 self.add(Movie(title, year, minutes, acquired,

@@ -161,7 +161,11 @@ class MainWindow(QMainWindow):
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
                      tip=None, checkable=False, signal="triggered()"):
-        action = QAction(text, self)  # QAction(QObject) |QAction(str, QObject) |QAction(QIcon, str, QObject)
+        action = QAction(text, self)
+        # QAction::三种创建方法
+        # QAction(QObject parent)
+        # QAction(str name, QObject parent)
+        # QAction(QIcon icon, str name, QObject parent)
         if icon is not None:
             action.setIcon(QIcon(":/{}.png".format(icon)))
         if shortcut is not None:

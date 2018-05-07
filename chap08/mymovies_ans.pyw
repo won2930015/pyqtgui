@@ -88,8 +88,9 @@ class MainWindow(QMainWindow):
         self.connect(self.table,
                 SIGNAL("itemDoubleClicked(QTableWidgetItem*)"),
                 self.editEdit)
-        QShortcut(QKeySequence("Return"), self.table, self.editEdit)
 
+        # 设置快捷键 todo::http://chenye.science/coding-dairy-20170726.html
+        QShortcut(QKeySequence("Return"), self.table, self.editEdit)  # (快捷键, 应用的控件, 执行的函数)
         settings = QSettings()
         self.restoreGeometry(settings.value("MainWindow/Geometry",
                 QByteArray()))
@@ -97,7 +98,7 @@ class MainWindow(QMainWindow):
                 QByteArray()))
         
         self.setWindowTitle("My Movies")
-        QTimer.singleShot(0, self.loadInitialFile)
+        QTimer.singleShot(0, self.loadInitialFile)  # 零时单触发
 
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
@@ -113,7 +114,7 @@ class MainWindow(QMainWindow):
         if slot is not None:
             self.connect(action, SIGNAL(signal), slot)
         if checkable:
-            action.setCheckable(True)
+            action.setCheckable(True)  # 设置是否可选的.
         return action
 
 
@@ -158,22 +159,22 @@ class MainWindow(QMainWindow):
 
 
     def updateTable(self, current=None):
-        self.table.clear()
-        self.table.setRowCount(len(self.movies))
-        self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(["Title", "Year", "Mins",
+        self.table.clear()  # 清空
+        self.table.setRowCount(len(self.movies))  # 设置行数
+        self.table.setColumnCount(6)    # 设置列数
+        self.table.setHorizontalHeaderLabels(["Title", "Year", "Mins",  # 设置水平表头标签
                 "Acquired", "Location", "Notes"])
-        self.table.setAlternatingRowColors(True)
-        self.table.setEditTriggers(QTableWidget.NoEditTriggers)
-        self.table.setSelectionBehavior(QTableWidget.SelectRows)
-        self.table.setSelectionMode(QTableWidget.SingleSelection)
+        self.table.setAlternatingRowColors(True)    # 设置交替行颜色
+        self.table.setEditTriggers(QTableWidget.NoEditTriggers)  # 设置Table 编辑触发条件:不触发
+        self.table.setSelectionBehavior(QTableWidget.SelectRows)  # 设置选择行为：选择行
+        self.table.setSelectionMode(QTableWidget.SingleSelection)  # 设置选择方式：单选
         selected = None
         for row, movie in enumerate(self.movies):
             item = QTableWidgetItem(movie.title)
-            if current is not None and current == id(movie):
+            if current is not None and current == id(movie):  # 获取电影对象ID号（内存句柄号）
                 selected = item
-            item.setData(Qt.UserRole, int(id(movie)))
-            self.table.setItem(row, 0, item)
+            item.setData(Qt.UserRole, int(id(movie)))  # todo::设置用户角色数据== int(id(movie))
+            self.table.setItem(row, 0, item)  # 设置项(行, 列, item对象)
             year = movie.year
             if year != movie.UNKNOWNYEAR:
                 item = QTableWidgetItem("{}".format(year))
@@ -193,11 +194,11 @@ class MainWindow(QMainWindow):
             if len(notes) > 40:
                 notes = notes[:39] + "..."
             self.table.setItem(row, 5, QTableWidgetItem(notes))
-        self.table.resizeColumnsToContents()
+        self.table.resizeColumnsToContents()  # 调整列宽适配内容
         if selected is not None:
-            selected.setSelected(True)
-            self.table.setCurrentItem(selected)
-            self.table.scrollToItem(selected)
+            selected.setSelected(True)  # 设置为可选中
+            self.table.setCurrentItem(selected)  # 设置_当前项为
+            self.table.scrollToItem(selected)  # 滚动_到_项(selected)
         
 
     def fileNew(self):
@@ -324,7 +325,7 @@ class MainWindow(QMainWindow):
         row = self.table.currentRow()
         if row > -1:
             item = self.table.item(row, 0)
-            id = int(item.data(Qt.UserRole))
+            id = int(item.data(Qt.UserRole))  # 读取用户角色数据 todo:: row175
             return self.movies.movieFromId(id)
         return None
 
@@ -345,7 +346,7 @@ class MainWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    app.setOrganizationName("Qtrac Ltd.")
+    app.setOrganizationName("Qtrac Ltd.")  # 设置环境变量,为使用QSettings()作准备.
     app.setOrganizationDomain("qtrac.eu")
     app.setApplicationName("My Movies")
     app.setWindowIcon(QIcon(":/icon.png"))
