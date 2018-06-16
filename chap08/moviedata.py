@@ -166,17 +166,18 @@ class MovieContainer(object):
     def formats():
         return "*.mqb *.mpb *.mqt *.mpt"
 
+    # 保存不同格式的文件
     def save(self, fname=""):
         if fname:
             self.__fname = fname
         if self.__fname.endswith(".mqb"):
-            return self.saveQDataStream()
+            return self.saveQDataStream()  # 数据流 保存
         elif self.__fname.endswith(".mpb"):
-            return self.savePickle()
+            return self.savePickle()  # 包 保存
         elif self.__fname.endswith(".mqt"):
-            return self.saveQTextStream()
+            return self.saveQTextStream()  # QT文本流 保存
         elif self.__fname.endswith(".mpt"):
-            return self.saveText()
+            return self.saveText()  # 文本 保存
         return False, "Failed to save: invalid file extension"
 
     def load(self, fname=""):

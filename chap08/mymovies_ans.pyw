@@ -196,7 +196,7 @@ class MainWindow(QMainWindow):
             self.table.setItem(row, 5, QTableWidgetItem(notes))
         self.table.resizeColumnsToContents()  # 调整列宽适配内容
         if selected is not None:
-            selected.setSelected(True)  # 设置为可选中
+            selected.setSelected(True)  # 设置为选中
             self.table.setCurrentItem(selected)  # 设置_当前项为
             self.table.scrollToItem(selected)  # 滚动_到_项(selected)
         

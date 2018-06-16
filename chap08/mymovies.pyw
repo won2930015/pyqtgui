@@ -26,9 +26,9 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        self.movies = moviedata.MovieContainer()
-        self.table = QTableWidget()
-        self.setCentralWidget(self.table)
+        self.movies = moviedata.MovieContainer()  # MovieContainer::电影容器
+        self.table = QTableWidget()  # 表格_控件
+        self.setCentralWidget(self.table)  #设置中央控件.
         status = self.statusBar()
         status.setSizeGripEnabled(False)
         status.showMessage("Ready", 5000)
