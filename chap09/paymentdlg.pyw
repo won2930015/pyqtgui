@@ -68,7 +68,7 @@ class PaymentDlg(QDialog):
 
         tabWidget = QTabWidget()
         cashWidget = QWidget()
-        cashLayout = QHBoxLayout()      #横向布局
+        cashLayout = QHBoxLayout()      #水平布局
         cashLayout.addWidget(self.paidCheckBox)
         cashWidget.setLayout(cashLayout)
         tabWidget.addTab(cashWidget, "Cas&h")
@@ -87,7 +87,7 @@ class PaymentDlg(QDialog):
         creditWidget = QWidget()
         creditLayout = QGridLayout()        #网格布局
         creditLayout.addWidget(creditCardLabel, 0, 0)
-        creditLayout.addWidget(self.creditCardLineEdit, 0, 1, 1, 3)
+        creditLayout.addWidget(self.creditCardLineEdit, 0, 1, 1, 3)  # 占用1行3列.
         creditLayout.addWidget(validFromLabel, 1, 0)
         creditLayout.addWidget(self.validFromDateEdit, 1, 1)
         creditLayout.addWidget(expiryLabel, 1, 2)
@@ -104,7 +104,7 @@ class PaymentDlg(QDialog):
         gridLayout.addWidget(self.invoiceSpinBox, 1, 1)
         gridLayout.addWidget(amountLabel, 1, 2)
         gridLayout.addWidget(self.amountSpinBox, 1, 3)
-        layout = QVBoxLayout()      #纵向布局
+        layout = QVBoxLayout()      #垂直布局
         layout.addLayout(gridLayout)
         layout.addWidget(tabWidget)
         layout.addWidget(self.buttonBox)

@@ -27,14 +27,16 @@ class Ui_PaymentDlg(object):
         PaymentDlg.setObjectName(_fromUtf8("PaymentDlg"))
         PaymentDlg.resize(399, 276)
         self.gridlayout = QtGui.QGridLayout(PaymentDlg)
-        self.gridlayout.setMargin(9)
-        self.gridlayout.setSpacing(6)
+        self.gridlayout.setMargin(9)  # 设置边缘 ==9
+        self.gridlayout.setSpacing(6)  # 设置间隔 ==6
         self.gridlayout.setObjectName(_fromUtf8("gridlayout"))
-        self.buttonBox = QtGui.QDialogButtonBox(PaymentDlg)
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox = QtGui.QDialogButtonBox(PaymentDlg)  # 创建按键盒.
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)  # 设置方向==水平
+        # 设置标准按键S ==(Cancel ,No ,Ok)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.NoButton|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
         self.gridlayout.addWidget(self.buttonBox, 3, 0, 1, 1)
+        # 设置间隔器[弹簧隔垫] (长 ,宽 ,水平 ,垂直)
         spacerItem = QtGui.QSpacerItem(381, 16, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridlayout.addItem(spacerItem, 2, 0, 1, 1)
         self.tabWidget = QtGui.QTabWidget(PaymentDlg)
@@ -154,12 +156,13 @@ class Ui_PaymentDlg(object):
         self.label.setBuddy(self.forenameLineEdit)
         self.label_5.setBuddy(self.invoiceNumSpinBox)
         self.label_4.setBuddy(self.amountSpinBox)
-
+        # 重译Ui
         self.retranslateUi(PaymentDlg)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), PaymentDlg.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), PaymentDlg.reject)
         QtCore.QMetaObject.connectSlotsByName(PaymentDlg)
+        # 设置BAT键的遍历顺序.
         PaymentDlg.setTabOrder(self.forenameLineEdit, self.surnameLineEdit)
         PaymentDlg.setTabOrder(self.surnameLineEdit, self.invoiceNumSpinBox)
         PaymentDlg.setTabOrder(self.invoiceNumSpinBox, self.amountSpinBox)
@@ -173,6 +176,7 @@ class Ui_PaymentDlg(object):
         PaymentDlg.setTabOrder(self.creditCardLineEdit, self.validFromDateEdit)
         PaymentDlg.setTabOrder(self.validFromDateEdit, self.expiryDateEdit)
 
+    # 重译Ui
     def retranslateUi(self, PaymentDlg):
         PaymentDlg.setWindowTitle(_translate("PaymentDlg", "Payment Form", None))
         self.paidCheckBox.setText(_translate("PaymentDlg", "&Paid", None))
