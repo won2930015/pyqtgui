@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'h:\Users\won293_root\Desktop\qt_test\pyqtbook3.tar\pyqtbook31.tar\pyqtbook31\pyqtbook31\chap08\addeditmoviedlg.ui'
+# Form implementation generated from reading ui file 'addeditmoviedlg.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #

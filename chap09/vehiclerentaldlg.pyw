@@ -54,7 +54,7 @@ class VehicleRentalDlg(QDialog):
         self.mileageLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   ### setFrameStyle：设置_框架_样式||QFrame.StyledPanel:样式_面板||QFrame.Sunken:凹陷
         self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|
                                           QDialogButtonBox.Cancel)
-
+        # ***堆叠窗口 开始***
         self.stackedWidget = QStackedWidget()       #创建堆叠窗口。
         carWidget = QWidget()
         carLayout = QGridLayout()
@@ -72,19 +72,20 @@ class VehicleRentalDlg(QDialog):
         vanLayout.addWidget(self.volumeSpinBox, 1, 1)
         vanWidget.setLayout(vanLayout)
         self.stackedWidget.addWidget(vanWidget)
+        # ***堆叠窗口 结束***
 
-        topLayout = QHBoxLayout()
+        topLayout = QHBoxLayout()   #  顶部布局
         topLayout.addWidget(vehicleLabel)
         topLayout.addWidget(self.vehicleComboBox)
-        bottomLayout = QHBoxLayout()    #bottomLayout：低部布局
+        bottomLayout = QHBoxLayout()    #bottomLayout：底部布局
         bottomLayout.addWidget(mileageLabel)
         bottomLayout.addWidget(self.mileageLabel)
         layout = QVBoxLayout()
-        layout.addLayout(topLayout)
-        layout.addWidget(self.stackedWidget)
-        layout.addLayout(bottomLayout)
-        layout.addWidget(self.buttonBox)
-        self.setLayout(layout)
+        layout.addLayout(topLayout)  # 加入顶部布局
+        layout.addWidget(self.stackedWidget)  # 加入堆叠窗口
+        layout.addLayout(bottomLayout)  # 加入底部布局
+        layout.addWidget(self.buttonBox)  # 加入按键盒
+        self.setLayout(layout)  # 设置布局
 
         self.connect(self.buttonBox, SIGNAL("accepted()"), self.accept)
         self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject)

@@ -103,11 +103,12 @@ class MovieContainer(object):
             self.__fname = ""
         self.__dirty = False
 
+    # 根据id返回 movie对象
     def movieFromId(self, id):
         """Returns the movie with the given Python ID."""
-        return self.__movieFromId[id]  # 字典,返回value
+        return self.__movieFromId[id]  # 字典,返回value -->即:movie对象
 
-    #按索引返回列表项
+    # 按索引返回列表项
     def movieAtIndex(self, index):
         """Returns the index-th movie."""
         return self.__movies[index][1]  # 返回索引的列表项 的第二个元素movie ##.__movies[[key,movie],...]
@@ -308,7 +309,7 @@ class MovieContainer(object):
             if not fh.open(QIODevice.WriteOnly):
                 raise IOError(fh.errorString())
             stream = QTextStream(fh)
-            stream.setCodec(CODEC)
+            stream.setCodec(CODEC)  #设置使用的编码==utf8
             for key, movie in self.__movies:
                 stream << "{{MOVIE}} " << movie.title << "\n" \
                        << movie.year << " " << movie.minutes << " " \
@@ -368,7 +369,7 @@ class MovieContainer(object):
                 if line != "{NOTES}":
                     raise ValueError("notes expected")
                 notes = ""
-                while not stream.atEnd():
+                while not stream.atEnd():  #处理 空notes和 有notes两种情况.
                     line = stream.readLine()
                     lino += 1
                     if line == "{{ENDMOVIE}}":
@@ -458,7 +459,7 @@ class MovieContainer(object):
                 if line != "{NOTES}\n":
                     raise ValueError("notes expected")
                 notes = ""
-                while True:
+                while True:  #处理 空notes和 有notes两种情况.
                     line = fh.readline()
                     if not line:
                         raise ValueError("missing endmovie marker")
