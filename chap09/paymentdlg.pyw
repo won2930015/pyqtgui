@@ -134,7 +134,7 @@ class PaymentDlg(QDialog):
         today = QDate.currentDate()
         enable = (bool(self.forenameLineEdit.text()) or
                   bool(self.surnameLineEdit.text()))
-        if enable: ### TODO CHECK THE LOGIC!!!
+        if enable:  ### TODO CHECK THE LOGIC!!!
             enable = (self.paidCheckBox.isChecked() or
                   (bool(self.checkNumLineEdit.text()) and
                    bool(self.accountNumLineEdit.text()) and

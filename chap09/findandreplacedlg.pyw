@@ -8,6 +8,9 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
+#---------------
+# 扩展对话框示例.#
+#---------------
 
 import sys
 from PyQt4.QtCore import *
@@ -15,12 +18,12 @@ from PyQt4.QtGui import *
 
 MAC = True
 try:
-    from PyQt4.QtGui import qt_mac_set_native_menubar #判断是否在MAC环境！！！
+    from PyQt4.QtGui import qt_mac_set_native_menubar  # 判断是否在MAC环境！！！
 except ImportError:
     MAC = False
 
 
-class FindAndReplaceDlg(QDialog):
+class FindAndReplaceDlg(QDialog):  # 查找与替换窗口.
 
     def __init__(self, parent=None):
         super(FindAndReplaceDlg, self).__init__(parent)
@@ -132,8 +135,8 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     form = FindAndReplaceDlg()
-    form.connect(form, SIGNAL("find"), find)
-    form.connect(form, SIGNAL("replace"), replace)
+    form.connect(form, SIGNAL("find"), find)  # 关联 find信号到 find函数.
+    form.connect(form, SIGNAL("replace"), replace)  # 关联 replace信号到 replace函数.
     form.show()
     app.exec_()
 

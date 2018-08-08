@@ -20,7 +20,7 @@ class VehicleRentalDlg(QDialog,
 
     def __init__(self, parent=None):
         super(VehicleRentalDlg, self).__init__(parent)
-        self.setupUi(self)
+        self.setupUi(self)  # ui_vehiclerentaldlg.Ui_VehicleRentalDlg.setupUi()
         self.vehicleComboBox.setFocus()
 
 

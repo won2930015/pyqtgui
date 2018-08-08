@@ -135,7 +135,7 @@ class Ui_VehicleRentalDlg(object):
         self.label_2.setBuddy(self.seatsSpinBox)
         self.label.setBuddy(self.vehicleComboBox)
 
-        self.retranslateUi(VehicleRentalDlg)
+        self.retranslateUi(VehicleRentalDlg)  #  重译Ui
         self.stackedWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.vehicleComboBox, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.stackedWidget.setCurrentIndex)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), VehicleRentalDlg.accept)

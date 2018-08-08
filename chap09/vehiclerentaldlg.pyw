@@ -91,7 +91,7 @@ class VehicleRentalDlg(QDialog):
         self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject)
         self.connect(self.vehicleComboBox,
                      SIGNAL("currentIndexChanged(QString)"),
-                     self.setWidgetStack)   #自定义函数->100
+                     self.setWidgetStack)   #自定义函数->100 row
         self.connect(self.weightSpinBox, SIGNAL("valueChanged(int)"),
                      self.weightChanged)
 

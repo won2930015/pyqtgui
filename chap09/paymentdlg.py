@@ -19,7 +19,7 @@ class PaymentDlg(QDialog, ui_paymentdlg.Ui_PaymentDlg):
 
     def __init__(self, parent=None):
         super(PaymentDlg, self).__init__(parent)
-        self.setupUi(self)
+        self.setupUi(self)  # <--ui_paymentdlg.setupUi()
         for lineEdit in (self.forenameLineEdit, self.surnameLineEdit,
                 self.checkNumLineEdit, self.accountNumLineEdit,
                 self.bankLineEdit, self.sortCodeLineEdit,
