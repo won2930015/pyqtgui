@@ -26,30 +26,28 @@ class MainWindow(QMainWindow):
         self.messagesList = QListWidget()
         self.messageView = QTextBrowser()
 
-        self.messageSplitter = QSplitter(Qt.Vertical)
+        self.messageSplitter = QSplitter(Qt.Vertical)  # Splitter:切分条(分离器) ,Vertical:垂直
         self.messageSplitter.addWidget(self.messagesList)
         self.messageSplitter.addWidget(self.messageView)
-        self.mainSplitter = QSplitter(Qt.Horizontal)
+        self.mainSplitter = QSplitter(Qt.Horizontal)  # Splitter:切分条(分离器) ,Horizontal:水平
         self.mainSplitter.addWidget(self.groupsList)
         self.mainSplitter.addWidget(self.messageSplitter)
         self.setCentralWidget(self.mainSplitter)
 
-        self.mainSplitter.setStretchFactor(0, 1)
+        #设置 垂直,水平切分条(分离器)的分配比例
+        self.mainSplitter.setStretchFactor(0, 1)  # setStretchFactor:设置可伸缩因素
         self.mainSplitter.setStretchFactor(1, 3)
         self.messageSplitter.setStretchFactor(0, 1)
         self.messageSplitter.setStretchFactor(1, 2)
 
         self.createMenusAndToolbars()
 
+        # 读取 窗口/切分条 尺寸配置
         settings = QSettings()
-        self.restoreGeometry(settings.value("MainWindow/Geometry",
-                QByteArray()))
-        self.restoreState(settings.value("MainWindow/State",
-                QByteArray()))
-        self.messageSplitter.restoreState(settings.value("MessageSplitter",
-                QByteArray()))
-        self.mainSplitter.restoreState(settings.value("MainSplitter",
-                QByteArray()))
+        self.restoreGeometry(settings.value("MainWindow/Geometry", QByteArray()))
+        self.restoreState(settings.value("MainWindow/State", QByteArray()))
+        self.messageSplitter.restoreState(settings.value("MessageSplitter", QByteArray()))
+        self.mainSplitter.restoreState(settings.value("MainSplitter", QByteArray()))
 
         status = self.statusBar()
         status.setSizeGripEnabled(False)
@@ -90,11 +88,11 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         if self.okToContinue():
+            # 保存 窗口/切分条 的尺寸配置.
             settings = QSettings()
             settings.setValue("MainWindow/Geometry", self.saveGeometry())
             settings.setValue("MainWindow/State", self.saveState())
-            settings.setValue("MessageSplitter",
-                    self.messageSplitter.saveState())
+            settings.setValue("MessageSplitter", self.messageSplitter.saveState())
             settings.setValue("MainSplitter", self.mainSplitter.saveState())
         else:
             event.ignore()
@@ -223,7 +221,7 @@ Plus many other features and bundled libraries.""")
 
 def main():
     app = QApplication(sys.argv)
-    app.setOrganizationName("Qtrac Ltd.")
+    app.setOrganizationName("Qtrac Ltd.")  # 设置软件相关信息,这样QSettings()的配置信息才会起效.
     app.setOrganizationDomain("qtrac.eu")
     app.setApplicationName("News Reader")
     form = MainWindow()

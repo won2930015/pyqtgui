@@ -1,3 +1,5 @@
-1.PaymentDlg
-2.vehiclerentaldlg
-3.findandreplacedlg
+1.PaymentDlg        tab标签页部件
+2.vehiclerentaldlg  堆叠窗口部件
+3.findandreplacedlg 扩展对话框
+4.newsreader        窗口切分条
+5.sditexteditor     SDI单文档界面

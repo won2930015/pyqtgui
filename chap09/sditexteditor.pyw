@@ -21,11 +21,11 @@ __version__ = "1.0.0"
 class MainWindow(QMainWindow):
 
     NextId = 1
-    Instances = set()
+    Instances = set()  # Instances::实例 ,定义为元组.
 
     def __init__(self, filename="", parent=None):
         super(MainWindow, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setAttribute(Qt.WA_DeleteOnClose)  # WA_DeleteOnClose::退出时删除引用的内存?
         MainWindow.Instances.add(self)
 
         self.editor = QTextEdit()
@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         fileSaveAction = self.createAction("&Save", self.fileSave,
                 QKeySequence.Save, "filesave", "Save the text")
         fileSaveAsAction = self.createAction("Save &As...",
-                self.fileSaveAs, icon="filesaveas",
+                self.fileSaveAs, icon="filesaveas",  # 注意没有定义快捷键.
                 tip="Save the text using a new filename")
         fileSaveAllAction = self.createAction("Save A&ll",
                 self.fileSaveAll, icon="filesave",
@@ -59,28 +59,31 @@ class MainWindow(QMainWindow):
                 self.editor.paste, QKeySequence.Paste, "editpaste",
                 "Paste in the clipboard's text")
 
+        # 文件菜单
         fileMenu = self.menuBar().addMenu("&File")
         self.addActions(fileMenu, (fileNewAction, fileOpenAction,
                 fileSaveAction, fileSaveAsAction, fileSaveAllAction,
                 None, fileCloseAction, fileQuitAction))
+        # 编辑菜单
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (editCopyAction, editCutAction,
                                    editPasteAction))
-
+        # 窗口菜单
         self.windowMenu = self.menuBar().addMenu("&Window")
         self.connect(self.windowMenu, SIGNAL("aboutToShow()"),
                      self.updateWindowMenu)
-
+        # 文件工具条
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
         self.addActions(fileToolbar, (fileNewAction, fileOpenAction,
                                       fileSaveAction))
+        # 编辑工具条
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")
         self.addActions(editToolbar, (editCopyAction, editCutAction,
                                       editPasteAction))
-
-        self.connect(self, SIGNAL("destroyed(QObject*)"),
+        # 当销毁窗口时...
+        self.connect(self, SIGNAL("destroyed(QObject*)"), # destroyed(QObject*)::销毁(对象)_信号
                      MainWindow.updateInstances)
 
         status = self.statusBar()
@@ -93,14 +96,14 @@ class MainWindow(QMainWindow):
         if not self.filename:
             self.filename = "Unnamed-{}.txt".format(MainWindow.NextId)
             MainWindow.NextId += 1
-            self.editor.document().setModified(False)
+            self.editor.document().setModified(False)  # setModified::设置修改标识.
             self.setWindowTitle("SDI Text Editor - {}".format(
                                 self.filename))
         else:
             self.loadFile()
 
 
-    @staticmethod
+    @staticmethod  # todo::https://blog.csdn.net/GeekLeee/article/details/52624742
     def updateInstances(qobj):
         MainWindow.Instances = (set([window for window
                 in MainWindow.Instances if isAlive(window)]))
@@ -238,21 +241,21 @@ class MainWindow(QMainWindow):
 
 
     def raiseWindow(self):
-        action = self.sender()
+        action = self.sender()  # 传送触发对象到action
         if not isinstance(action, QAction):
             return
         for window in MainWindow.Instances:
             if (isAlive(window) and
                 window.windowTitle() == action.text()):
-                window.activateWindow()
-                window.raise_()
+                window.activateWindow()  # 设置窗口为活动窗口.
+                window.raise_()  # raise::提升:窗口至顶层
                 break
 
 
 def isAlive(qobj):
     import sip
     try:
-        sip.unwrapinstance(qobj)
+        sip.unwrapinstance(qobj)  # 解包实例
     except RuntimeError:
         return False
     return True
