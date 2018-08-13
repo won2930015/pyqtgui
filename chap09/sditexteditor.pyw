@@ -21,7 +21,7 @@ __version__ = "1.0.0"
 class MainWindow(QMainWindow):
 
     NextId = 1
-    Instances = set()  # Instances::实例 ,定义为元组.
+    Instances = set()  # Instances::实例 ,定义为集.
 
     def __init__(self, filename="", parent=None):
         super(MainWindow, self).__init__(parent)
@@ -83,7 +83,7 @@ class MainWindow(QMainWindow):
         self.addActions(editToolbar, (editCopyAction, editCutAction,
                                       editPasteAction))
         # 当销毁窗口时...
-        self.connect(self, SIGNAL("destroyed(QObject*)"), # destroyed(QObject*)::销毁(对象)_信号
+        self.connect(self, SIGNAL("destroyed(QObject*)"),  # destroyed(QObject*)::销毁(对象)_信号
                      MainWindow.updateInstances)
 
         status = self.statusBar()
@@ -241,7 +241,7 @@ class MainWindow(QMainWindow):
 
 
     def raiseWindow(self):
-        action = self.sender()  # 传送触发对象到action
+        action = self.sender()  # 传送被触发对象到action
         if not isinstance(action, QAction):
             return
         for window in MainWindow.Instances:
@@ -252,10 +252,10 @@ class MainWindow(QMainWindow):
                 break
 
 
-def isAlive(qobj):
+def isAlive(qobj):  # P217
     import sip
     try:
-        sip.unwrapinstance(qobj)  # 解包实例
+        sip.unwrapinstance(qobj)  # 解包实例 ,检查指向的实列是否还存活.
     except RuntimeError:
         return False
     return True

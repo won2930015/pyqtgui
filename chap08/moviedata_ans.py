@@ -106,12 +106,11 @@ class MovieContainer(object):
             self.__fname = ""
         self.__dirty = False
 
-    def movieFromId(self, id):
+    def movieFromId(self, id):  # 从id返回 movie对象
         """Returns the movie with the given Python ID."""
         return self.__movieFromId[id]  # 字典,返回value
 
-
-    def movieAtIndex(self, index):
+    def movieAtIndex(self, index):  # 从索引 返回 movie对象.
         """Returns the index-th movie."""
         return self.__movies[index][1]  # 返回索引的列表项 的第二个元素movie ##.__movies[[key,movie],...]
 

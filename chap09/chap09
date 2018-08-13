@@ -3,3 +3,4 @@
 3.findandreplacedlg 扩展对话框
 4.newsreader        窗口切分条
 5.sditexteditor     SDI单文档界面
+6.texteditor        MDI多文档界面
