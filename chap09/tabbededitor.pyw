@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        self.tabWidget = QTabWidget()
+        self.tabWidget = QTabWidget()  # Tab标签控件
         self.setCentralWidget(self.tabWidget)
 
         fileNewAction = self.createAction("&New", self.fileNew,

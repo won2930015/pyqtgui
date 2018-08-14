@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        self.mdi = QWorkspace()
+        self.mdi = QWorkspace()  # QWorkspace::工作空间. todo::http://www.kuqin.com/qtdocument/qworkspace.html#details
         self.setCentralWidget(self.mdi)
 
         fileNewAction = self.createAction("&New", self.fileNew,
@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
                 "Open an existing text file")
         fileSaveAction = self.createAction("&Save", self.fileSave,
                 QKeySequence.Save, "filesave", "Save the text")
-        fileSaveAsAction = self.createAction("Save &As...",
+        fileSaveAsAction = self.createAction("Save &As...",   # 无快捷键
                 self.fileSaveAs, icon="filesaveas",
                 tip="Save the text using a new filename")
         fileSaveAllAction = self.createAction("Save A&ll",
@@ -51,25 +51,33 @@ class MainWindow(QMainWindow):
         editPasteAction = self.createAction("&Paste", self.editPaste,
                 QKeySequence.Paste, "editpaste",
                 "Paste in the clipboard's text")
+        # 下一窗口 动作
         self.windowNextAction = self.createAction("&Next",
                 self.mdi.activateNextWindow, QKeySequence.NextChild)
+        # 上一窗口 动作
         self.windowPrevAction = self.createAction("&Previous",
                 self.mdi.activatePreviousWindow,
                 QKeySequence.PreviousChild)
+        # 层叠窗口(all)
         self.windowCascadeAction = self.createAction("Casca&de",
                 self.mdi.cascade)
+        # 平铺窗口(all)
         self.windowTileAction = self.createAction("&Tile",
                 self.mdi.tile)
+        # 还原窗口(all)
         self.windowRestoreAction = self.createAction("&Restore All",
                 self.windowRestoreAll)
+        # 最小化窗口(all)
         self.windowMinimizeAction = self.createAction("&Iconize All",
                 self.windowMinimizeAll)
+        # 排列图标 动作
         self.windowArrangeIconsAction = self.createAction(
                 "&Arrange Icons", self.mdi.arrangeIcons)
+        # 关闭窗口 动作
         self.windowCloseAction = self.createAction("&Close",
                 self.mdi.closeActiveWindow, QKeySequence.Close)
 
-        self.windowMapper = QSignalMapper(self)
+        self.windowMapper = QSignalMapper(self)  # todo::https://blog.csdn.net/lpmygod/article/details/40477649
         self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
                      self.mdi, SLOT("setActiveWindow(QWidget*)"))
 

@@ -247,7 +247,7 @@ class MainWindow(QMainWindow):
         for window in MainWindow.Instances:
             if (isAlive(window) and
                 window.windowTitle() == action.text()):
-                window.activateWindow()  # 设置窗口为活动窗口.
+                window.activateWindow()  # 设置为活动窗口.
                 window.raise_()  # raise::提升:窗口至顶层
                 break
 
