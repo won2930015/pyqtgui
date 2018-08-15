@@ -77,33 +77,38 @@ class MainWindow(QMainWindow):
         self.windowCloseAction = self.createAction("&Close",
                 self.mdi.closeActiveWindow, QKeySequence.Close)
 
-        self.windowMapper = QSignalMapper(self)  # todo::https://blog.csdn.net/lpmygod/article/details/40477649
+        self.windowMapper = QSignalMapper(self)  # todo::https://blog.csdn.net/noricky/article/details/81240147
         self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
                      self.mdi, SLOT("setActiveWindow(QWidget*)"))
-
+        # 文件菜单
         fileMenu = self.menuBar().addMenu("&File")
         self.addActions(fileMenu, (fileNewAction, fileOpenAction,
                 fileSaveAction, fileSaveAsAction, fileSaveAllAction,
                 None, fileQuitAction))
+        # 编辑菜单
         editMenu = self.menuBar().addMenu("&Edit")
         self.addActions(editMenu, (editCopyAction, editCutAction,
                                    editPasteAction))
+        # 窗口菜单
         self.windowMenu = self.menuBar().addMenu("&Window")
         self.connect(self.windowMenu, SIGNAL("aboutToShow()"),
                      self.updateWindowMenu)
-
+        # 文件工具条
         fileToolbar = self.addToolBar("File")
         fileToolbar.setObjectName("FileToolbar")
         self.addActions(fileToolbar, (fileNewAction, fileOpenAction,
                                       fileSaveAction))
+        # 编缉工具条
         editToolbar = self.addToolBar("Edit")
         editToolbar.setObjectName("EditToolbar")
         self.addActions(editToolbar, (editCopyAction, editCutAction,
                                       editPasteAction))
-
+        # 创建配置文件
         settings = QSettings()
+        # 恢复几何图形
         self.restoreGeometry(settings.value("MainWindow/Geometry",
                 QByteArray()))
+        # 恢复状态
         self.restoreState(settings.value("MainWindow/State",
                 QByteArray()))
 
@@ -113,7 +118,8 @@ class MainWindow(QMainWindow):
 
         self.updateWindowMenu()
         self.setWindowTitle("Text Editor")
-        QTimer.singleShot(0, self.loadFiles)
+        QTimer.singleShot(0, self.loadFiles)  # 单singleShot，表示它只会触发一次，发出一次信号，然后来执行槽函数。
+                                              # todo::https://blog.csdn.net/fanyun_01/article/details/73162626
 
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
@@ -157,30 +163,31 @@ class MainWindow(QMainWindow):
                     QMessageBox.No):
             event.ignore()
             return
+        # 创建配置文件,记录配置.
         settings = QSettings()
-        settings.setValue("MainWindow/Geometry", self.saveGeometry())
-        settings.setValue("MainWindow/State", self.saveState())
+        settings.setValue("MainWindow/Geometry", self.saveGeometry())  # 保存几何
+        settings.setValue("MainWindow/State", self.saveState())  # 保存状态
         files = []
         for textEdit in self.mdi.windowList():
             if not textEdit.filename.startswith("Unnamed"):
                 files.append(textEdit.filename)
-        settings.setValue("CurrentFiles", files)
+        settings.setValue("CurrentFiles", files)  # 保存最近打开文件.
         self.mdi.closeAllWindows()
 
 
     def loadFiles(self):
         if len(sys.argv) > 1:
-            for filename in sys.argv[1:31]: # Load at most 30 files
+            for filename in sys.argv[1:31]: # Load at most 30 files(最大预载入30个文件.)
                 if QFileInfo(filename).isFile():
                     self.loadFile(filename)
-                    QApplication.processEvents()
+                    QApplication.processEvents()  # todo::https://www.cnblogs.com/findumars/p/5607683.html
         else:
             settings = QSettings()
             files = settings.value("CurrentFiles") or []
             for filename in files:
                 if QFile.exists(filename):
                     self.loadFile(filename)
-                    QApplication.processEvents()
+                    QApplication.processEvents()  # processEvents()函数的作用是当程序处理耗时事件时(如文件保存/载入),把使用权返回给调用者.避免出现假死的情况.
 
 
     def fileNew(self):
@@ -322,8 +329,8 @@ class MainWindow(QMainWindow):
                 accel = "&{} ".format(chr(i + ord("@") - 9))
             action = menu.addAction("{}{}".format(accel, title))
             self.connect(action, SIGNAL("triggered()"),
-                         self.windowMapper, SLOT("map()"))
-            self.windowMapper.setMapping(action, textEdit)
+                         self.windowMapper, SLOT("map()"))  # 81ROW
+            self.windowMapper.setMapping(action, textEdit)  # TODO::http://blog.sina.com.cn/s/blog_a3eacdb20101ddcf.html
             i += 1
 
 
