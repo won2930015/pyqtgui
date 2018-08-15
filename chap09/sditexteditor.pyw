@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, filename="", parent=None):
         super(MainWindow, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)  # WA_DeleteOnClose::退出时删除引用的内存?
+        self.setAttribute(Qt.WA_DeleteOnClose)  # WA_DeleteOnClose::关闭时删除引用的内存?
         MainWindow.Instances.add(self)
 
         self.editor = QTextEdit()

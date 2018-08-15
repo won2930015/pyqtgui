@@ -261,7 +261,7 @@ class MainWindow(QMainWindow):
                     "Text Editor -- Save All Error",
                     "Failed to save\n{}".format("\n".join(errors)))
 
-
+    # 复制
     def editCopy(self):
         textEdit = self.mdi.activeWindow()
         if textEdit is None or not isinstance(textEdit, QTextEdit):
@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
             clipboard = QApplication.clipboard()
             clipboard.setText(text)
 
-
+    # 剪切
     def editCut(self):
         textEdit = self.mdi.activeWindow()
         if textEdit is None or not isinstance(textEdit, QTextEdit):
@@ -284,7 +284,7 @@ class MainWindow(QMainWindow):
             clipboard = QApplication.clipboard()
             clipboard.setText(text)
 
-
+    # 粘贴
     def editPaste(self):
         textEdit = self.mdi.activeWindow()
         if textEdit is None or not isinstance(textEdit, QTextEdit):
@@ -292,17 +292,17 @@ class MainWindow(QMainWindow):
         clipboard = QApplication.clipboard()
         textEdit.insertPlainText(clipboard.text())
 
-
+    # 还原窗口(all)
     def windowRestoreAll(self):
         for textEdit in self.mdi.windowList():
             textEdit.showNormal()
 
-
+    # 最小化窗口(all)
     def windowMinimizeAll(self):
         for textEdit in self.mdi.windowList():
             textEdit.showMinimized()
 
-
+    # 更新窗口菜单
     def updateWindowMenu(self):
         self.windowMenu.clear()
         self.addActions(self.windowMenu, (self.windowNextAction,

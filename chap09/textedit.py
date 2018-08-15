@@ -19,7 +19,7 @@ class TextEdit(QTextEdit):
 
     def __init__(self, filename="", parent=None):
         super(TextEdit, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setAttribute(Qt.WA_DeleteOnClose)  # WA_DeleteOnClose::关闭时删除引用的内存?
         self.filename = filename
         if not self.filename:
             self.filename = "Unnamed-{}.txt".format(TextEdit.NextId)
@@ -56,7 +56,7 @@ class TextEdit(QTextEdit):
                 return
             self.filename = filename
         self.setWindowTitle(QFileInfo(self.filename).fileName())
-        exception = None
+        exception = None  # 异常
         fh = None
         try:
             fh = QFile(self.filename)
@@ -76,7 +76,7 @@ class TextEdit(QTextEdit):
 
 
     def load(self):
-        exception = None
+        exception = None  # 异常
         fh = None
         try:
             fh = QFile(self.filename)

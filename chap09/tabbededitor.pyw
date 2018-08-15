@@ -55,8 +55,8 @@ class MainWindow(QMainWindow):
                 QKeySequence.Paste, "editpaste",
                 "Paste in the clipboard's text")
 
-        QShortcut(QKeySequence.PreviousChild, self, self.prevTab)   #QShortcut:快捷方式，PreviousChild：前一个孩子
-        QShortcut(QKeySequence.NextChild, self, self.nextTab)
+        QShortcut(QKeySequence.PreviousChild, self, self.prevTab)   # QShortcut:快捷方式，PreviousChild：前一个孩子
+        QShortcut(QKeySequence.NextChild, self, self.nextTab)  # (快捷键,绑定对象,执行的方法)
 
         fileMenu = self.menuBar().addMenu("&File")
         self.addActions(fileMenu, (fileNewAction, fileOpenAction,
@@ -86,7 +86,8 @@ class MainWindow(QMainWindow):
         status.showMessage("Ready", 5000)
 
         self.setWindowTitle("Tabbed Text Editor")
-        QTimer.singleShot(0, self.loadFiles)
+        QTimer.singleShot(0, self.loadFiles)  # 单singleShot，表示它只会触发一次，发出一次信号，然后来执行槽函数。
+                                              # todo::https://blog.csdn.net/fanyun_01/article/details/73162626
 
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
