@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
                 "Paste in the clipboard's text")
 
         QShortcut(QKeySequence.PreviousChild, self, self.prevTab)   # QShortcut:快捷方式，PreviousChild：前一个孩子
-        QShortcut(QKeySequence.NextChild, self, self.nextTab)  # (快捷键,绑定对象,执行的方法)
+        QShortcut(QKeySequence.NextChild, self, self.nextTab)  # (快捷键,绑定对象,执行的方法) todo::https://blog.csdn.net/ljhandlwt/article/details/52354139
 
         fileMenu = self.menuBar().addMenu("&File")
         self.addActions(fileMenu, (fileNewAction, fileOpenAction,
@@ -116,7 +116,7 @@ class MainWindow(QMainWindow):
 
 
     def closeEvent(self, event):
-        failures = []
+        failures = []  # 失败
         for i in range(self.tabWidget.count()):
             textEdit = self.tabWidget.widget(i)
             if textEdit.isModified():
@@ -171,9 +171,9 @@ class MainWindow(QMainWindow):
             for filename in sys.argv[1:]:
                 if QFileInfo(filename).isFile():
                     self.loadFile(filename)
-                    QApplication.processEvents()    #处理事件：返还控权给事件循环。
+                    QApplication.processEvents()    #处理耗时事件时(读/写/加载文件)：返还控制权给事件循环。
                     count += 1
-                    if count >= 10: # Load at most 10 files
+                    if count >= 10: # Load at most 10 files (最大预读10个文件)
                         break
         else:
             settings = QSettings()
@@ -261,7 +261,7 @@ class MainWindow(QMainWindow):
                     "Save All Error",
                     "Failed to save\n{}".format("\n".join(errors)))
 
-
+    # 关闭单一标签
     def fileCloseTab(self):
         textEdit = self.tabWidget.currentWidget()
         if textEdit is None or not isinstance(textEdit, QTextEdit):
@@ -279,7 +279,7 @@ class MainWindow(QMainWindow):
             clipboard = QApplication.clipboard()
             clipboard.setText(text)
 
-
+    # 剪切
     def editCut(self):
         textEdit = self.tabWidget.currentWidget()
         if textEdit is None or not isinstance(textEdit, QTextEdit):
@@ -291,7 +291,7 @@ class MainWindow(QMainWindow):
             clipboard = QApplication.clipboard()
             clipboard.setText(text)
 
-
+    # 粘贴
     def editPaste(self):
         textEdit = self.tabWidget.currentWidget()
         if textEdit is None or not isinstance(textEdit, QTextEdit):
@@ -301,7 +301,7 @@ class MainWindow(QMainWindow):
 
 
 app = QApplication(sys.argv)
-app.setWindowIcon(QIcon(":/icon.png"))
+app.setWindowIcon(QIcon(":/icon.png"))  # 设置软件信息,才可使用QSettings 配置文件.
 app.setOrganizationName("Qtrac Ltd.")
 app.setOrganizationDomain("qtrac.eu")
 app.setApplicationName("Tabbed Text Editor")
