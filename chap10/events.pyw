@@ -19,14 +19,14 @@ class Widget(QWidget):
 
     def __init__(self, parent=None):
         super(Widget, self).__init__(parent)
-        self.justDoubleClicked = False
+        self.justDoubleClicked = False  # 确定双击
         self.key = ""
         self.text = ""
         self.message = ""
         self.resize(400, 300)
         self.move(100, 100)
         self.setWindowTitle("Events")
-        QTimer.singleShot(0, self.giveHelp) # Avoids first resize msg
+        QTimer.singleShot(0, self.giveHelp)  # Avoids first resize msg
 
 
     def giveHelp(self):
@@ -79,7 +79,7 @@ class Widget(QWidget):
         if self.message:
             painter.drawText(self.rect(), Qt.AlignBottom|Qt.AlignHCenter,
                              self.message)
-            QTimer.singleShot(5000, self.message.clear)
+            QTimer.singleShot(5000, self.message.clear)  # 单singleShot:第二参数必需是 可调用的 或是方法函数.
             QTimer.singleShot(5000, self.update)
 
 
