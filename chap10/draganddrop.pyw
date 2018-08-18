@@ -20,9 +20,10 @@ class Form(QDialog):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
 
+        # 列表
         listWidget = QListWidget()
-        listWidget.setAcceptDrops(True)
-        listWidget.setDragEnabled(True)
+        listWidget.setAcceptDrops(True)  # 接受Drops
+        listWidget.setDragEnabled(True)  # 拖曳允许
         path = os.path.dirname(__file__)
         for image in sorted(os.listdir(os.path.join(path, "images"))):
             if image.endswith(".png"):
@@ -30,18 +31,20 @@ class Form(QDialog):
                 item.setIcon(QIcon(os.path.join(path,
                                    "images/{}".format(image))))
                 listWidget.addItem(item)
+        # 图标列表
         iconListWidget = QListWidget()
         iconListWidget.setAcceptDrops(True)
         iconListWidget.setDragEnabled(True)
         iconListWidget.setViewMode(QListWidget.IconMode)    #setViewMode：设置视图模式
+        # 创建表格
         tableWidget = QTableWidget()
-        tableWidget.setRowCount(5)
-        tableWidget.setColumnCount(2)
+        tableWidget.setRowCount(5)  # 行
+        tableWidget.setColumnCount(2)  # 列
         tableWidget.setHorizontalHeaderLabels(["Column #1", "Column #2"])   #水平信头标签
         tableWidget.setAcceptDrops(True)
         tableWidget.setDragEnabled(True)
 
-        splitter = QSplitter(Qt.Horizontal) #创建水平分裂器
+        splitter = QSplitter(Qt.Horizontal)  # 创建水平分裂器
         splitter.addWidget(listWidget)
         splitter.addWidget(iconListWidget)
         splitter.addWidget(tableWidget)

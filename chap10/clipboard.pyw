@@ -74,7 +74,7 @@ class Form(QDialog):
 
 
     def copyHtml(self):
-        mimeData = QMimeData()
+        mimeData = QMimeData()  # 多用途网际邮件扩充服务,Multipurpose Internet Mail Extensions  P235
         mimeData.setHtml("<b>Bold and <font color=red>Red</font></b>")
         clipboard = QApplication.clipboard()
         clipboard.setMimeData(mimeData)

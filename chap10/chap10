@@ -5,9 +5,7 @@ PYQT为拦截处理事件提供5种办法:
     3,4.事件过滤程序 EventFilter ,可以对任何QObject调用installEventFilter().用做程序调试 或 处理那些被禁用部件控件的Event.
     5.子类化QApplication并重新实现其notify()方法.该方法在任何事件过滤程序或者事件处理程序之前得到调用,因此它提供了终极控制能力.(仅会用于调试)
 
-10.2 重新实现事件处理程序
-events
-
-10.3 使用剪贴板
-
-10.4 拖放
+10.2 events            重新实现事件处理程序
+10.3 clipboard         使用剪贴板
+10.4 draganddrop       拖放
+     customdraganddrop 自定义数据集(示列:QLineEdit ,QListWidget ,QWidget 自定义数据的拖拽)
