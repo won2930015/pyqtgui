@@ -83,7 +83,7 @@ class Widget(QWidget):
             QTimer.singleShot(5000, self.sss)  # 单singleShot:第二参数必需是 可调用的 或是方法函数.
             QTimer.singleShot(5000, self.update)
     def sss(self):
-        self.message =""
+        self.message = ""
 
     def resizeEvent(self, event):
         self.text = "Resized to QSize({}, {})".format(

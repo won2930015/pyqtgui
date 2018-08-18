@@ -9,3 +9,4 @@ PYQT为拦截处理事件提供5种办法:
 10.3 clipboard         使用剪贴板
 10.4 draganddrop       拖放
      customdraganddrop 自定义数据集(示列:QLineEdit ,QListWidget ,QWidget 自定义数据的拖拽)
+     customdraganddrop_ans  对QListWidget分别增加 弹出菜单选择拖放类型 按ctrl改变拖放类型

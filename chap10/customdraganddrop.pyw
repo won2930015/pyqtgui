@@ -171,7 +171,7 @@ class DnDWidget(QWidget):
         self.startDrag()
         QWidget.mouseMoveEvent(self, event)
 
-    # 有元素被拖动时执行此时件。
+    # 开始拖拽(有元素被拖动时执行此时件。)
     def startDrag(self):
         icon = self.icon
         if icon.isNull():
@@ -187,15 +187,15 @@ class DnDWidget(QWidget):
         pixmap = icon.pixmap(24, 24)
         drag.setHotSpot(QPoint(12, 12))
         drag.setPixmap(pixmap)
-        drag.start(Qt.CopyAction)
-        # drag.start(Qt.MoveAction)
+        # drag.start(Qt.CopyAction)
+        drag.start(Qt.MoveAction)
 
 
 class Form(QDialog):
 
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
-
+        # 支持拖拽的列表窗口.
         dndListWidget = DnDListWidget()
         path = os.path.dirname(__file__)
         for image in sorted(os.listdir(os.path.join(path, "images"))):
@@ -204,9 +204,12 @@ class Form(QDialog):
                 item.setIcon(QIcon(os.path.join(path,
                                    "images/{}".format(image))))
                 dndListWidget.addItem(item)
+        # 支持拖拽的图标列表窗口.
         dndIconListWidget = DnDListWidget()
         dndIconListWidget.setViewMode(QListWidget.IconMode)
+        # 支持拖拽的Widget控件.
         dndWidget = DnDWidget("Drag to me!")
+        # 支持拖拽的LineEdit控件.
         dropLineEdit = DropLineEdit()
 
         layout = QGridLayout()
