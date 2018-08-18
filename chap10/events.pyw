@@ -31,7 +31,7 @@ class Widget(QWidget):
 
     def giveHelp(self):
         self.text = "Click to toggle mouse tracking"
-        self.update()   #调用update()会间接调用 paintEvent(self, event):事件.
+        self.update()   # 调用update()会间接调用 paintEvent(self, event):事件.
 
     def closeEvent(self, event):
         print("Closed")
@@ -74,14 +74,16 @@ class Widget(QWidget):
         if self.key:
             text += "\n\nYou pressed: {}".format(self.key)
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.TextAntialiasing)    #设置渲染提示
+        painter.setRenderHint(QPainter.TextAntialiasing)    # 设置渲染提示
         painter.drawText(self.rect(), Qt.AlignCenter, text)
         if self.message:
             painter.drawText(self.rect(), Qt.AlignBottom|Qt.AlignHCenter,
                              self.message)
-            QTimer.singleShot(5000, self.message.clear)  # 单singleShot:第二参数必需是 可调用的 或是方法函数.
+            # QTimer.singleShot(5000, self.message.clear)  # 单singleShot:第二参数必需是 可调用的 或是方法函数.
+            QTimer.singleShot(5000, self.sss)  # 单singleShot:第二参数必需是 可调用的 或是方法函数.
             QTimer.singleShot(5000, self.update)
-
+    def sss(self):
+        self.message =""
 
     def resizeEvent(self, event):
         self.text = "Resized to QSize({}, {})".format(
@@ -93,7 +95,7 @@ class Widget(QWidget):
         if self.justDoubleClicked:
             self.justDoubleClicked = False
         else:
-            self.setMouseTracking(not self.hasMouseTracking())
+            self.setMouseTracking(not self.hasMouseTracking())  # 鼠标跟踪-->P233
             if self.hasMouseTracking():
                 self.text = ("Mouse tracking is on.\n"
                         "Try moving the mouse!\n"
@@ -106,7 +108,7 @@ class Widget(QWidget):
 
     def mouseMoveEvent(self, event):
         if not self.justDoubleClicked:
-            globalPos = self.mapToGlobal(event.pos())
+            globalPos = self.mapToGlobal(event.pos())  # 获取全局pos(x,y)
             self.text = ("The mouse is at\nQPoint({0}, {1}) "
                     "in widget coords, and\n"
                     "QPoint({2}, {3}) in screen coords".format(
@@ -128,8 +130,8 @@ class Widget(QWidget):
         elif event.key() == Qt.Key_End:
             self.key = "End"
         elif event.key() == Qt.Key_PageUp:
-            if event.modifiers() & Qt.ControlModifier:  #event.modifiers()=1 & Qt.ControlModifier=1 时.
-                self.key = "Ctrl+PageUp"
+            if event.modifiers() & Qt.ControlModifier:  # event.modifiers()返回一个'位标识符',反映Shift,Ctrl,Alt状态.
+                self.key = "Ctrl+PageUp"                # Qt.ControlModifier=1 ,Ctrl按下.
             else:
                 self.key = "PageUp"
         elif event.key() == Qt.Key_PageDown:

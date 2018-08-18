@@ -20,31 +20,31 @@ class DropLineEdit(QLineEdit):
     
     def __init__(self, parent=None):
         super(DropLineEdit, self).__init__(parent)
-        self.setAcceptDrops(True)  # 接受放下
+        self.setAcceptDrops(True)  # 接受Drops(下降)
 
-    # 当拖拽进入到控件范围时发生。
+    # 拖拽进入事件(当拖拽进入到控件范围时发生。)
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             event.accept()
         else:
             event.ignore()
 
-    # 在控件上拖拽移动时发生。
+    # 拖拽移动事件(在控件上拖拽移动时发生。)
     def dragMoveEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
-            event.setDropAction(Qt.CopyAction)  # 拖拽动作：复制
+            event.setDropAction(Qt.CopyAction)  # 设置 下降动作：复制
             event.accept()
         else:
             event.ignore()
 
-    # 拖动操作在目标控件上释放时发生。
+    # 下降事件(拖动操作在控件上释放时发生。)
     def dropEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             data = event.mimeData().data("application/x-icon-and-text")
             stream = QDataStream(data, QIODevice.ReadOnly)
             text = stream.readQString()
             self.setText(text)
-            event.setDropAction(Qt.CopyAction)  # 拖拽动作：复制
+            event.setDropAction(Qt.CopyAction)  # 设置 下降动作：复制
             event.accept()
         else:
             event.ignore()
@@ -54,25 +54,25 @@ class DnDListWidget(QListWidget):
 
     def __init__(self, parent=None):
         super(DnDListWidget, self).__init__(parent)
-        self.setAcceptDrops(True)   # 接受放下。
-        self.setDragEnabled(True)   # 接受拖动。
+        self.setAcceptDrops(True)   # 接受下降。
+        self.setDragEnabled(True)   # 拖曳充许。
         
-    # 当拖拽进入到控件范围时发生。
+    # 拖曳进入件事(当拖拽进入到控件范围时发生。)
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             event.accept()
         else:
             event.ignore()
 
-    # 在控件上拖拽移动时发生。
+    # 拖曳移动事件(在控件上拖拽移动时发生。)
     def dragMoveEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
-            event.setDropAction(Qt.MoveAction)  # 拖拽动作：移动
+            event.setDropAction(Qt.MoveAction)  # 设置 下降动作：移动
             event.accept()
         else:
             event.ignore()
 
-    # 在控件上发生拖动时
+    # 下降事件(拖动操作在控件上释放时发生。)
     def dropEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             data = event.mimeData().data("application/x-icon-and-text")
@@ -82,22 +82,22 @@ class DnDListWidget(QListWidget):
             stream >> icon
             item = QListWidgetItem(text, self)
             item.setIcon(icon)
-            event.setDropAction(Qt.MoveAction)
+            event.setDropAction(Qt.MoveAction)  # 设置 下降动作：移动
             event.accept()
         else:
             event.ignore()
 
-    # 有元素被拖动时执行此时件。
-    def startDrag(self, dropActions):
+    # 开始拖曳(有元素被拖曳时执行此事件。)
+    def startDrag(self, dropActions):  # dropActions::下降动作
         item = self.currentItem()
         icon = item.icon()
-        data = QByteArray()
+        data = QByteArray()  # 字节数组(即保存二进制数据格式.)
         stream = QDataStream(data, QIODevice.WriteOnly)
         stream.writeQString(item.text())
         stream << icon
         mimeData = QMimeData()
-        mimeData.setData("application/x-icon-and-text", data)
-        drag = QDrag(self)
+        mimeData.setData("application/x-icon-and-text", data)  # 设置自定义格式数据??
+        drag = QDrag(self)  # 创建拖曳对象
         drag.setMimeData(mimeData)
         pixmap = icon.pixmap(24, 24)
         drag.setHotSpot(QPoint(12, 12))  # 设置热点（设置为drag的中点）
@@ -110,11 +110,11 @@ class DnDWidget(QWidget):
     
     def __init__(self, text, icon=QIcon(), parent=None):
         super(DnDWidget, self).__init__(parent)
-        self.setAcceptDrops(True)   # 同意拖拽=True
+        self.setAcceptDrops(True)   # 设置 接受下降=True
         self.text = text
         self.icon = icon
 
-
+    # 最小尺寸提示(控件的最小Size)
     def minimumSizeHint(self):
         fm = QFontMetricsF(self.font())  # FontMetrics:字体度量
         if self.icon.isNull():
@@ -127,7 +127,7 @@ class DnDWidget(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)    # setRenderHint:设置渲染指示,Antialiasing:反锯齿
         painter.setRenderHint(QPainter.TextAntialiasing)    # setRenderHint:设置渲染指示,TextAntialiasing:文字反锯齿
-        painter.fillRect(self.rect(), QColor(Qt.yellow).light())
+        painter.fillRect(self.rect(), QColor(Qt.yellow).light())  # fillRect::填充矩形.
         if self.icon.isNull():
             painter.drawText(10, height, self.text)
         else:
@@ -136,14 +136,14 @@ class DnDWidget(QWidget):
             painter.drawText(34, height,
                              self.text + " (Drag to or from me!)")
 
-    # 当拖拽进入到控件范围时发生。
+    # 拖拽进入事件(当拖拽进入到控件范围时发生。)
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             event.accept()
         else:
             event.ignore()
 
-    # 在控件上拖拽移动时发生。
+    # 拖拽移动事件(在控件上拖拽移动时发生。)
     def dragMoveEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             event.setDropAction(Qt.CopyAction)
@@ -151,7 +151,7 @@ class DnDWidget(QWidget):
         else:
             event.ignore()
 
-    # 拖动操作在目标控件上释放时发生。
+    # 下降事件(拖动操作在控件上释放时发生。)
     def dropEvent(self, event):
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             data = event.mimeData().data("application/x-icon-and-text")
@@ -161,12 +161,12 @@ class DnDWidget(QWidget):
             stream >> self.icon
             event.setDropAction(Qt.CopyAction)
             event.accept()
-            self.updateGeometry()
-            self.update()
+            self.updateGeometry()  # 更新几何(图形)
+            self.update()  # 更新(触发执行paintEvent())
         else:
             event.ignore()
 
-
+    # 鼠标移动事件
     def mouseMoveEvent(self, event):
         self.startDrag()
         QWidget.mouseMoveEvent(self, event)
