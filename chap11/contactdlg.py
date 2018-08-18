@@ -16,6 +16,7 @@ from PyQt4.QtGui import *
 
 class ContactDlg(QDialog):
 
+    # QSS样式表.
     StyleSheet = """
 QComboBox { color: darkblue; }
 QLineEdit { color: darkgreen; }
@@ -23,8 +24,8 @@ QLineEdit[mandatory="1"] {
     background-color: rgb(255, 255, 127);
     color: darkblue;
 }
-""" #QComboBox::选择器,{ color: darkblue; }::属性,值 P243
-    #QLineEdit[mandatory="1"]::设置的属性值只应用到QLineEdit[mandatory="1"]的对象上.
+"""  # QComboBox::选择器 ,{ color: darkblue; }::属性,值 P243
+    # QLineEdit[mandatory="1"]::设置的属性值只应用到QLineEdit[mandatory="1"]的对象上.
 
     def __init__(self, parent=None):
         super(ContactDlg, self).__init__(parent)
@@ -91,7 +92,7 @@ QLineEdit[mandatory="1"] {
         self.lineedits = (self.forenameEdit, self.surnameEdit,
                 self.companyEdit, self.phoneEdit, self.emailEdit)
         for lineEdit in self.lineedits:
-            lineEdit.setProperty("mandatory", 1)
+            lineEdit.setProperty("mandatory", 1)  # 设置自定义属性
             self.connect(lineEdit, SIGNAL("textEdited(QString)"),
                          self.updateUi)
         self.connect(self.categoryComboBox, SIGNAL("activated(int)"),
@@ -100,7 +101,7 @@ QLineEdit[mandatory="1"] {
         self.connect(self.buttonBox, SIGNAL("accepted()"), self.accept)
         self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject)
 
-        self.setStyleSheet(ContactDlg.StyleSheet)   #窗口部件样式表.
+        self.setStyleSheet(ContactDlg.StyleSheet)  # 窗口部件样式表(QSS).
         self.setWindowTitle("Add Contact")
 
 
@@ -113,12 +114,13 @@ QLineEdit[mandatory="1"] {
             self.companyEdit.setProperty("mandatory", 0)
 
         if (mandatory !=
-            bool(int(self.companyEdit.property("mandatory")))): #如果companyEdit的[mandatory]属性改变: 重新应用样式表.
+            bool(int(self.companyEdit.property("mandatory")))):  # 如果companyEdit的[mandatory]属性改变: 重新应用样式表.
             self.setStyleSheet(ContactDlg.StyleSheet)
         enable = True
         for lineEdit in self.lineedits:
+            # 任何一个有mandatory(必填)属性的对象的.text()为空时add键 =False.
             if (bool(int(lineEdit.property("mandatory"))) and
-                not lineEdit.text()):          #任何一个必填对象的.text()为空时add键=False.
+                not lineEdit.text()):
                 enable = False
                 break
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(enable)
