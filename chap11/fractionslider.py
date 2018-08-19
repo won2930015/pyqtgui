@@ -9,54 +9,55 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import platform  #platform::平台：获取系统及python一些信息.
+
+import platform  # platform::平台(获取系统及python的一些信息.)
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 X11 = True
 try:
-    from PyQt4.QtGui import qt_x11_wait_for_window_manager
+    from PyQt4.QtGui import qt_x11_wait_for_window_manager  # P253 判断是否为 X Window(Linux ,BSD ,Solaris 等) 是X11 ==True
 except ImportError:
     X11 = False
 
 
-class FractionSlider(QWidget):#分数滑动器.
+class FractionSlider(QWidget):  # 分数滑动器.
 
-    XMARGIN = 12.0  #X边缘
-    YMARGIN = 5.0   #边缘
-    WSTRING = "999" #字符串 宽
+    XMARGIN = 12.0  # X边缘
+    YMARGIN = 5.0   # Y边缘
+    WSTRING = "999"  # 字符串 宽
 
-    def __init__(self, numerator=0, denominator=10, parent=None):   #numerator=分子, denominator=分母。
+    def __init__(self, numerator=0, denominator=10, parent=None):   # numerator =分子, denominator =分母。
         super(FractionSlider, self).__init__(parent)
         self.__numerator = numerator
         self.__denominator = denominator
-        self.setFocusPolicy(Qt.WheelFocus)  #setFocusPolicy:设焦点策略,Qt.WheelFocus:切换到,点击,使用滚轮,多能获得焦点.
+        self.setFocusPolicy(Qt.WheelFocus)  # setFocusPolicy:设焦点策略 ,Qt.WheelFocus:转动焦点(即::点击,使用滚轮,多能获得焦点.)
         self.setSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding,
-                                       QSizePolicy.Fixed))  #setSizePolicy:设置尺寸策略（X:最小可扩展，Y:固定）
+                                       QSizePolicy.Fixed))  # setSizePolicy:设置尺寸策略（X:最小可扩展，Y:固定）
 
-
-    def decimal(self):  #小数：分数/分母 == 3/10 = 0.3.
+    # 小数(分数/分母 == 3/10 = 0.3)
+    def decimal(self):
         return self.__numerator / float(self.__denominator)
 
-
-    def fraction(self): #return(分数,分母)
+    # 分数( return 分数,分母 )
+    def fraction(self):
         return self.__numerator, self.__denominator
 
-
-    def sizeHint(self): #尺寸提示
+    # 尺寸提示
+    def sizeHint(self):
         return self.minimumSizeHint()
 
-
-    def minimumSizeHint(self):  #最小尺寸提示
+    # 最小尺寸提示
+    def minimumSizeHint(self):
         font = QFont(self.font())
-        font.setPointSize(font.pointSize() - 1) #setPointSize:设置字体节点尺寸(字号大小).
-        fm = QFontMetricsF(font)    #获得字体度量对象(用于设置字体的宽/高).
+        font.setPointSize(font.pointSize() - 1)  # setPointSize:设置节点(字体)尺寸::字体大小 ==font.pointSize() - 1.
+        fm = QFontMetricsF(font)  # 获得字体度量对象(用于设置字体的宽/高).
         return QSize(fm.width(FractionSlider.WSTRING) *
                      self.__denominator,
                      (fm.height() * 4) + FractionSlider.YMARGIN)
 
-
-    def setFraction(self, numerator, denominator=None): #设置分数
+    # 设置分数
+    def setFraction(self, numerator, denominator=None):
         if denominator is not None:
             if 3 <= denominator <= 60:
                 self.__denominator = denominator
@@ -66,27 +67,27 @@ class FractionSlider(QWidget):#分数滑动器.
             self.__numerator = numerator
         else:
             raise ValueError("numerator out of range")
-        self.update()   #执行update()方法,触发paintEvent事件
-        self.updateGeometry() #刷新控件几何位置.
+        self.update()  # 执行update()方法,触发paintEvent事件
+        self.updateGeometry()  # 刷新控件几何(位置).
 
-
-    def mousePressEvent(self, event):   #鼠标按下事件
+    # 鼠标按下事件
+    def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            self.moveSlider(event.x())
+            self.moveSlider(event.x())  # moveSlider::移动滑块
             event.accept()
         else:
             QWidget.mousePressEvent(self, event)
 
-
-    def mouseMoveEvent(self, event):    #鼠标移动事件(鼠标跟踪为:False时拖动鼠标才执行该事件.)
+    # 鼠标移动事件(鼠标跟踪为:False时拖动鼠标才执行该事件.)
+    def mouseMoveEvent(self, event):
         self.moveSlider(event.x())
 
-
-    def moveSlider(self, x):    #移动△滑块
-        span = self.width() - (FractionSlider.XMARGIN * 2)
+    # 移动 △滑块
+    def moveSlider(self, x):
+        span = self.width() - (FractionSlider.XMARGIN * 2)  # span::范围(计算减去 X边缘 后的范围)
         offset = span - x + FractionSlider.XMARGIN
         numerator = int(round(self.__denominator *
-                        (1.0 - (offset / span))))   #计算分子的值,round:圆正(四舍五入)
+                        (1.0 - (offset / span))))   # 计算分子的值,round:圆正(四舍五入)
         numerator = max(0, min(numerator, self.__denominator))
         if numerator != self.__numerator:
             self.__numerator = numerator
@@ -94,8 +95,8 @@ class FractionSlider(QWidget):#分数滑动器.
                       self.__numerator, self.__denominator)
             self.update()
 
-
-    def keyPressEvent(self, event): #键按下事件
+    # 键按下事件
+    def keyPressEvent(self, event):
         change = 0
         if event.key() == Qt.Key_Home:
             change = -self.__denominator
@@ -122,13 +123,13 @@ class FractionSlider(QWidget):#分数滑动器.
         else:
             QWidget.keyPressEvent(self, event)
 
-
-    def paintEvent(self, event=None):   #绘画事件
+    # 绘画事件
+    def paintEvent(self, event=None):
         font = QFont(self.font())
-        font.setPointSize(font.pointSize() - 1)  #setPointSize:设置字体(节点)尺寸:字号大小.
-        fm = QFontMetricsF(font)    #获得字体度量对象(用于设置字体的宽/高)
+        font.setPointSize(font.pointSize() - 1)  # setPointSize:设置字体(节点)尺寸:字号大小.
+        fm = QFontMetricsF(font)    # 获得字体度量对象(用于设置字体的宽/高)
         fracWidth = fm.width(FractionSlider.WSTRING)
-        indent = fm.boundingRect("9").width() / 2.0 #.boundingRect:边界框
+        indent = fm.boundingRect("9").width() / 2.0  # .boundingRect:边界框
         if not X11:
             fracWidth *= 1.5
         span = self.width() - (FractionSlider.XMARGIN * 2)

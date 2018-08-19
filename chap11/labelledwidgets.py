@@ -13,8 +13,9 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-LEFT, ABOVE = range(2)  #分别赋值 LEFT=0, ABOVE=1
+LEFT, ABOVE = range(2)  # 分别赋值 LEFT=0 (左), ABOVE=1 (上方)
 
+# 带标签头的行编辑框
 class LabelledLineEdit(QWidget):
 
     def __init__(self, labelText="", position=LEFT,
@@ -23,13 +24,14 @@ class LabelledLineEdit(QWidget):
         self.label = QLabel(labelText)
         self.lineEdit = QLineEdit()
         self.label.setBuddy(self.lineEdit)
+        # todo::https://blog.csdn.net/heaven_evil/article/details/78307261
         layout = QBoxLayout(QBoxLayout.LeftToRight
-                if position == LEFT else QBoxLayout.TopToBottom)    #创建布局(QBoxLayout):如果==LEFT,从左至右排列,否则从上至下排列.
+                if position == LEFT else QBoxLayout.TopToBottom)  # 创建布局(QBoxLayout):如果==LEFT,从左至右排列,否则从上至下排列.
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
         self.setLayout(layout)
 
-
+# 带标签头的文本编辑框
 class LabelledTextEdit(QWidget):
 
     def __init__(self, labelText="", position=LEFT,
@@ -49,30 +51,35 @@ class Dialog(QDialog):
 
     def __init__(self, address=None, parent=None):
         super(Dialog, self).__init__(parent)
-
+        # 街道
         self.street = LabelledLineEdit("&Street:")
+        # 城市
         self.city = LabelledLineEdit("&City:")
+        # 国家
         self.state = LabelledLineEdit("St&ate:")
+        # 邮编
         self.zipcode = LabelledLineEdit("&Zipcode:")
-        self.notes = LabelledTextEdit("&Notes:", ABOVE) #ABOVE:在上方.
-        if address is not None:
+        # 备注
+        self.notes = LabelledTextEdit("&Notes:", ABOVE)  # ABOVE:在上方 ,定义标签在上方.
+        if address is not None:  # address:字典类型
+
             self.street.lineEdit.setText(address.get("street", ""))
             self.city.lineEdit.setText(address.get("city", ""))
             self.state.lineEdit.setText(address.get("state", ""))
             self.zipcode.lineEdit.setText(address.get("zipcode", ""))
-            self.notes.textEdit.setPlainText(address.get("notes", ""))  #PlainText::纯文本.
+            self.notes.textEdit.setPlainText(address.get("notes", ""))  # PlainText::纯文本.
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|
                                      QDialogButtonBox.Cancel)
 
-        grid = QGridLayout()    #栅格布局
+        grid = QGridLayout()    # 栅格布局
         grid.addWidget(self.street, 0, 0)
         grid.addWidget(self.city, 0, 1)
         grid.addWidget(self.state, 1, 0)
         grid.addWidget(self.zipcode, 1, 1)
         grid.addWidget(self.notes, 2, 0, 1, 2)
-        layout = QVBoxLayout()  #垂直布局
-        layout.addLayout(grid)  #addLayout:加入布局
-        layout.addWidget(buttonBox) #addWidget:加入饰件
+        layout = QVBoxLayout()  # 垂直布局
+        layout.addLayout(grid)  # addLayout:加入布局
+        layout.addWidget(buttonBox)  # addWidget:加入饰件
         self.setLayout(layout)
         
         self.connect(buttonBox, SIGNAL("accepted()"), self.accept)

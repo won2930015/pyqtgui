@@ -1,2 +1,11 @@
 11.章自定义窗口部件
-contactdlg.py
+
+11.1 contactdlg  QSS表式表的应用 P243 ,P244 https://www.cnblogs.com/wangqiguo/p/4960776.html
+
+11.2 labelledwidgets 创建复合窗口部件.# 带标签头的行编辑框 ,带标签头的文本编辑框.
+
+11.3 romanspinbox 子类化内置窗口部件.# 自定义 罗马数值SpinBox控件 ,重点:数字与罗马数字转换.
+
+11.4 子类化QWidget::视口(物理)坐标系 / 窗口(逻辑)坐标系 简介
+    11.4.1 fractionslider::使用视口(物理)坐标系
+    11.4.2 ypipewidget::使用窗口(逻辑)坐标系
