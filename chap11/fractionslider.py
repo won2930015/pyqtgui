@@ -20,18 +20,18 @@ try:
 except ImportError:
     X11 = False
 
-
-class FractionSlider(QWidget):  # 分数滑动器.
+#自定义 分数滑块 控件
+class FractionSlider(QWidget):  # QWidget(绘图设备.)
 
     XMARGIN = 12.0  # X边缘
     YMARGIN = 5.0   # Y边缘
-    WSTRING = "999"  # 字符串 宽
+    WSTRING = "999"  # 字符宽
 
     def __init__(self, numerator=0, denominator=10, parent=None):   # numerator =分子, denominator =分母。
         super(FractionSlider, self).__init__(parent)
         self.__numerator = numerator
         self.__denominator = denominator
-        self.setFocusPolicy(Qt.WheelFocus)  # setFocusPolicy:设焦点策略 ,Qt.WheelFocus:转动焦点(即::点击,使用滚轮,多能获得焦点.)
+        self.setFocusPolicy(Qt.WheelFocus)  # setFocusPolicy:设焦点策略 ,Qt.WheelFocus:转动焦点(即 点击,使用滚轮,多能获得焦点.)
         self.setSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding,
                                        QSizePolicy.Fixed))  # setSizePolicy:设置尺寸策略（X:最小可扩展，Y:固定）
 
@@ -123,11 +123,11 @@ class FractionSlider(QWidget):  # 分数滑动器.
         else:
             QWidget.keyPressEvent(self, event)
 
-    # 绘画事件
+    # 绘画事件::绘图设备--物理坐标系示例(视口操作示例)
     def paintEvent(self, event=None):
         font = QFont(self.font())
         font.setPointSize(font.pointSize() - 1)  # setPointSize:设置字体(节点)尺寸:字号大小.
-        fm = QFontMetricsF(font)    # 获得字体度量对象(用于设置字体的宽/高)
+        fm = QFontMetricsF(font)  # 获得字体度量对象(用于设置字体的宽/高)
         fracWidth = fm.width(FractionSlider.WSTRING)
         indent = fm.boundingRect("9").width() / 2.0  # .boundingRect:边界框
         if not X11:
@@ -135,49 +135,48 @@ class FractionSlider(QWidget):  # 分数滑动器.
         span = self.width() - (FractionSlider.XMARGIN * 2)
         value = self.__numerator / float(self.__denominator)
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)    #setRenderHint:设置渲染提示,Antialiasing:反锯齿
-        painter.setRenderHint(QPainter.TextAntialiasing)    #TextAntialiasing:文本反锯齿
-        painter.setPen(self.palette().color(QPalette.Mid))  #设置Pen画笔,用于形状轮廓和文本绘制.
+        painter.setRenderHint(QPainter.Antialiasing)  # setRenderHint:设置渲染提示,Antialiasing:反锯齿
+        painter.setRenderHint(QPainter.TextAntialiasing)  # TextAntialiasing:文本反锯齿
+        painter.setPen(self.palette().color(QPalette.Mid))  #Pen画笔(用于形状轮廓和文本绘制.) ,QPalette.Mid::中间色(透明灰)
         painter.setBrush(self.palette().brush(
-                QPalette.AlternateBase))#设置Brush画刷为填充底色.
-        painter.drawRect(self.rect())   #绘制矩形.
-        segColor = QColor(Qt.green).dark(120)   #创建颜色对象 绿色 色深120
+                QPalette.AlternateBase))  # 设置Brush画刷 ,AlternateBase::交替底色(浅灰).
+        painter.drawRect(self.rect())   # 绘制矩形.
+        segColor = QColor(Qt.green).dark(120)  # 创建颜色对象 绿色 色深120
         segLineColor = segColor.dark()
-        painter.setPen(segLineColor)    #设置画笔
-        painter.setBrush(segColor)  #设置画刷,用于填充.
+        painter.setPen(segLineColor)  # 设置画笔
+        painter.setBrush(segColor)  # 设置画刷,用于填充.
         painter.drawRect(FractionSlider.XMARGIN,
-                         FractionSlider.YMARGIN, span, fm.height()) #创建一字高绿底色矩形.
-        textColor = self.palette().color(QPalette.Text) #用调色板创建文体颜色对象.
+                         FractionSlider.YMARGIN, span, fm.height())  # 创建一字高绿底色矩形.
+        textColor = self.palette().color(QPalette.Text)  # 用调色板创建文体颜色对象.
         segWidth = span / self.__denominator    #求出间隔宽
         segHeight = fm.height() * 2 #间隔条高度
-        nRect = fm.boundingRect(FractionSlider.WSTRING) #单个间隔边框矩形
+        nRect = fm.boundingRect(FractionSlider.WSTRING)  # 单个间隔边框矩形
         x = FractionSlider.XMARGIN
         yOffset = segHeight + fm.height()   # y轴偏移
-        for i in range(self.__denominator + 1):
+        for i in range(self.__denominator + 1):   # 描绘所有分数
             painter.setPen(segLineColor)
             painter.drawLine(x, FractionSlider.YMARGIN, x, segHeight)
             painter.setPen(textColor)
             y = segHeight
             rect = QRectF(nRect)
-            rect.moveCenter(QPointF(x, y + fm.height() / 2.0))
-            painter.drawText(rect, Qt.AlignCenter, "{}".format(i))
+            rect.moveCenter(QPointF(x, y + fm.height() / 2.0))  # 计算分子位置
+            painter.drawText(rect, Qt.AlignCenter, "{}".format(i))   # 绘 分子值
             y = yOffset
-            rect.moveCenter(QPointF(x, y + fm.height() / 2.0))
+            rect.moveCenter(QPointF(x, y + fm.height() / 2.0))  # 计算分母位置
             painter.drawText(rect, Qt.AlignCenter,
-                             "{}".format(self.__denominator))
+                             "{}".format(self.__denominator))  # 绘 分母值
             painter.drawLine(QPointF(rect.left() + indent, y),
-                             QPointF(rect.right() - indent, y))
+                             QPointF(rect.right() - indent, y))  # 绘制分数线
             x += segWidth
         span = int(span)
         y = FractionSlider.YMARGIN - 0.5
+        # 创建三角形
         triangle = [QPointF(value * span, y),
-                    QPointF((value * span) +
-                            (2 * FractionSlider.XMARGIN), y),
-                    QPointF((value * span) +
-                            FractionSlider.XMARGIN, fm.height())]   #创建三角形
-        painter.setPen(Qt.yellow)   #Pen设置为标准黄
-        painter.setBrush(Qt.darkYellow) #Brush设置为深黄
-        painter.drawPolygon(QPolygonF(triangle))    #画多边形.
+                    QPointF((value * span) +(2 * FractionSlider.XMARGIN), y),
+                    QPointF((value * span) +FractionSlider.XMARGIN, fm.height())]
+        painter.setPen(Qt.yellow)  # Pen设置为标准黄
+        painter.setBrush(Qt.darkYellow)  # Brush设置为深黄
+        painter.drawPolygon(QPolygonF(triangle))  # 画多边形.
 
 
 if __name__ == "__main__":
@@ -213,9 +212,9 @@ if __name__ == "__main__":
         numeratorLCD.display(numerator)
         
     form.connect(slider, SIGNAL("valueChanged(int,int)"),
-                 numeratorLCD, SLOT("display(int)"))    #触发slider的valueChanged信号时触发.
+                 numeratorLCD, SLOT("display(int)"))  # 触发slider的valueChanged信号时触发.
     form.connect(denominatorSpinBox, SIGNAL("valueChanged(int)"),
-                 valueChanged)  #触发denominatorSpinBox的valueChanged信号时触发.
+                 valueChanged)  # 触发denominatorSpinBox的valueChanged信号时触发.
     form.setWindowTitle("Fraction Slider")
     form.show()
     app.exec_()

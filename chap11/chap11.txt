@@ -7,5 +7,11 @@
 11.3 romanspinbox 子类化内置窗口部件.# 自定义 罗马数值SpinBox控件 ,重点:数字与罗马数字转换.
 
 11.4 子类化QWidget::视口(物理)坐标系 / 窗口(逻辑)坐标系 简介
-    11.4.1 fractionslider::使用视口(物理)坐标系
-    11.4.2 ypipewidget::使用窗口(逻辑)坐标系
+  PyQt绘图机制
+  https://blog.csdn.net/liang19890820/article/details/51982187
+  https://blog.csdn.net/s634772208/article/details/39757171
+  QPainter支持两种独立坐系
+    1.绘图设备:物理坐标系(视口): 绘图设备有QGLPixelBuffer,QImage,QPicture,QPixmap,QPrinter,QSvgGenerator
+    2.窗口显示:逻辑坐标系(窗口): painter.setWindow(0, 0, LogicalSize, LogicalSize)
+11.4.1 fractionslider::使用视口(物理)坐标系
+11.4.2 ypipewidget::使用窗口(逻辑)坐标系

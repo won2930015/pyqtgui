@@ -37,10 +37,10 @@ class YPipeWidget(QWidget):
                      self.valueChanged)
 
         self.label = QLabel(self)
-        self.label.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)  #设置边框样式.
+        self.label.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)  # 设置边框样式.
         self.label.setAlignment(Qt.AlignCenter)
-        fm = QFontMetricsF(self.font())#QFontMetricsF:返回'字符串'字体度量对象.尾缀F代表返回的是浮点数.无尾缀返回的是整数.
-        self.label.setMinimumWidth(fm.width(" 999 l/s "))   #setMinimumWidth:设置最小宽度
+        fm = QFontMetricsF(self.font())  # QFontMetricsF:返回'字符串'字体度量对象.尾缀F代表返回的是浮点数.无尾缀返回的是整数.
+        self.label.setMinimumWidth(fm.width(" 999 l/s "))   # setMinimumWidth:设置最小宽度
 
         self.setSizePolicy(QSizePolicy(QSizePolicy.Expanding,
                                        QSizePolicy.Expanding))  #setSizePolicy:设置尺寸策略(x:扩展,y:扩展)
@@ -78,18 +78,19 @@ class YPipeWidget(QWidget):
 
 
     def paintEvent(self, event=None):
-        LogicalSize = 100.0 #罗辑尺寸.
+        LogicalSize = 100.0  # 逻辑尺寸.
 
-        def logicalFromPhysical(length, side):  #逻辑尺寸 from 物理尺寸
-            return (length / side) * LogicalSize    #根据物理尺寸转换到相应的逻辑尺寸.
+        def logicalFromPhysical(length, side):  # 逻辑尺寸 from 物理尺寸
+            return (length / side) * LogicalSize    # 根据物理尺寸转换到相应的逻辑尺寸.
         
         fm = QFontMetricsF(self.font())
         ymargin = ((LogicalSize / 30.0) +
                    logicalFromPhysical(self.leftSpinBox.height(),
-                                       self.height()))  #ymargin: y边界(y轴上边界值)
+                                       self.height()))  # ymargin: y边界(y轴上边界值)
         ymax = (LogicalSize -
-                logicalFromPhysical(fm.height() * 2, self.height()))#y轴下边界值.
+                logicalFromPhysical(fm.height() * 2, self.height()))  # y轴下边界值.
         width = LogicalSize / 4.0
+        # 计算 Y形 各节点的站标.
         cx, cy = LogicalSize / 2.0, LogicalSize / 3.0
         ax, ay = cx - (2 * width), ymargin
         bx, by = cx - width, ay
@@ -109,14 +110,14 @@ class YPipeWidget(QWidget):
 
         painter.setPen(Qt.NoPen)
 
-        #上左通道颜色填充.
+        # 上左通道颜色填充.
         gradient = QLinearGradient(QPointF(0, 0),
                                          QPointF(0, 100))   #LinearGradient:线性渐变
         gradient.setColorAt(0, Qt.white)    # 线性渐变:0 = Qt.white:白色
         a = self.leftSpinBox.value()
         gradient.setColorAt(1, (Qt.red if a != 0 else Qt.white))    # 线性渐变:1 = Qt.white or Qt.red
         painter.setBrush(QBrush(gradient))
-        painter.drawPolygon(QPolygon([ax, ay, bx, by, cx, cy, ix, iy])) #drawPolygon:绘制_多边形.
+        painter.drawPolygon(QPolygon([ax, ay, bx, by, cx, cy, ix, iy]))  # drawPolygon:绘制_多边形.
 
         #上右通道颜色填充.
         gradient = QLinearGradient(QPointF(0, 0), QPointF(0, 100))
@@ -142,7 +143,7 @@ class YPipeWidget(QWidget):
                 [cx, cy, fx, fy, gx, gy, hx, hy, ix, iy]))
 
 
-        #画左中右三条黑色边线.
+        # 画左中右三条黑色边线.
         painter.setPen(Qt.black)
         painter.drawPolyline(QPolygon([ax, ay, ix, iy, hx, hy]))
         painter.drawPolyline(QPolygon([gx, gy, fx, fy, ex, ey]))
