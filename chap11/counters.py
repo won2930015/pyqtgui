@@ -103,11 +103,11 @@ class CountersWidget(QWidget):
                 elif cell == YELLOW:
                     color = Qt.yellow
                 if color is not None:
-                    painter.save()
+                    painter.save()  # save()用于保存 QPainter 的状态. https://blog.csdn.net/TemetNosce/article/details/78059042
                     painter.setPen(Qt.black)
                     painter.setBrush(color)
                     painter.drawEllipse(rect.adjusted(2, 2, -2, -2))
-                    painter.restore()
+                    painter.restore()  # restore() 用于恢复 QPainter 的状态，save() 和 restore() 一般都是成对使用的.
                 if [x, y] == self.selected:
                     painter.setPen(QPen(Qt.blue, 3))
                 else:

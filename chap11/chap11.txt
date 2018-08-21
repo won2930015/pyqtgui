@@ -16,3 +16,7 @@
     2.逻辑坐标系(窗口): painter.setWindow(0, 0, LogicalSize, LogicalSize) 映射到 视口坐标(0,0) 即窗口与视口坐标对齐.
 11.4.1 fractionslider::使用视口(物理)坐标系
 11.4.2 ypipewidget::使用窗口(逻辑)坐标系
+
+关于视口与窗口详参第12章.
+
+习题:counters/counters_dnd.自定义控件五子棋
