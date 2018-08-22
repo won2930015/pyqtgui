@@ -9,37 +9,37 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import functools    #函数_工具
-import random       #随机
+import functools  # 函数_工具
+import random  # 随机
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 MAC = "qt_mac_set_native_menubar" in dir()
 
-#PageSize = (595, 842) # A4 in points
-PageSize = (612, 792) # US Letter in points
+#PageSize = (595, 842)  # A4 in points
+PageSize = (612, 792)  # US Letter in points
 PointSize = 10
 
-MagicNumber = 0x70616765    #魔数号
-FileVersion = 1             #文件号
+MagicNumber = 0x70616765  # 魔数号
+FileVersion = 1  # 文件号
 
-Dirty = False
+Dirty = False  # 修改标志
 
 
-class TextItemDlg(QDialog):     #自定义的文本项对话框...
+class TextItemDlg(QDialog):  # 自定义的文本项对话框...
 
     def __init__(self, item=None, position=None, scene=None, parent=None):  #下面是完整的定义.
     #def __init__(self, item: object = None, scene: object = None, position: object = None, parent: object = None) -> object:
         super(QDialog, self).__init__(parent)
 
-        self.item = item            #项
-        self.position = position    #位置
-        self.scene = scene          #场景
+        self.item = item  # 项
+        self.position = position  # 位置
+        self.scene = scene  # 场景
 
         self.editor = QTextEdit()
-        self.editor.setAcceptRichText(False)    # 设置_接受_富文本 =False
-        self.editor.setTabChangesFocus(True)    # 设置_Tab_改变_焦点 =True
+        self.editor.setAcceptRichText(False)  # 设置_接受_富文本 =False
+        self.editor.setTabChangesFocus(True)  # 设置_Tab_改变_焦点 =True
         editorLabel = QLabel("&Text:")
         editorLabel.setBuddy(self.editor)
         self.fontComboBox = QFontComboBox()     # 创建 字体复合选择框 实例.
@@ -47,17 +47,17 @@ class TextItemDlg(QDialog):     #自定义的文本项对话框...
         fontLabel = QLabel("&Font:")
         fontLabel.setBuddy(self.fontComboBox)
         self.fontSpinBox = QSpinBox()
-        self.fontSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)    #.setAlignment:设置对齐
+        self.fontSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)    # .setAlignment:设置对齐
         self.fontSpinBox.setRange(6, 280)
         self.fontSpinBox.setValue(PointSize)
         fontSizeLabel = QLabel("&Size:")
         fontSizeLabel.setBuddy(self.fontSpinBox)
-        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|    #DialogButtonBox::对话框_按钮_盒.
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|    # DialogButtonBox::对话框_按钮_盒.
                                           QDialogButtonBox.Cancel)
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
         if self.item is not None:
-            self.editor.setPlainText(self.item.toPlainText())   #setPlainText:设置_纯_文本
+            self.editor.setPlainText(self.item.toPlainText())  # setPlainText:设置_纯_文本
             self.fontComboBox.setCurrentFont(self.item.font())
             self.fontSpinBox.setValue(self.item.font().pointSize())
 
@@ -72,13 +72,13 @@ class TextItemDlg(QDialog):     #自定义的文本项对话框...
         self.setLayout(layout)
 
         self.connect(self.fontComboBox,
-                SIGNAL("currentFontChanged(QFont)"), self.updateUi) # 字体复合框字体改变时...
+                SIGNAL("currentFontChanged(QFont)"), self.updateUi)  # 字体复合框字体改变时...
         self.connect(self.fontSpinBox,
-                SIGNAL("valueChanged(int)"), self.updateUi) #字号改变时...
+                SIGNAL("valueChanged(int)"), self.updateUi)  # 字号改变时...
         self.connect(self.editor, SIGNAL("textChanged()"),
-                     self.updateUi) #文本编辑框,文本改变时...
-        self.connect(self.buttonBox, SIGNAL("accepted()"), self.accept) # OK按钮被单击时...
-        self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject) # Cancel按钮被单击时...
+                     self.updateUi)  # 文本编辑框,文本改变时...
+        self.connect(self.buttonBox, SIGNAL("accepted()"), self.accept)  # OK按钮被单击时...
+        self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject)  # Cancel按钮被单击时...
 
         self.setWindowTitle("Page Designer - {} Text Item".format(
                 "Add" if self.item is None else "Edit"))
@@ -123,12 +123,12 @@ class TextItem(QGraphicsTextItem):  #GraphicsTextItem::图形_文本_项.
         Dirty = True
 
 
-    def parentWidget(self): # 返回::父_控件 P272
-        return self.scene().views()[0]
+    def parentWidget(self):  # 返回::父_控件 P272
+        return self.scene().views()[0]  # 返回场景第一个视图(view)
 
 
-    def itemChange(self, change, variant):  #与项进行交互[移动/选择],就会调用此方法.P272
-        if change != QGraphicsItem.ItemSelectedChange:  #change(改变) != 选择_变化 时执行...
+    def itemChange(self, change, variant):  # 与项进行交互[移动/选择],就会调用此方法.P272
+        if change != QGraphicsItem.ItemSelectedChange:  # change(改变) != 选择_变化 时执行...
             global Dirty
             Dirty = True
         return QGraphicsTextItem.itemChange(self, change, variant)
@@ -141,12 +141,12 @@ class TextItem(QGraphicsTextItem):  #GraphicsTextItem::图形_文本_项.
 
 class BoxItem(QGraphicsItem):
 
-    def __init__(self, position, scene, style=Qt.SolidLine,     #SolidLine::实线
+    def __init__(self, position, scene, style=Qt.SolidLine,  # SolidLine::实线
                  rect=None, matrix=QMatrix()):
         super(BoxItem, self).__init__()
-        self.setFlags(QGraphicsItem.ItemIsSelectable|   #项_可_选择
-                      QGraphicsItem.ItemIsMovable|      #项_可_移动
-                      QGraphicsItem.ItemIsFocusable)    #项_可_焦点
+        self.setFlags(QGraphicsItem.ItemIsSelectable|   # 项_可_选择
+                      QGraphicsItem.ItemIsMovable|      # 项_可_移动
+                      QGraphicsItem.ItemIsFocusable)    # 项_可_焦点
         if rect is None:
             rect = QRectF(-10 * PointSize, -PointSize, 20 * PointSize,
                           2 * PointSize)
@@ -162,41 +162,41 @@ class BoxItem(QGraphicsItem):
         Dirty = True
 
 
-    def parentWidget(self): #上级控件
-        return self.scene().views()[0]
+    def parentWidget(self):  # 返回父控件
+        return self.scene().views()[0]  # 返回场景第一个视图.(view)
 
 
-    def boundingRect(self):     # 边界框_矩形.
-        return self.rect.adjusted(-2, -2, 2, 2)     #adjusted::调整
+    def boundingRect(self):  # 边界框_矩形.
+        return self.rect.adjusted(-2, -2, 2, 2)  # adjusted::调整
 
 
     def paint(self, painter, option, widget):
         pen = QPen(self.style)
         pen.setColor(Qt.black)
         pen.setWidth(1)
-        if option.state & QStyle.State_Selected:    #当option.state==选中状态 时...
+        if option.state & QStyle.State_Selected:  # 当option.state==选中状态(State_Selected) 时...
             pen.setColor(Qt.blue)
         painter.setPen(pen)
         painter.drawRect(self.rect)
 
 
-    def itemChange(self, change, variant):  #与项进行交互[移动/选择],就会调用些方法.
+    def itemChange(self, change, variant):  # 与项进行交互[移动/选择],就会调用些方法.
         if change != QGraphicsItem.ItemSelectedChange:  #改变 != 选择改变 时执行.
             global Dirty
             Dirty = True
         return QGraphicsItem.itemChange(self, change, variant)
 
 
-    def contextMenuEvent(self, event):  #上下文菜单.
+    def contextMenuEvent(self, event):  # 上下文菜单.
         wrapped = []
         menu = QMenu(self.parentWidget())
         for text, param in (
-                ("&Solid", Qt.SolidLine),   #实线
-                ("&Dashed", Qt.DashLine),   #破折_线
-                ("D&otted", Qt.DotLine),    #点_线
-                ("D&ashDotted", Qt.DashDotLine),    #破折|点_线.
-                ("DashDo&tDotted", Qt.DashDotDotLine)): #破折|点|点_线
-            wrapper = functools.partial(self.setStyle, param)   #偏函数:.partial(函数(), 参数1,参数2,...)
+                ("&Solid", Qt.SolidLine),  # 实线
+                ("&Dashed", Qt.DashLine),  # 破折线  _ _ _
+                ("D&otted", Qt.DotLine),   # 点线  ...
+                ("D&ashDotted", Qt.DashDotLine),  # 破折点线  _._._.
+                ("DashDo&tDotted", Qt.DashDotDotLine)):  #破折点点线  _.._.._..
+            wrapper = functools.partial(self.setStyle, param)  # 偏函数:.partial(函数(), 参数1,参数2,...)
             wrapped.append(wrapper)
             menu.addAction(text, wrapper)
         menu.exec_(event.screenPos())   #event.screenPos()::事件.屏幕坐标点
