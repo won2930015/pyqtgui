@@ -239,7 +239,7 @@ class GraphicsView(QGraphicsView):  # 自定义 图形视图 类.
         super(GraphicsView, self).__init__(parent)
         self.setDragMode(QGraphicsView.RubberBandDrag)  # setDragMode::设置_拖拽_模式, RubberBandDrag::拖动时显示 橡皮筋边框
         self.setRenderHint(QPainter.Antialiasing)  # RenderHint::渲染_提示
-        self.setRenderHint(QPainter.TextAntialiasing)
+        self.setRenderHint(QPainter.TextAntialiasing)  # TextAntialiasing::文字反锯齿
 
     # 鼠标滚轮事件.
     def wheelEvent(self, event):
@@ -260,7 +260,7 @@ class MainForm(QDialog):
         self.borders = []  # 边框??
 
         self.printer = QPrinter(QPrinter.HighResolution)  # .HighResolution:高分辨率
-        self.printer.setPageSize(QPrinter.Letter)
+        self.printer.setPageSize(QPrinter.Letter)  # 注意打印机属于绘图设备,使用物理坐标系.
 
         self.view = GraphicsView()  # 创建视图对象.
         self.scene = QGraphicsScene(self)  # 创建场景
