@@ -340,7 +340,7 @@ class MainForm(QDialog):
 
 
     def position(self):
-        point = self.mapFromGlobal(QCursor.pos())   # 将光标当前位置坐标转换成物理坐标point.
+        point = self.mapFromGlobal(QCursor.pos())   # 将光标当前的逻辑坐标转换成物理坐标 point.
         if not self.view.geometry().contains(point):    # geometry::几何图形,contains::包含, 当 视图.几何图形不包含point时执行...
             coord = random.randint(36, 144)
             point = QPoint(coord, coord)
