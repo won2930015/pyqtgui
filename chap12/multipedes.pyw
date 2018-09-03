@@ -16,13 +16,13 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-SCENESIZE = 500 # 场景SIZE
+SCENESIZE = 500  # 场景SIZE
 INTERVAL = 200  # 间隔
 
-Running = False # 运转
+Running = False  # 运转
 
 
-class Head(QGraphicsItem):  #头部
+class Head(QGraphicsItem):  # 头部
 
     Rect = QRectF(-30, -20, 60, 40)
 
@@ -35,26 +35,26 @@ class Head(QGraphicsItem):  #头部
         QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
         self.timer.start(INTERVAL)
 
-
+    # 边界范围
     def boundingRect(self):
         return Head.Rect
 
-
-    def shape(self):       # 形状:根据返回的形状检测碰撞项.
+    # 形状:根据返回的形状检测碰撞项.
+    def shape(self):
         path = QPainterPath()   # PainterPath : 涂(画)路径|涂(画)范围.
         path.addEllipse(Head.Rect)  # addEllipse:加入椭圆
         return path
 
-
+    #   涂(绘)
     def paint(self, painter, option, widget=None):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        painter.drawEllipse(Head.Rect)
-        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行...
-            painter.setBrush(QBrush(Qt.yellow)) #yellow:黄
+        painter.drawEllipse(Head.Rect)  # 绘制头部
+        if option.levelOfDetail > 0.5:  # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行... P282
+            painter.setBrush(QBrush(Qt.yellow))  # yellow:黄
             painter.drawEllipse(-12, -19, 8, 8)
             painter.drawEllipse(-12, 11, 8, 8)
-            if option.levelOfDetail > 0.9: # Inner eyes:内眼(瞳孔部分).
+            if option.levelOfDetail > 0.9:  # Inner eyes:内眼(瞳孔部分).
                 painter.setBrush(QBrush(Qt.darkBlue))   #darkBlue:深蓝
                 painter.drawEllipse(-12, -19, 4, 4)
                 painter.drawEllipse(-12, 11, 4, 4)
@@ -76,16 +76,16 @@ class Head(QGraphicsItem):  #头部
             if 0 <= x <= SCENESIZE and 0 <= y <= SCENESIZE:
                 break
         self.angle = angle
-        self.rotate(random.randint(-5, 5))      #rotate:旋转
+        self.rotate(random.randint(-5, 5))      # rotate:旋转
         self.setPos(QPointF(x, y))
-        for item in self.scene().collidingItems(self):  #collidingItems:碰撞_项
-            if isinstance(item, Head):  #当碰撞项是Head Class时...
+        for item in self.scene().collidingItems(self):  # collidingItems:碰撞_项
+            if isinstance(item, Head):  # 当碰撞项是Head Class时...
                 self.color.setRed(min(255, self.color.red() + 5))   # 碰撞时头部红色成分增加.
             else:
-                item.color.setBlue(min(255, item.color.blue() + 5)) # 没有碰撞时头部蓝色成分增加.
+                item.color.setBlue(min(255, item.color.blue() + 5))  # 没有碰撞时头部蓝色成分增加.
 
 
-
+# 构造蜈蚣身体
 class Segment(QGraphicsItem):
 
     def __init__(self, color, offset, parent):
@@ -97,11 +97,11 @@ class Segment(QGraphicsItem):
         x = offset + 15
         y = -20
         self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))    #蜈蚣左脚
-        self.path.closeSubpath()    #closeSubpath:结束子路径
+                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))  # 蜈蚣左脚
+        self.path.closeSubpath()  # closeSubpath:结束子路径
         y = 20
         self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))    #蜈蚣右脚
+                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))  # 蜈蚣右脚
         self.path.closeSubpath()
         self.change = 1
         self.angle = 0
@@ -109,19 +109,19 @@ class Segment(QGraphicsItem):
         QObject.connect(self.timer, SIGNAL("timeout()"), self.timeout)
         self.timer.start(INTERVAL)
 
-
+    # 边界范围
     def boundingRect(self):
         return self.path.boundingRect()
 
-
+    # 形状:根据返回的形状检测碰撞项.
     def shape(self):
         return self.path
 
-
-    def paint(self, painter, option, widget=None):  #涂(画)
+    # 涂(绘)
+    def paint(self, painter, option, widget=None):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        if option.levelOfDetail < 0.9:   #levelOfDetail:级别of细节 < 90% 时执行...
+        if option.levelOfDetail < 0.9:   # levelOfDetail:级别of细节 < 90% 时执行...
             painter.drawEllipse(self.rect)
         else:
             painter.drawPath(self.path)
@@ -150,12 +150,12 @@ class MainForm(QDialog):
 
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0, SCENESIZE, SCENESIZE)
-        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)   #setItemIndexMethod:设置_项_索引_方法
+        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)   # setItemIndexMethod:设置_项_索引_方法 ?NoIndex:没索引???
         self.view = QGraphicsView()
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
-        self.view.setFocusPolicy(Qt.NoFocus)
-        zoomSlider = QSlider(Qt.Horizontal) #QSlider:滑块, Qt.Horizontal:水平方向
+        self.view.setFocusPolicy(Qt.NoFocus)   # 设置焦点策略::没焦点
+        zoomSlider = QSlider(Qt.Horizontal)  # QSlider:滑块, Qt.Horizontal:水平方向
         zoomSlider.setRange(5, 200)
         zoomSlider.setValue(100)
         self.pauseButton = QPushButton("Pa&use")
@@ -220,7 +220,7 @@ class MainForm(QDialog):
     def timerEvent(self, event):
         if not Running:
             return
-        dead = set()    # 死亡的...
+        dead = set()    # dead::死亡的...
         items = self.scene.items()
         if len(items) == 0:
             self.populate()

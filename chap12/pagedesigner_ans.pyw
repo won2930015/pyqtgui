@@ -9,54 +9,54 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import functools
-import random
+import functools  # 函数_工具
+import random  # 随机
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 MAC = "qt_mac_set_native_menubar" in dir()
 
-#PageSize = (595, 842) # A4 in points
-PageSize = (612, 792) # US Letter in points
+# PageSize = (595, 842)  # A4 in points
+PageSize = (612, 792)  # US Letter in points
 PointSize = 10
 
-MagicNumber = 0x70616765
-FileVersion = 1
+MagicNumber = 0x70616765  # 魔数号
+FileVersion = 1  # 文件号
 
-Dirty = False
+Dirty = False  # 修改标志
 
 
-class TextItemDlg(QDialog):
+class TextItemDlg(QDialog):  # 自定义的文本项对话框...
 
     def __init__(self, item=None, position=None, scene=None, parent=None):
         super(QDialog, self).__init__(parent)
 
-        self.item = item
-        self.position = position
-        self.scene = scene
+        self.item = item  # 项
+        self.position = position  # 位置
+        self.scene = scene  # 场景
 
         self.editor = QTextEdit()
-        self.editor.setAcceptRichText(False)
-        self.editor.setTabChangesFocus(True)
+        self.editor.setAcceptRichText(False)  # 设置_接受_富文本 =False
+        self.editor.setTabChangesFocus(True)  # 设置_Tab_改变_焦点 =True
         editorLabel = QLabel("&Text:")
         editorLabel.setBuddy(self.editor)
-        self.fontComboBox = QFontComboBox()
-        self.fontComboBox.setCurrentFont(QFont("Times", PointSize))
+        self.fontComboBox = QFontComboBox()     # 创建 字体复合选择框 实例.
+        self.fontComboBox.setCurrentFont(QFont("Times", PointSize))    # 设置_当前_字体
         fontLabel = QLabel("&Font:")
         fontLabel.setBuddy(self.fontComboBox)
         self.fontSpinBox = QSpinBox()
-        self.fontSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
+        self.fontSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)    # .setAlignment:设置对齐
         self.fontSpinBox.setRange(6, 280)
         self.fontSpinBox.setValue(PointSize)
         fontSizeLabel = QLabel("&Size:")
         fontSizeLabel.setBuddy(self.fontSpinBox)
-        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|
+        self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok|    # DialogButtonBox::对话框_按钮_盒.
                                           QDialogButtonBox.Cancel)
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
         if self.item is not None:
-            self.editor.setPlainText(self.item.toPlainText())
+            self.editor.setPlainText(self.item.toPlainText())  # setPlainText:设置_纯_文本
             self.fontComboBox.setCurrentFont(self.item.font())
             self.fontSpinBox.setValue(self.item.font().pointSize())
 
@@ -71,13 +71,13 @@ class TextItemDlg(QDialog):
         self.setLayout(layout)
 
         self.connect(self.fontComboBox,
-                SIGNAL("currentFontChanged(QFont)"), self.updateUi)
+                SIGNAL("currentFontChanged(QFont)"), self.updateUi)  # 字体复合框字体改变时...
         self.connect(self.fontSpinBox,
-                SIGNAL("valueChanged(int)"), self.updateUi)
+                SIGNAL("valueChanged(int)"), self.updateUi)  # 字号改变时...
         self.connect(self.editor, SIGNAL("textChanged()"),
-                     self.updateUi)
-        self.connect(self.buttonBox, SIGNAL("accepted()"), self.accept)
-        self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject)
+                     self.updateUi)  # 文本编辑框,文本改变时...
+        self.connect(self.buttonBox, SIGNAL("accepted()"), self.accept)  # OK按钮被单击时...
+        self.connect(self.buttonBox, SIGNAL("rejected()"), self.reject)  # Cancel按钮被单击时...
 
         self.setWindowTitle("Page Designer - {} Text Item".format(
                 "Add" if self.item is None else "Edit"))
@@ -100,34 +100,34 @@ class TextItemDlg(QDialog):
         self.item.setFont(font)
         self.item.setPlainText(self.editor.toPlainText())   
         self.item.update()
-        global Dirty
+        global Dirty    # Dirty:脏的(本文修改标志)
         Dirty = True
         QDialog.accept(self)
 
 
-class TextItem(QGraphicsTextItem):
+class TextItem(QGraphicsTextItem):  # GraphicsTextItem::图形_文本_项.
 
     def __init__(self, text, position, scene,
-                font=QFont("Times", PointSize), matrix=QMatrix()):
+                font=QFont("Times", PointSize), matrix=QMatrix()):  # matrix:矩阵
         super(TextItem, self).__init__(text)
-        self.setFlags(QGraphicsItem.ItemIsSelectable|
-                      QGraphicsItem.ItemIsMovable)
+        self.setFlags(QGraphicsItem.ItemIsSelectable|  # setFlags:设置标志, .ItemIsSelectable::项是可选择的...,.
+                      QGraphicsItem.ItemIsMovable)     # ItemIsMovable::项是可移动的...
         self.setFont(font)
         self.setPos(position)
         self.setMatrix(matrix)
-        scene.clearSelection()
+        scene.clearSelection()  # 清除_选择.
         scene.addItem(self)
         self.setSelected(True)
         global Dirty
         Dirty = True
 
 
-    def parentWidget(self):
-        return self.scene().views()[0]
+    def parentWidget(self):  # 返回::父_控件 P272
+        return self.scene().views()[0]  # 返回场景第一个视图(view)
 
 
-    def itemChange(self, change, variant):
-        if change != QGraphicsItem.ItemSelectedChange:
+    def itemChange(self, change, variant):  # 与项进行交互[移动/选择],就会调用此方法.P272
+        if change != QGraphicsItem.ItemSelectedChange:  # change(改变) != 选择_变化 时执行...
             global Dirty
             Dirty = True
         return QGraphicsTextItem.itemChange(self, change, variant)
@@ -140,12 +140,12 @@ class TextItem(QGraphicsTextItem):
 
 class BoxItem(QGraphicsItem):
 
-    def __init__(self, position, scene, style=Qt.SolidLine,
+    def __init__(self, position, scene, style=Qt.SolidLine,  # SolidLine::实线
                  rect=None, matrix=QMatrix()):
         super(BoxItem, self).__init__()
-        self.setFlags(QGraphicsItem.ItemIsSelectable|
-                      QGraphicsItem.ItemIsMovable|
-                      QGraphicsItem.ItemIsFocusable)
+        self.setFlags(QGraphicsItem.ItemIsSelectable|   # 项_可_选择
+                      QGraphicsItem.ItemIsMovable|      # 项_可_移动
+                      QGraphicsItem.ItemIsFocusable)    # 项_可_焦点
         if rect is None:
             rect = QRectF(-10 * PointSize, -PointSize, 20 * PointSize,
                           2 * PointSize)
@@ -161,44 +161,44 @@ class BoxItem(QGraphicsItem):
         Dirty = True
 
 
-    def parentWidget(self):
-        return self.scene().views()[0]
+    def parentWidget(self):  # 返回父控件
+        return self.scene().views()[0]  # 返回场景第一个视图.(view)
 
 
-    def boundingRect(self):
-        return self.rect.adjusted(-2, -2, 2, 2)
+    def boundingRect(self):  # 边界框_矩形.
+        return self.rect.adjusted(-2, -2, 2, 2)  # adjusted::调整
 
 
     def paint(self, painter, option, widget):
         pen = QPen(self.style)
         pen.setColor(Qt.black)
         pen.setWidth(1)
-        if option.state & QStyle.State_Selected:
+        if option.state & QStyle.State_Selected:  # 当option.state==选中状态(State_Selected) 时...
             pen.setColor(Qt.blue)
         painter.setPen(pen)
         painter.drawRect(self.rect)
 
 
-    def itemChange(self, change, variant):
-        if change != QGraphicsItem.ItemSelectedChange:
+    def itemChange(self, change, variant):  # 与项进行交互[移动/选择],就会调用些方法.
+        if change != QGraphicsItem.ItemSelectedChange:  # 改变 != 选择改变 时执行.
             global Dirty
             Dirty = True
         return QGraphicsItem.itemChange(self, change, variant)
 
 
-    def contextMenuEvent(self, event):
+    def contextMenuEvent(self, event):  # 上下文菜单.
         wrapped = []
         menu = QMenu(self.parentWidget())
         for text, param in (
-                ("&Solid", Qt.SolidLine),
-                ("&Dashed", Qt.DashLine),
-                ("D&otted", Qt.DotLine),
-                ("D&ashDotted", Qt.DashDotLine),
-                ("DashDo&tDotted", Qt.DashDotDotLine)):
-            wrapper = functools.partial(self.setStyle, param)
+                ("&Solid", Qt.SolidLine),  # 实线
+                ("&Dashed", Qt.DashLine),  # 破折线  _ _ _
+                ("D&otted", Qt.DotLine),   # 点线  ...
+                ("D&ashDotted", Qt.DashDotLine),  # 破折点线  _._._.
+                ("DashDo&tDotted", Qt.DashDotDotLine)):  # 破折点点线  _.._.._..
+            wrapper = functools.partial(self.setStyle, param)  # 偏函数:.partial(函数(), 参数1,参数2,...)
             wrapped.append(wrapper)
             menu.addAction(text, wrapper)
-        menu.exec_(event.screenPos())
+        menu.exec_(event.screenPos())  # event.screenPos()::事件.屏幕坐标点
 
 
     def setStyle(self, style):
@@ -209,40 +209,40 @@ class BoxItem(QGraphicsItem):
 
 
     def keyPressEvent(self, event):
-        factor = PointSize / 4
+        factor = PointSize / 4  # factor::因数
         changed = False
-        if event.modifiers() & Qt.ShiftModifier:
-            if event.key() == Qt.Key_Left:
+        if event.modifiers() & Qt.ShiftModifier:  # event.modifiers():功能键被按下时->True,   Qt.ShiftModifier:Shift键被按下时->True
+            if event.key() == Qt.Key_Left:  # ←键
                 self.rect.setRight(self.rect.right() - factor)
                 changed = True
-            elif event.key() == Qt.Key_Right:
+            elif event.key() == Qt.Key_Right:   # →键
                 self.rect.setRight(self.rect.right() + factor)
                 changed = True
-            elif event.key() == Qt.Key_Up:
+            elif event.key() == Qt.Key_Up:  # ↑键
                 self.rect.setBottom(self.rect.bottom() - factor)
                 changed = True
-            elif event.key() == Qt.Key_Down:
+            elif event.key() == Qt.Key_Down:    # ↓键
                 self.rect.setBottom(self.rect.bottom() + factor)
                 changed = True
         if changed:
             self.update()
             global Dirty
             Dirty = True
-        else:
+        else:  # 除 SHIFT+ ↑↓←→按键事件外,所有keyPressEvent由父类QGraphicsItem.keyPressEvent()处理.
             QGraphicsItem.keyPressEvent(self, event)
 
 
-class GraphicsView(QGraphicsView):
+class GraphicsView(QGraphicsView):  # 自定义 图形视图 类.
 
     def __init__(self, parent=None):
         super(GraphicsView, self).__init__(parent)
-        self.setDragMode(QGraphicsView.RubberBandDrag)
-        self.setRenderHint(QPainter.Antialiasing)
-        self.setRenderHint(QPainter.TextAntialiasing)
+        self.setDragMode(QGraphicsView.RubberBandDrag)  # setDragMode::设置_拖拽_模式, RubberBandDrag::拖动时显示 橡皮筋边框
+        self.setRenderHint(QPainter.Antialiasing)  # RenderHint::渲染_提示
+        self.setRenderHint(QPainter.TextAntialiasing)  # TextAntialiasing::文字反锯齿
 
-
+    # 鼠标滚轮事件.
     def wheelEvent(self, event):
-        factor = 1.41 ** (-event.delta() / 240.0)
+        factor = 1.41 ** (-event.delta() / 240.0)   # delta:增量
         self.scale(factor, factor)
 
 
@@ -252,22 +252,22 @@ class MainForm(QDialog):
         super(MainForm, self).__init__(parent)
 
         self.filename = ""
-        self.copiedItem = QByteArray()
-        self.pasteOffset = 5
-        self.prevPoint = QPoint()
-        self.addOffset = 5
-        self.borders = []
+        self.copiedItem = QByteArray()  # copiedItem:复制_项
+        self.pasteOffset = 5  # 粘贴_偏移
+        self.prevPoint = QPoint()  # 前一个_节点
+        self.addOffset = 5  # 加入_偏移
+        self.borders = []  # 边框??
 
-        self.printer = QPrinter(QPrinter.HighResolution)
-        self.printer.setPageSize(QPrinter.Letter)
+        self.printer = QPrinter(QPrinter.HighResolution)  # .HighResolution:高分辨率
+        self.printer.setPageSize(QPrinter.Letter)  # 注意打印机属于绘图设备,使用物理坐标系.
 
-        self.view = GraphicsView()
-        self.scene = QGraphicsScene(self)
-        self.scene.setSceneRect(0, 0, PageSize[0], PageSize[1])
-        self.addBorders()
+        self.view = GraphicsView()  # 创建视图对象.
+        self.scene = QGraphicsScene(self)  # 创建场景
+        self.scene.setSceneRect(0, 0, PageSize[0], PageSize[1])  # 设置场景范围.
+        self.addBorders()  # 加入边界
         self.view.setScene(self.scene)
 
-        self.wrapped = [] # Needed to keep wrappers alive
+        self.wrapped = [] # Needed to keep wrappers alive (需要保持封装器存活)
         buttonLayout = QVBoxLayout()
         for text, slot in (
                 ("Add &Text", self.addText),
@@ -288,6 +288,7 @@ class MainForm(QDialog):
                 button.setFocusPolicy(Qt.NoFocus)
             if slot is not None:
                 self.connect(button, SIGNAL("clicked()"), slot)
+            # 创建<对齐>菜单
             if text == "&Align":
                 menu = QMenu(self)
                 for text, arg in (
@@ -300,31 +301,31 @@ class MainForm(QDialog):
                     menu.addAction(text, wrapper)
                 button.setMenu(menu)
             if text == "Pri&nt...":
-                buttonLayout.addStretch(5)
+                buttonLayout.addStretch(5)  # 加入长度5的拉伸.
             if text == "&Quit":
-                buttonLayout.addStretch(1)
+                buttonLayout.addStretch(1)  # 加入长度1的拉伸.
             buttonLayout.addWidget(button)
         buttonLayout.addStretch()
 
         layout = QHBoxLayout()
-        layout.addWidget(self.view, 1)
+        layout.addWidget(self.view, 1)  # 1 :代表可扩展的.
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
-        fm = QFontMetrics(self.font())
+        fm = QFontMetrics(self.font())  # FontMetrics::字体度量对象
         self.resize(self.scene.width() + fm.width(" Delete... ") + 50,
                     self.scene.height() + 50)
         self.setWindowTitle("Page Designer")
 
-
+    # 加入边界线
     def addBorders(self):
         self.borders = []
         rect = QRectF(0, 0, PageSize[0], PageSize[1])
-        self.borders.append(self.scene.addRect(rect, Qt.yellow))
+        self.borders.append(self.scene.addRect(rect, Qt.yellow))  # 页面大小指示线
         margin = 5.25 * PointSize
         self.borders.append(self.scene.addRect(
                 rect.adjusted(margin, margin, -margin, -margin),
-                Qt.yellow))
+                Qt.yellow))  # 边距指示线
 
 
     def removeBorders(self):
@@ -342,7 +343,7 @@ class MainForm(QDialog):
         self.offerSave()
         QDialog.accept(self)
 
-
+    # 提议保存
     def offerSave(self):
         if (Dirty and QMessageBox.question(self,
                             "Page Designer - Unsaved Changes",
@@ -353,8 +354,8 @@ class MainForm(QDialog):
 
 
     def position(self):
-        point = self.mapFromGlobal(QCursor.pos())
-        if not self.view.geometry().contains(point):
+        point = self.mapFromGlobal(QCursor.pos())   # 将光标当前的逻辑坐标转换成物理坐标 point.
+        if not self.view.geometry().contains(point):    # geometry::几何图形,contains::包含, 当 视图.几何图形不包含point时执行...
             coord = random.randint(36, 144)
             point = QPoint(coord, coord)
         else:
@@ -364,7 +365,7 @@ class MainForm(QDialog):
             else:
                 self.addOffset = 5
                 self.prevPoint = point
-        return self.view.mapToScene(point)
+        return self.view.mapToScene(point)  # 将point物理坐标转换成Scene的逻辑坐标.
 
 
     def addText(self):
@@ -389,10 +390,10 @@ class MainForm(QDialog):
 
     def createPixmapItem(self, pixmap, position, matrix=QMatrix()):
         item = QGraphicsPixmapItem(pixmap)
-        item.setFlags(QGraphicsItem.ItemIsSelectable|
-                      QGraphicsItem.ItemIsMovable)
+        item.setFlags(QGraphicsItem.ItemIsSelectable|  # 可选择
+                      QGraphicsItem.ItemIsMovable)  # 可移动
         item.setPos(position)
-        item.setMatrix(matrix)
+        item.setMatrix(matrix)  # QT4.3以后QMatrix()更名为QTranstform() http://blog.csdn.net/founderznd/article/details/51533777
         self.scene.clearSelection()
         self.scene.addItem(item)
         item.setSelected(True)
@@ -406,7 +407,7 @@ class MainForm(QDialog):
             return items[0]
         return None
 
-
+    # 复制
     def copy(self):
         item = self.selectedItem()
         if item is None:
@@ -414,9 +415,9 @@ class MainForm(QDialog):
         self.copiedItem.clear()
         self.pasteOffset = 5
         stream = QDataStream(self.copiedItem, QIODevice.WriteOnly)
-        self.writeItemToStream(stream, item)
+        self.writeItemToStream(stream, item)  # 写项到→流::自定义函数方法.
 
-
+    # 剪切
     def cut(self):
         item = self.selectedItem()
         if item is None:
@@ -425,7 +426,7 @@ class MainForm(QDialog):
         self.scene.removeItem(item)
         del item
 
-
+    # 粘贴
     def paste(self):
         if self.copiedItem.isEmpty():
             return
@@ -435,23 +436,25 @@ class MainForm(QDialog):
 
 
     def setAlignment(self, alignment):
-        # Items are returned in arbitrary order
+        # Items are returned in arbitrary order(项目以任意顺序返回)
         items = self.scene.selectedItems()
         if len(items) <= 1:
             return
-        # Gather coordinate data
+
+        # Gather coordinate data(收集坐标数据)
         leftXs, rightXs, topYs, bottomYs = [], [], [], []
         for item in items:
-            rect = item.sceneBoundingRect()
+            rect = item.sceneBoundingRect()  # sceneBoundingRect::屏幕边框范围(返回 项 在屏幕边框范围).
             leftXs.append(rect.x())
             rightXs.append(rect.x() + rect.width())
             topYs.append(rect.y())
             bottomYs.append(rect.y() + rect.height())
-        # Perform alignment
+
+        # Perform alignment(执行对齐)
         if alignment == Qt.AlignLeft:
             xAlignment = min(leftXs)
             for i, item in enumerate(items):
-                item.moveBy(xAlignment - leftXs[i], 0)
+                item.moveBy(xAlignment - leftXs[i], 0)  # 增量水平,垂直移动.
         elif alignment == Qt.AlignRight:
             xAlignment = max(rightXs)
             for i, item in enumerate(items):
@@ -472,7 +475,7 @@ class MainForm(QDialog):
         for item in self.scene.selectedItems():
             item.rotate(30)
 
-
+    # 删除
     def delete(self):
         items = self.scene.selectedItems()
         if (len(items) and QMessageBox.question(self,
@@ -488,16 +491,16 @@ class MainForm(QDialog):
             global Dirty
             Dirty = True
 
-
+    # 打印
     def print_(self):
         dialog = QPrintDialog(self.printer)
         if dialog.exec_():
-            painter = QPainter(self.printer)
+            painter = QPainter(self.printer)  # 将绘图器初始化到打印机上.
             painter.setRenderHint(QPainter.Antialiasing)
             painter.setRenderHint(QPainter.TextAntialiasing)
             self.scene.clearSelection()
             self.removeBorders()
-            self.scene.render(painter)
+            self.scene.render(painter)  # render():渲染. PS:将 屏幕内容.渲染到[painter::绘图器]上→ 即打印输出屏幕内容.
             self.addBorders()
 
 
@@ -578,7 +581,7 @@ class MainForm(QDialog):
         type = ""
         position = QPointF()
         matrix = QMatrix()
-        type = stream.readQString()
+        type = stream.readQString()  # readQString()::读出一段字符串类型.
         stream >> position >> matrix
         if offset:
             position += QPointF(offset, offset)
@@ -615,7 +618,7 @@ class MainForm(QDialog):
 
 app = QApplication(sys.argv)
 form = MainForm()
-rect = QApplication.desktop().availableGeometry()
+rect = QApplication.desktop().availableGeometry()   # :获取桌面().availableGeometry可用_几何矩形.
 form.resize(int(rect.width() * 0.6), int(rect.height() * 0.9))
 form.show()
 app.exec_()

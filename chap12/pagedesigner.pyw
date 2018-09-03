@@ -335,7 +335,7 @@ class MainForm(QDialog):
                             "Page Designer - Unsaved Changes",
                             "Save unsaved changes?",
                             QMessageBox.Yes|QMessageBox.No) ==
-            QMessageBox.Yes):
+           QMessageBox.Yes):
             self.save()
 
 
