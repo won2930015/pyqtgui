@@ -9,8 +9,8 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import math     # 数学
-import random   # 随机
+import math  # 数学
+import random  # 随机
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -45,7 +45,7 @@ class Head(QGraphicsItem):  # 头部
         path.addEllipse(Head.Rect)  # addEllipse:加入椭圆
         return path
 
-    #   涂(绘)
+    #   涂(画)
     def paint(self, painter, option, widget=None):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
@@ -71,12 +71,12 @@ class Head(QGraphicsItem):  # 头部
         while True:
             angle += random.randint(-9, 9)
             offset = random.randint(3, 15)
-            x = self.x() + (offset * math.sin(math.radians(angle))) # sin:正弦,radians:弧度
-            y = self.y() + (offset * math.cos(math.radians(angle))) # cos:余弦
+            x = self.x() + (offset * math.sin(math.radians(angle)))  # sin:正弦,radians:弧度
+            y = self.y() + (offset * math.cos(math.radians(angle)))  # cos:余弦
             if 0 <= x <= SCENESIZE and 0 <= y <= SCENESIZE:
                 break
         self.angle = angle
-        self.rotate(random.randint(-5, 5))      # rotate:旋转
+        self.rotate(random.randint(-5, 5))  # rotate:旋转
         self.setPos(QPointF(x, y))
         for item in self.scene().collidingItems(self):  # collidingItems:碰撞_项
             if isinstance(item, Head):  # 当碰撞项是Head Class时...
@@ -117,7 +117,7 @@ class Segment(QGraphicsItem):
     def shape(self):
         return self.path
 
-    # 涂(绘)
+    # 涂(画)
     def paint(self, painter, option, widget=None):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
@@ -155,7 +155,7 @@ class MainForm(QDialog):
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
         self.view.setFocusPolicy(Qt.NoFocus)   # 设置焦点策略::没焦点
-        zoomSlider = QSlider(Qt.Horizontal)  # QSlider:滑块, Qt.Horizontal:水平方向
+        zoomSlider = QSlider(Qt.Horizontal)  # QSlider:滑块控件, Qt.Horizontal:水平方向
         zoomSlider.setRange(5, 200)
         zoomSlider.setValue(100)
         self.pauseButton = QPushButton("Pa&use")
@@ -216,7 +216,7 @@ class MainForm(QDialog):
         global Running
         Running = True
 
-
+    # QDialog类自带timer控件.
     def timerEvent(self, event):
         if not Running:
             return

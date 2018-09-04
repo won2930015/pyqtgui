@@ -16,13 +16,13 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-SCENESIZE = 500 # 场景SIZE
+SCENESIZE = 500  # 场景SIZE
 INTERVAL = 1  # 间隔
 
-Running = False # 运转
+Running = False  # 运转
 
 
-class Head(QGraphicsItem):  #头部
+class Head(QGraphicsItem):  # 头部
 
     Rect = QRectF(-30, -20, 60, 40)
 
@@ -50,15 +50,15 @@ class Head(QGraphicsItem):  #头部
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
         painter.drawEllipse(Head.Rect)
-        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行...
+        if option.levelOfDetail > 0.5:  # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行...
             painter.setBrush(QBrush(Qt.yellow)) #yellow:黄
             painter.drawEllipse(-12, -19, 8, 8)
             painter.drawEllipse(-12, 11, 8, 8)
-            if option.levelOfDetail > 0.9: # Inner eyes:内眼(瞳孔部分).
+            if option.levelOfDetail > 0.9:  # Inner eyes:内眼(瞳孔部分).
                 painter.setBrush(QBrush(Qt.darkBlue))   #darkBlue:深蓝
                 painter.drawEllipse(-12, -19, 4, 4)
                 painter.drawEllipse(-12, 11, 4, 4)
-                if option.levelOfDetail > 1.3: # Nostrils:鼻孔
+                if option.levelOfDetail > 1.3:  # Nostrils:鼻孔
                     painter.setBrush(QBrush(Qt.white))
                     painter.drawEllipse(-27, -5, 2, 2)
                     painter.drawEllipse(-27, 3, 2, 2)
@@ -69,7 +69,7 @@ class Head(QGraphicsItem):  #头部
             return
         angle = self.angle
         while True:
-            flipper = 1 # 鳍状肢
+            flipper = 1  # 鳍状肢
             angle += random.random() * random.choice((-1, 1))   #.choice::选择
             offset = flipper * random.random()
             x = self.x() + (offset * math.sin(math.radians(angle)))
@@ -159,7 +159,7 @@ class MainForm(QDialog):
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
         self.view.setFocusPolicy(Qt.NoFocus)
-        zoomSlider = QSlider(Qt.Horizontal) #QSlider:滑块, Qt.Horizontal:水平方向
+        zoomSlider = QSlider(Qt.Horizontal)  # QSlider:滑块控件, Qt.Horizontal:水平方向
         zoomSlider.setRange(5, 200)
         zoomSlider.setValue(100)
         self.pauseButton = QPushButton("Pa&use")
