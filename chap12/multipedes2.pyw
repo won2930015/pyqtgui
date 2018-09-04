@@ -49,9 +49,9 @@ class Head(QGraphicsItem):  # 头部
     def paint(self, painter, option, widget=None):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        painter.drawEllipse(Head.Rect)
-        if option.levelOfDetail > 0.5:  # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行...
-            painter.setBrush(QBrush(Qt.yellow)) #yellow:黄
+        painter.drawEllipse(Head.Rect)  # 绘制头部
+        if option.levelOfDetail > 0.5:  # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行... P282
+            painter.setBrush(QBrush(Qt.yellow))  # yellow:黄
             painter.drawEllipse(-12, -19, 8, 8)
             painter.drawEllipse(-12, 11, 8, 8)
             if option.levelOfDetail > 0.9:  # Inner eyes:内眼(瞳孔部分).
@@ -89,7 +89,7 @@ class Head(QGraphicsItem):  # 头部
                     item.color.setBlue(min(255, item.color.blue() + 1))
 
 
-
+# 构造蜈蚣身体
 class Segment(QGraphicsItem):
 
     def __init__(self, color, offset, parent):
@@ -100,12 +100,12 @@ class Segment(QGraphicsItem):
         self.path.addEllipse(self.rect)
         x = offset + 15
         y = -20
-        self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))    #蜈蚣左脚
-        self.path.closeSubpath()    #closeSubpath:结束子路径
+        self.path.addPolygon(QPolygonF([QPointF(x, y),  # addPolygon:加入多边形
+                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))    # 蜈蚣左脚
+        self.path.closeSubpath()    # closeSubpath:结束子路径
         y = 20
         self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))    #蜈蚣右脚
+                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))    # 蜈蚣右脚
         self.path.closeSubpath()
         self.change = 1
         self.angle = 0
@@ -122,10 +122,10 @@ class Segment(QGraphicsItem):
         return self.path
 
 
-    def paint(self, painter, option, widget=None):  #涂(画)
+    def paint(self, painter, option, widget=None):  # 涂(画)
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        if option.levelOfDetail < 0.9:   #levelOfDetail:级别of细节 < 90% 时执行...
+        if option.levelOfDetail < 0.9:   # levelOfDetail:级别of细节 < 90% 时执行...
             painter.drawEllipse(self.rect)
         else:
             painter.drawPath(self.path)
@@ -154,7 +154,7 @@ class MainForm(QDialog):
 
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0, SCENESIZE, SCENESIZE)
-        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)   #setItemIndexMethod:设置_项_索引_方法
+        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)  # setItemIndexMethod:设置_项_索引_方法
         self.view = QGraphicsView()
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)

@@ -16,12 +16,12 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-SCENESIZE = 500 # 场景SIZE
+SCENESIZE = 500  # 场景SIZE
 INTERVAL = 1  # 间隔
 
 
 
-class Head(QGraphicsItem):  #头部
+class Head(QGraphicsItem):  # 头部
 
     Rect = QRectF(-30, -20, 60, 40)
 
@@ -45,27 +45,28 @@ class Head(QGraphicsItem):  #头部
     def paint(self, painter, option, widget=None):
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        painter.drawEllipse(Head.Rect)
-        if option.levelOfDetail > 0.5: # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行...
-            painter.setBrush(QBrush(Qt.yellow)) #yellow:黄
+        painter.drawEllipse(Head.Rect)  # 绘制头部
+        if option.levelOfDetail > 0.5:  # Outer eyes:外眼(眼白部分). levelOfDetail:级别of细节 > 原图50%时.执行... P282
+            painter.setBrush(QBrush(Qt.yellow))  # yellow:黄
             painter.drawEllipse(-12, -19, 8, 8)
             painter.drawEllipse(-12, 11, 8, 8)
-            if option.levelOfDetail > 0.9: # Inner eyes:内眼(瞳孔部分).
+            if option.levelOfDetail > 0.9:  # Inner eyes:内眼(瞳孔部分).
                 painter.setBrush(QBrush(Qt.darkBlue))   #darkBlue:深蓝
                 painter.drawEllipse(-12, -19, 4, 4)
                 painter.drawEllipse(-12, 11, 4, 4)
-                if option.levelOfDetail > 1.3: # Nostrils:鼻孔
+                if option.levelOfDetail > 1.3:  # Nostrils:鼻孔
                     painter.setBrush(QBrush(Qt.white))
                     painter.drawEllipse(-27, -5, 2, 2)
                     painter.drawEllipse(-27, 3, 2, 2)
 
-
-    def advance(self, phase):    # advance::前进|先行, phase::相位
+    # 当执行QGraphicsScene.advance()时会调用场景中每一个QGraphicsItem元素自己的advance()函数。
+    # 会调用两次 第一次:phase =0 ,第二次:phase =1
+    def advance(self, phase):  # advance::前进, phase::相位
         if phase == 0:
             angle = self.angle
             while True:
-                flipper = 1 # 鳍状肢
-                angle += random.random() * random.choice((-1, 1))   #.choice::选择
+                flipper = 1  # 鳍状肢
+                angle += random.random() * random.choice((-1, 1))   # .choice::选择
                 offset = flipper * random.random()
                 x = self.x() + (offset * math.sin(math.radians(angle)))
                 y = self.y() + (offset * math.cos(math.radians(angle)))
@@ -86,7 +87,7 @@ class Head(QGraphicsItem):  #头部
                         item.color.setBlue(min(255, item.color.blue() + 1))
 
 
-
+# 构造蜈蚣身体
 class Segment(QGraphicsItem):
 
     def __init__(self, color, offset, parent):
@@ -97,12 +98,12 @@ class Segment(QGraphicsItem):
         self.path.addEllipse(self.rect)
         x = offset + 15
         y = -20
-        self.path.addPolygon(QPolygonF([QPointF(x, y),  #addPolygon:加入多边形
-                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))    #蜈蚣左脚
-        self.path.closeSubpath()    #closeSubpath:结束子路径
+        self.path.addPolygon(QPolygonF([QPointF(x, y),  # addPolygon:加入多边形
+                QPointF(x - 5, y - 12), QPointF(x - 5, y)]))    # 蜈蚣左脚
+        self.path.closeSubpath()    # closeSubpath:结束子路径
         y = 20
         self.path.addPolygon(QPolygonF([QPointF(x, y),
-                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))    #蜈蚣右脚
+                QPointF(x - 5, y + 12), QPointF(x - 5, y)]))    # 蜈蚣右脚
         self.path.closeSubpath()
         self.change = 1
         self.angle = 0
@@ -116,16 +117,17 @@ class Segment(QGraphicsItem):
         return self.path
 
 
-    def paint(self, painter, option, widget=None):  #涂(画)
+    def paint(self, painter, option, widget=None):  # 涂(画)
         painter.setPen(Qt.NoPen)
         painter.setBrush(QBrush(self.color))
-        if option.levelOfDetail < 0.9:   #levelOfDetail:级别of细节 < 90% 时执行...
+        if option.levelOfDetail < 0.9:   # levelOfDetail:级别of细节 < 90% 时执行...
             painter.drawEllipse(self.rect)
         else:
             painter.drawPath(self.path)
 
-
-    def advance(self, phase):
+    # 当执行QGraphicsScene.advance()时会调用场景中每一个QGraphicsItem元素自己的advance()函数。
+    # 会调用两次 第一次:phase =0 ,第二次:phase =1
+    def advance(self, phase):  # advance::前进, phase::相位.
         if phase == 0:
             matrix = self.matrix()
             matrix.reset()
@@ -149,12 +151,12 @@ class MainForm(QDialog):
         self.running = False
         self.scene = QGraphicsScene(self)
         self.scene.setSceneRect(0, 0, SCENESIZE, SCENESIZE)
-        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)   #setItemIndexMethod:设置_项_索引_方法
+        self.scene.setItemIndexMethod(QGraphicsScene.NoIndex)  # setItemIndexMethod:设置_项_索引_方法
         self.view = QGraphicsView()
         self.view.setRenderHint(QPainter.Antialiasing)
         self.view.setScene(self.scene)
         self.view.setFocusPolicy(Qt.NoFocus)
-        zoomSlider = QSlider(Qt.Horizontal) #QSlider:滑块, Qt.Horizontal:水平方向
+        zoomSlider = QSlider(Qt.Horizontal)  # QSlider:滑块控件, Qt.Horizontal:水平方向
         zoomSlider.setRange(5, 200)
         zoomSlider.setValue(100)
         self.pauseButton = QPushButton("Pa&use")
@@ -235,7 +237,7 @@ class MainForm(QDialog):
             item = dead.pop()
             self.scene.removeItem(item)
             del item
-        self.scene.advance()    #QGraphicsScene::advance()会调用场景中每一个元素自己的advance()函数。
+        self.scene.advance()    # QGraphicsScene::advance()会调用场景中每一个元素自己的advance()函数。
                                 # #https://www.devbean.net/2012/12/qt-study-road-2-snake-2/
 
 app = QApplication(sys.argv)
