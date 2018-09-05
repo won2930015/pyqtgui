@@ -19,7 +19,7 @@ import qrc_resources
 __version__ = "1.0.1"
 
 
-class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高亮.
+class PythonHighlighter(QSyntaxHighlighter):  # SyntaxHighlighter::语法高亮.
 
     Rules = []
 
@@ -30,7 +30,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         keywordFormat.setForeground(Qt.darkBlue)    # Foreground::前景
         keywordFormat.setFontWeight(QFont.Bold) # FontWeight::字型粗细, QFont.Bold::粗体
         for pattern in ((r"\band\b", r"\bas\b", r"\bassert\b",      # https://zhidao.baidu.com/question/446577778.html
-                r"\bbreak\b", r"\bclass\b", r"\bcontinue\b",
+                r"\bbreak\b", r"\bclass\b", r"\bcontinue\b",        # \b ::正则表达式界定词.例: r"\b...\b"
                 r"\bdef\b", r"\bdel\b", r"\belif\b", r"\belse\b",
                 r"\bexcept\b", r"\bexec\b", r"\bfinally\b", r"\bfor\b",
                 r"\bfrom\b", r"\bglobal\b", r"\bif\b", r"\bimport\b",
@@ -56,24 +56,30 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         PythonHighlighter.Rules.append((self.stringRe, self.stringFormat))
 
         self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   '''单引号模式::http://blog.csdn.net/sunhuaer123/article/details/16343313
-        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  #   """双引号模式
+        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  #   """双引号模式::http://www.imkevinyang.com/2009/08/%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%89%BE%E5%87%BA%E4%B8%8D%E5%8C%85%E5%90%AB%E7%89%B9%E5%AE%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%9D%A1%E7%9B%AE.html
 
+    # 匹配当前text行所有 关键字 ,及字符串.
+    def highlightBlock(self, text):  # 高亮块
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)  #   0,1,2   NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式
 
-    def highlightBlock(self, text): #高亮块
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)   #   0,1,2   NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式
-
-        for regex, format in PythonHighlighter.Rules:   # 对所有适配模式的关键字进行格式操作.
-            i = regex.indexIn(text)
+        # 匹配当前text行所有 关键字 ,及字符串.
+        for regex, format in PythonHighlighter.Rules:  # 对所有适配模式的关键字进行格式操作.
+            i = regex.indexIn(text)  # 注:text以一行文本为单位.
             while i >= 0:
                 length = regex.matchedLength()
                 self.setFormat(i, length, format)
                 i = regex.indexIn(text, i + length)
 
-        self.setCurrentBlockState(NORMAL) #设置_当前_'块'_状态.??????????
+        # 设置当前块状态为 正常状态:NORMAL =0 [ '''状态TRIPLESINGLE =1 , """状态TRIPLEDOUBLE =2 ]
+        self.setCurrentBlockState(NORMAL)  # 设置_当前_'块'_状态 ??????????
+
+        # text有"""string......."""格式的字符串时返回.
         if self.stringRe.indexIn(text) != -1:
             return
+
+        # text为 '''/ """ 区块格式
         for i, state in ((self.tripleSingleRe.indexIn(text),TRIPLESINGLE),(self.tripleDoubleRe.indexIn(text),TRIPLEDOUBLE)):
-            if self.previousBlockState() == state:
+            if self.previousBlockState() == state:  # previousBlockState::前一个片状态.
                 if i == -1:
                     # i = text.length()
                     i = len(text)
