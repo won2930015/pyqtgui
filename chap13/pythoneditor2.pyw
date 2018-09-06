@@ -21,15 +21,15 @@ __version__ = "1.1.0"
 
 class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高亮.
 
-    Rules = []
-    Formats = {}    #定义为字典.
+    Rules = []  # 规则[列表]
+    Formats = {}  # 格式{字典}
 
     def __init__(self, parent=None):
         super(PythonHighlighter, self).__init__(parent)
 
-        self.initializeFormats()    #格式_初始化
+        self.initializeFormats()    # 格式_初始化
 
-        #关键字
+        # 关键字
         KEYWORDS = ["and", "as", "assert", "break", "class",
                 "continue", "def", "del", "elif", "else", "except",
                 "exec", "finally", "for", "from", "global", "if",
@@ -37,7 +37,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 "print", "raise", "return", "try", "while", "with",
                 "yield"]
 
-        #内置函数
+        # 内置函数
         BUILTINS = ["abs", "all", "any", "basestring", "bool",
                 "callable", "chr", "classmethod", "cmp", "compile",
                 "complex", "delattr", "dict", "dir", "divmod",
@@ -51,59 +51,59 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
                 "staticmethod", "str", "sum", "super", "tuple", "type",
                 "vars", "zip"] 
 
-        #常量
+        # 常量
         CONSTANTS = ["False", "True", "None", "NotImplemented",
                      "Ellipsis"]
 
         PythonHighlighter.Rules.append((QRegExp(
-                "|".join([r"\b%s\b" % keyword for keyword in KEYWORDS])), "keyword"))   #关键字
+                "|".join([r"\b%s\b" % keyword for keyword in KEYWORDS])), "keyword"))   # 关键字
         PythonHighlighter.Rules.append((QRegExp(
                 "|".join([r"\b%s\b" % builtin for builtin in BUILTINS])), "builtin"))   #内置函数
         PythonHighlighter.Rules.append((QRegExp(
-                "|".join([r"\b%s\b" % constant for constant in CONSTANTS])), "constant"))   #常量
+                "|".join([r"\b%s\b" % constant for constant in CONSTANTS])), "constant"))   # 常量
         PythonHighlighter.Rules.append((QRegExp(
-                r"\b[+-]?[0-9]+[lL]?\b"     #10进制数
-                r"|\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b"     #16进制数
-                r"|\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b"),  #浮点指数
-                "number"))  #数值
+                r"\b[+-]?[0-9]+[lL]?\b"     # 10进制数
+                r"|\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b"     # 16进制数
+                r"|\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b"),  # 浮点指数
+                "number"))  # 数值
         PythonHighlighter.Rules.append((QRegExp(
-                r"\bPyQt4\b|\bQt?[A-Z][a-z]\w+\b"), "pyqt"))        #Qt关键盘 :: \w+  匹配数字和字母下划线的多个字符
+                r"\bPyQt4\b|\bQt?[A-Z][a-z]\w+\b"), "pyqt"))        # Qt关键字 :: \w+  匹配数字和字母下划线的多个字符
         PythonHighlighter.Rules.append((QRegExp(r"\b@\w+\b"), "decorator"))   #装饰器.
 
-        stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")  # '字符串' 正则表达式.
-        stringRe.setMinimal(True)   #设置非贪婪匹配模式(小最匹配模式)
+        stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")  # '字符串' 正则表达式[匹配模式]
+        stringRe.setMinimal(True)   # 设置非贪婪匹配模式(小最匹配模式)
         PythonHighlighter.Rules.append((stringRe, "string"))
 
-        self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")   ##设置三个'''或""""号的字符串匹配模式.
+        self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")   # 设置三个'''或""""号的字符串匹配模式.
         self.stringRe.setMinimal(True)
         PythonHighlighter.Rules.append((self.stringRe, "string"))
 
-        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   匹配'''单引号,但前驱 != "  ::http://blog.csdn.net/sunhuaer123/article/details/16343313
-        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  ##  匹配"""双引号,但前驱 != '
+        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  # 匹配'''单引号,但前驱 != "  ::http://blog.csdn.net/sunhuaer123/article/details/16343313
+        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  # 匹配"""双引号,但前驱 != '
 
 
     @staticmethod
-    def initializeFormats():    #格式_初始化
+    def initializeFormats():  # 格式_初始化
         baseFormat = QTextCharFormat()
-        baseFormat.setFontFamily("courier") #设置_字体_家族
-        baseFormat.setFontPointSize(12)     #设置_点_大小(字符大小)
+        baseFormat.setFontFamily("courier")  # 设置_字体_家族
+        baseFormat.setFontPointSize(12)  # 设置_点_大小(字符大小)
         for name, color in (("normal", Qt.black),
-                ("keyword", Qt.darkBlue), ("builtin", Qt.darkRed),          #keyword::关键字,builtin::内置函数,constant::常量,decorator::装饰器,
-                ("constant", Qt.darkGreen),
-                ("decorator", Qt.darkBlue), ("comment", Qt.darkGreen),      #comment::注释,string::字符串,number::数值,error::错误,pyqt::pyqt关键字
-                ("string", Qt.darkYellow), ("number", Qt.darkMagenta),
-                ("error", Qt.darkRed), ("pyqt", Qt.darkCyan)):
+                ("keyword", Qt.darkBlue), ("builtin", Qt.darkRed),  # keyword::关键字,builtin::内置函数
+                ("constant", Qt.darkGreen),  # constant::常量
+                ("decorator", Qt.darkBlue), ("comment", Qt.darkGreen),  # decorator::装饰器,comment::注释
+                ("string", Qt.darkYellow), ("number", Qt.darkMagenta),  # string::字符串,number::数值
+                ("error", Qt.darkRed), ("pyqt", Qt.darkCyan)):  # error::错误,pyqt::pyqt关键字
             format = QTextCharFormat(baseFormat)
-            format.setForeground(QColor(color))
+            format.setForeground(QColor(color))  # 设置前景色(字体颜色)
             if name in ("keyword", "decorator"):
-                format.setFontWeight(QFont.Bold)
+                format.setFontWeight(QFont.Bold)  # 设置字符宽
             if name == "comment":
-                format.setFontItalic(True)
+                format.setFontItalic(True)  # 设置斜体
             PythonHighlighter.Formats[name] = format    #设置字典key:value对::{"keyword":format,"builtin":format,...}
 
 
-    def highlightBlock(self, text): #高亮_块
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE, ERROR = range(4)    #   0,1,2,3  NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式, ERROR=错误
+    def highlightBlock(self, text):  # 高亮_块
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE, ERROR = range(4)  # 0,1,2,3 NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式, ERROR=错误
 
         textLength = len(text)
         prevState = self.previousBlockState()   # 前置_块_状态
@@ -114,12 +114,12 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
             self.setCurrentBlockState(ERROR)
             self.setFormat(0, textLength, PythonHighlighter.Formats["error"])
             return
-        if (prevState == ERROR and not (text.startswith(sys.ps1) or text.startswith("#"))):
+        if (prevState == ERROR and not (text.startswith(sys.ps1) or text.startswith("#"))):  # sys.ps1 == '>>>'
             self.setCurrentBlockState(ERROR)
             self.setFormat(0, textLength, PythonHighlighter.Formats["error"])
             return
 
-        for regex, format in PythonHighlighter.Rules: #匹配所有关键字
+        for regex, format in PythonHighlighter.Rules:  # 匹配所有关键字
             i = regex.indexIn(text)
             while i >= 0:
                 length = regex.matchedLength()  #matchedLength::匹配_长度
@@ -136,7 +136,7 @@ class PythonHighlighter(QSyntaxHighlighter):    # SyntaxHighlighter::语法高�
         else:
             stack = []  # 堆栈
             for i, c in enumerate(text):
-                if c in ('"', "'"):     #包含 " 或 ' 号时执行.
+                if c in ('"', "'"):  # 包含 " 或 ' 号时执行.
                     if stack and stack[-1] == c:
                         stack.pop()
                     else:
@@ -247,7 +247,7 @@ class MainWindow(QMainWindow):
         self.connect(self.editor,
                 SIGNAL("selectionChanged()"), self.updateUi)
         self.connect(self.editor.document(),
-                SIGNAL("modificationChanged(bool)"), self.updateUi) #modificationChanged::更正改变.
+                SIGNAL("modificationChanged(bool)"), self.updateUi)  # modificationChanged::更正改变.
         self.connect(QApplication.clipboard(),
                 SIGNAL("dataChanged()"), self.updateUi)
 
@@ -259,13 +259,13 @@ class MainWindow(QMainWindow):
         self.updateUi()
 
 
-    def updateUi(self, arg=None):   #更新Ui
+    def updateUi(self, arg=None):  # 更新Ui
         self.fileSaveAction.setEnabled(
                 self.editor.document().isModified())    #isModified::is_修改
         enable = not self.editor.document().isEmpty()
         self.fileSaveAsAction.setEnabled(enable)
-        self.editIndentAction.setEnabled(enable)
-        self.editUnindentAction.setEnabled(enable)
+        self.editIndentAction.setEnabled(enable)  # editIndentAction::编辑_进缩
+        self.editUnindentAction.setEnabled(enable)  # editUnindentAction::编辑_取消进缩
         enable = self.editor.textCursor().hasSelection()
         self.editCopyAction.setEnabled(enable)
         self.editCutAction.setEnabled(enable)
@@ -321,7 +321,7 @@ class MainWindow(QMainWindow):
             return
         document = self.editor.document()
         document.clear()
-        document.setModified(False) #设置_修改 标记
+        document.setModified(False)  # 设置_修改 标记
         self.filename = None
         self.setWindowTitle("Python Editor - Unnamed")
         self.updateUi()
@@ -396,23 +396,23 @@ class MainWindow(QMainWindow):
 
     def editIndent(self):   # 编辑_缩进
         cursor = self.editor.textCursor()
-        cursor.beginEditBlock()
-        if cursor.hasSelection():   #有_选择 时...
-            start = pos = cursor.anchor()   #anchor:: 锚(光标的选择区域)起始位置.
-            end = cursor.position() # 获得锚的结束位置.
-            if start > end:
+        cursor.beginEditBlock()  # cursor.beginEditBlock()与cursor.endEditBlock() 配对使用.
+        if cursor.hasSelection():   # 有_选择 时...
+            start = pos = cursor.anchor()  # anchor:: 锚(光标的选择区域)起始位置.
+            end = cursor.position()  # 获得锚的结束位置.
+            if start > end:  # 如果光标是从后向前选择时,修正数值.
                 start, end = end, start
                 pos = start
             cursor.clearSelection()
             cursor.setPosition(pos)
-            cursor.movePosition(QTextCursor.StartOfLine)    #StartOfLine::移动到当前'行'开始处.
+            cursor.movePosition(QTextCursor.StartOfLine)  # StartOfLine::移动到当前'行'开始处.
             while pos <= end:
                 cursor.insertText("    ")
-                cursor.movePosition(QTextCursor.Down)   #Down::向下移动一行.
-                cursor.movePosition(QTextCursor.StartOfLine)    #StartOfLine::移动到当前行开始处.
+                cursor.movePosition(QTextCursor.Down)  # Down::向下移动一行.
+                cursor.movePosition(QTextCursor.StartOfLine)  # StartOfLine::移动到当前行开始处.
                 pos = cursor.position()
             cursor.setPosition(start)
-            cursor.movePosition(QTextCursor.NextCharacter,  #NextCharacter::next_字符(移动到下一个字符)
+            cursor.movePosition(QTextCursor.NextCharacter,  # NextCharacter::next_字符(移动到下一个字符)
                                 QTextCursor.KeepAnchor, end - start)    #KeepAnchor::保持_锚(保持_选择区域[锚])
         else:
             pos = cursor.position()
