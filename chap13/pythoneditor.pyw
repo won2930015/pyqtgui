@@ -55,8 +55,8 @@ class PythonHighlighter(QSyntaxHighlighter):  # SyntaxHighlighter::语法高亮.
         self.stringRe.setMinimal(True)
         PythonHighlighter.Rules.append((self.stringRe, self.stringFormat))
 
-        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  #   '''单引号模式::http://blog.csdn.net/sunhuaer123/article/details/16343313
-        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  #   """双引号模式::http://www.imkevinyang.com/2009/08/%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%89%BE%E5%87%BA%E4%B8%8D%E5%8C%85%E5%90%AB%E7%89%B9%E5%AE%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%9D%A1%E7%9B%AE.html
+        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  # '''单引号模式::http://blog.csdn.net/sunhuaer123/article/details/16343313
+        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  # """双引号模式::http://www.imkevinyang.com/2009/08/%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%89%BE%E5%87%BA%E4%B8%8D%E5%8C%85%E5%90%AB%E7%89%B9%E5%AE%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%9D%A1%E7%9B%AE.html
 
     # 匹配当前text行所有 关键字 ,及字符串.
     def highlightBlock(self, text):  # 高亮块
@@ -181,7 +181,7 @@ class MainWindow(QMainWindow):
         if slot is not None:
             self.connect(action, SIGNAL(signal), slot)
         if checkable:
-            action.setCheckable(True)
+            action.setCheckable(True)   # 设置动作为可复选.
         return action
 
 

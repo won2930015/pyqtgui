@@ -19,18 +19,18 @@ import qrc_resources
 __version__ = "1.0.1"
 
 
-class PythonHighlighter(QSyntaxHighlighter):
+class PythonHighlighter(QSyntaxHighlighter):  # SyntaxHighlighter::语法高亮.
 
     Rules = []
 
     def __init__(self, parent=None):
         super(PythonHighlighter, self).__init__(parent)
 
-        keywordFormat = QTextCharFormat()
-        keywordFormat.setForeground(Qt.darkBlue)
-        keywordFormat.setFontWeight(QFont.Bold)
-        for pattern in ((r"\band\b", r"\bas\b", r"\bassert\b",
-                r"\bbreak\b", r"\bclass\b", r"\bcontinue\b",
+        keywordFormat = QTextCharFormat()   # QTextCharFormat::文本_字符_格式.
+        keywordFormat.setForeground(Qt.darkBlue)    # Foreground::前景
+        keywordFormat.setFontWeight(QFont.Bold) # FontWeight::字型粗细, QFont.Bold::粗体
+        for pattern in ((r"\band\b", r"\bas\b", r"\bassert\b",      # https://zhidao.baidu.com/question/446577778.html
+                r"\bbreak\b", r"\bclass\b", r"\bcontinue\b",        # \b ::正则表达式界定词.例: r"\b...\b"
                 r"\bdef\b", r"\bdel\b", r"\belif\b", r"\belse\b",
                 r"\bexcept\b", r"\bexec\b", r"\bfinally\b", r"\bfor\b",
                 r"\bfrom\b", r"\bglobal\b", r"\bif\b", r"\bimport\b",
@@ -38,51 +38,57 @@ class PythonHighlighter(QSyntaxHighlighter):
                 r"\bor\b", r"\bpass\b", r"\bprint\b", r"\braise\b",
                 r"\breturn\b", r"\btry\b", r"\bwhile\b", r"\bwith\b",
                 r"\byield\b")):
-            PythonHighlighter.Rules.append((QRegExp(pattern),
-                                           keywordFormat))
-        commentFormat = QTextCharFormat()
-        commentFormat.setForeground(QColor(0, 127, 0))
-        commentFormat.setFontItalic(True)
-        PythonHighlighter.Rules.append((QRegExp(r"#.*"),
-                                        commentFormat))
+            PythonHighlighter.Rules.append((QRegExp(pattern), keywordFormat))
+
+        commentFormat = QTextCharFormat()   # commentFormat::注释_格式,QTextCharFormat::文本_字符_格式.
+        commentFormat.setForeground(QColor(0, 127, 0))    # Foreground::前景
+        commentFormat.setFontItalic(True)   # Italic::斜体
+        PythonHighlighter.Rules.append((QRegExp(r"#.*"), commentFormat))
+
         self.stringFormat = QTextCharFormat()
         self.stringFormat.setForeground(Qt.darkYellow)
         stringRe = QRegExp(r"""(?:'[^']*'|"[^"]*")""")
-        stringRe.setMinimal(True)
+        stringRe.setMinimal(True)   # Minimal::最小的...(设置为非贪婪模式)
         PythonHighlighter.Rules.append((stringRe, self.stringFormat))
+
         self.stringRe = QRegExp(r"""(:?"["]".*"["]"|'''.*''')""")
         self.stringRe.setMinimal(True)
-        PythonHighlighter.Rules.append((self.stringRe,
-                                        self.stringFormat))
-        self.tripleSingleRe = QRegExp(r"""'''(?!")""")
-        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')
+        PythonHighlighter.Rules.append((self.stringRe, self.stringFormat))
 
+        self.tripleSingleRe = QRegExp(r"""'''(?!")""")  # '''单引号模式::http://blog.csdn.net/sunhuaer123/article/details/16343313
+        self.tripleDoubleRe = QRegExp(r'''"""(?!')''')  # """双引号模式::http://www.imkevinyang.com/2009/08/%E4%BD%BF%E7%94%A8%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%89%BE%E5%87%BA%E4%B8%8D%E5%8C%85%E5%90%AB%E7%89%B9%E5%AE%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%9D%A1%E7%9B%AE.html
 
-    def highlightBlock(self, text):
-        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)
+    # 匹配当前text行所有 关键字 ,及字符串.
+    def highlightBlock(self, text):  # 高亮块
+        NORMAL, TRIPLESINGLE, TRIPLEDOUBLE = range(3)  #   0,1,2   NORMAL=正常 /标准, TRIPLESINGLE= ''' 模式, TRIPLEDOUBLE = """ 模式
 
-        for regex, format in PythonHighlighter.Rules:
-            i = regex.indexIn(text)
+        # 匹配当前text行所有 关键字 ,及字符串.
+        for regex, format in PythonHighlighter.Rules:  # 对所有适配模式的关键字进行格式操作.
+            i = regex.indexIn(text)  # 注:text以一行文本为单位.
             while i >= 0:
                 length = regex.matchedLength()
                 self.setFormat(i, length, format)
                 i = regex.indexIn(text, i + length)
 
-        self.setCurrentBlockState(NORMAL)
+        # 设置当前块状态为 正常状态:NORMAL =0 [ '''状态TRIPLESINGLE =1 , """状态TRIPLEDOUBLE =2 ]
+        self.setCurrentBlockState(NORMAL)  # 设置_当前_'块'_状态 ??????????
+
+        # text有"""string......."""格式的字符串时返回.
         if self.stringRe.indexIn(text) != -1:
             return
-        for i, state in ((self.tripleSingleRe.indexIn(text),
-                          TRIPLESINGLE),
-                         (self.tripleDoubleRe.indexIn(text),
-                          TRIPLEDOUBLE)):
-            if self.previousBlockState() == state:
+
+        # text为 '''/ """ 区块格式的字符串.
+        for i, state in ((self.tripleSingleRe.indexIn(text),TRIPLESINGLE),(self.tripleDoubleRe.indexIn(text),TRIPLEDOUBLE)):
+            if self.previousBlockState() == state:  # previousBlockState::前一个片状态.
                 if i == -1:
-                    i = text.length()
+                    # i = text.length()
+                    i = len(text)
                     self.setCurrentBlockState(state)
                 self.setFormat(0, i + 3, self.stringFormat)
             elif i > -1:
                 self.setCurrentBlockState(state)
-                self.setFormat(i, text.length(), self.stringFormat)
+                # self.setFormat(i, text.length(), self.stringFormat)
+                self.setFormat(i, len(text), self.stringFormat)
 
 
 class TextEdit(QTextEdit):
@@ -90,7 +96,7 @@ class TextEdit(QTextEdit):
     def __init__(self, parent=None):
         super(TextEdit, self).__init__(parent)
 
-
+    # 修改TAB键按下时输出为四个空格.
     def event(self, event):
         if (event.type() == QEvent.KeyPress and event.key() == Qt.Key_Tab):
             cursor = self.textCursor()
@@ -105,10 +111,10 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
 
         font = QFont("Courier", 11)
-        font.setFixedPitch(True)
+        font.setFixedPitch(True)    # 设置_固定_间距
         self.editor = TextEdit()
         self.editor.setFont(font)
-        self.highlighter = PythonHighlighter(self.editor.document())
+        self.highlighter = PythonHighlighter(self.editor.document())  # parent == self.editor.document()
         self.setCentralWidget(self.editor)
 
         status = self.statusBar()
@@ -186,7 +192,7 @@ class MainWindow(QMainWindow):
         enable = self.editor.textCursor().hasSelection()
         self.editCopyAction.setEnabled(enable)
         self.editCutAction.setEnabled(enable)
-        self.editPasteAction.setEnabled(self.editor.canPaste())
+        self.editPasteAction.setEnabled(self.editor.canPaste())  # canPaste()::是否允许从剪贴板粘贴
 
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
@@ -202,7 +208,7 @@ class MainWindow(QMainWindow):
         if slot is not None:
             self.connect(action, SIGNAL(signal), slot)
         if checkable:
-            action.setCheckable(True)
+            action.setCheckable(True)   # 设置动作为可复选.
         return action
 
 
@@ -260,12 +266,12 @@ class MainWindow(QMainWindow):
     def loadFile(self):
         fh = None
         try:
-            fh = QFile(self.filename)
+            fh = QFile(self.filename)   # 实例化文件对像.
             if not fh.open(QIODevice.ReadOnly):
                 raise IOError(fh.errorString())
-            stream = QTextStream(fh)
+            stream = QTextStream(fh)    # 文本流..
             stream.setCodec("UTF-8")
-            self.editor.setPlainText(stream.readAll())
+            self.editor.setPlainText(stream.readAll())  # PlainText::纯文本.
             self.editor.document().setModified(False)
         except EnvironmentError as e:
             QMessageBox.warning(self, "Python Editor -- Load Error",
