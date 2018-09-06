@@ -77,7 +77,7 @@ class PythonHighlighter(QSyntaxHighlighter):  # SyntaxHighlighter::语法高亮.
         if self.stringRe.indexIn(text) != -1:
             return
 
-        # text为 '''/ """ 区块格式
+        # text为 '''/ """ 区块格式的字符串.
         for i, state in ((self.tripleSingleRe.indexIn(text),TRIPLESINGLE),(self.tripleDoubleRe.indexIn(text),TRIPLEDOUBLE)):
             if self.previousBlockState() == state:  # previousBlockState::前一个片状态.
                 if i == -1:
@@ -96,8 +96,8 @@ class TextEdit(QTextEdit):
     def __init__(self, parent=None):
         super(TextEdit, self).__init__(parent)
 
-
-    def event(self, event): #修改TAB键按下时输出为四个空格.
+    # 修改TAB键按下时输出为四个空格.
+    def event(self, event):
         if (event.type() == QEvent.KeyPress and event.key() == Qt.Key_Tab):
             cursor = self.textCursor()
             cursor.insertText("    ")
@@ -111,10 +111,10 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
 
         font = QFont("Courier", 11)
-        font.setFixedPitch(True)    #设置_固定_间距
+        font.setFixedPitch(True)    # 设置_固定_间距
         self.editor = TextEdit()
         self.editor.setFont(font)
-        self.highlighter = PythonHighlighter(self.editor.document())    #parent == self.editor.document()
+        self.highlighter = PythonHighlighter(self.editor.document())  # parent == self.editor.document()
         self.setCentralWidget(self.editor)
 
         status = self.statusBar()
@@ -147,9 +147,9 @@ class MainWindow(QMainWindow):
         editToolbar.setObjectName("EditToolBar")
         self.addActions(editToolbar, (self.editCopyAction, self.editCutAction, self.editPasteAction))
 
-        self.connect(self.editor, SIGNAL("selectionChanged()"), self.updateUi)  #获得焦点 / 失去焦点 时...
-        self.connect(self.editor.document(), SIGNAL("modificationChanged(bool)"), self.updateUi) # modificationChanged::发生 修正_改变 时...
-        self.connect(QApplication.clipboard(), SIGNAL("dataChanged()"), self.updateUi)  #QApplication.clipboard()::应用.粘贴板
+        self.connect(self.editor, SIGNAL("selectionChanged()"), self.updateUi)  # 获得焦点 / 失去焦点 时...
+        self.connect(self.editor.document(), SIGNAL("modificationChanged(bool)"), self.updateUi)  # modificationChanged::发生 修正_改变 时...
+        self.connect(QApplication.clipboard(), SIGNAL("dataChanged()"), self.updateUi)  # QApplication.clipboard()::应用.粘贴板
 
         self.resize(800, 600)
         self.setWindowTitle("Python Editor")
@@ -166,7 +166,7 @@ class MainWindow(QMainWindow):
         enable = self.editor.textCursor().hasSelection()
         self.editCopyAction.setEnabled(enable)
         self.editCutAction.setEnabled(enable)
-        self.editPasteAction.setEnabled(self.editor.canPaste())
+        self.editPasteAction.setEnabled(self.editor.canPaste())  # canPaste()::是否允许从剪贴板粘贴
 
 
     def createAction(self, text, slot=None, shortcut=None, icon=None, tip=None, checkable=False, signal="triggered()"):
@@ -239,16 +239,16 @@ class MainWindow(QMainWindow):
     def loadFile(self):
         fh = None
         try:
-            fh = QFile(self.filename)   #实例化文件对像.
+            fh = QFile(self.filename)   # 实例化文件对像.
             if not fh.open(QIODevice.ReadOnly):
                 raise IOError(fh.errorString())
-            stream = QTextStream(fh)    #文本流..
+            stream = QTextStream(fh)    # 文本流..
             stream.setCodec("UTF-8")
-            self.editor.setPlainText(stream.readAll())  #PlainText::纯文本.
+            self.editor.setPlainText(stream.readAll())  # PlainText::纯文本.
             self.editor.document().setModified(False)
             self.setWindowTitle("Python Editor - {}".format(
                     QFileInfo(self.filename).fileName()))
-        except EnvironmentError as e:   #EnvironmentError::环境_错误
+        except EnvironmentError as e:   # EnvironmentError::环境_错误
             QMessageBox.warning(self, "Python Editor -- Load Error",
                     "Failed to load {}: {}".format(self.filename, e))
         finally:
