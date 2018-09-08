@@ -19,16 +19,17 @@ import qrc_resources
 DATE_FORMAT = "MMM d, yyyy"
 
 
-class Statement(object):    #声明_对象
+# 声明_对象
+class Statement(object):
 
     def __init__(self, company, contact, address):
-        self.company = company  #公司
-        self.contact = contact  #联系人
-        self.address = address  #地址
-        self.transactions = [] # List of (QDate, float) two-tuples::两个-元组
+        self.company = company  # 公司
+        self.contact = contact  # 联系方式
+        self.address = address  # 地址
+        self.transactions = []  # 事务 List of (QDate, float) two-tuples::两个-元组
 
-
-    def balance(self):  #结算::返回amount总和.
+    # 结算::返回amount总和.
+    def balance(self):
         return sum([amount for date, amount in self.transactions])
 
 
@@ -37,11 +38,11 @@ class Form(QDialog):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
 
-        self.printer = QPrinter()   #创建打印对象
-        self.printer.setPageSize(QPrinter.Letter)   #设置页格式
-        self.generateFakeStatements()   #生成_伪_清单
-        self.table = QTableWidget()     #TableWidget::表_部件
-        self.populateTable()    #填充_表格部件
+        self.printer = QPrinter()  # 创建打印对象
+        self.printer.setPageSize(QPrinter.Letter)  # 设置页格式
+        self.generateFakeStatements()  # 生成_伪_清单
+        self.table = QTableWidget()  # TableWidget::表_部件
+        self.populateTable()  # 填充_表格部件
 
         cursorButton = QPushButton("Print via Q&Cursor")
         htmlButton = QPushButton("Print via &HTML")
@@ -69,8 +70,8 @@ class Form(QDialog):
 
         self.setWindowTitle("Printing")
 
-
-    def generateFakeStatements(self):   #生成_伪_清单
+    # 生成_伪_清单
+    def generateFakeStatements(self):
         self.statements = []
         statement = Statement("Consality", "Ms S. Royal",
                 "234 Rue Saint Hyacinthe, 750201, Paris")
@@ -102,11 +103,11 @@ class Form(QDialog):
         #statement.transactions.append((QDate(2008, 4, 5), 195))
         self.statements.append(statement)
 
-
-    def populateTable(self):    #填充_表格部件
+    # 填充_表格部件
+    def populateTable(self):
         headers = ["Company", "Contact", "Address", "Balance"]
-        self.table.setColumnCount(len(headers)) #setColumnCount::设置_栏_数
-        self.table.setHorizontalHeaderLabels(headers)   #setHorizontalHeaderLabels::设置_水平_头_标签
+        self.table.setColumnCount(len(headers))  # setColumnCount::设置_栏_数
+        self.table.setHorizontalHeaderLabels(headers)  # setHorizontalHeaderLabels::设置_水平_头_标签
         self.table.setRowCount(len(self.statements))
         for row, statement in enumerate(self.statements):
             self.table.setItem(row, 0,
@@ -119,14 +120,14 @@ class Form(QDialog):
                                     statement.balance()))
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
             self.table.setItem(row, 3, item)
-        self.table.resizeColumnsToContents()    #调整_栏_to_内容::调整栏宽度适配内容.
+        self.table.resizeColumnsToContents()  #调整_栏_to_内容::调整栏宽度适配内容.
 
     #用Html方式生成文字表格后打印.
     def printViaHtml(self):
         html = ""
         for statement in self.statements:
-            date = QDate.currentDate().toString(DATE_FORMAT)    #获得当前时间.
-            address = Qt.escape(statement.address).replace( ",", "<br>")    #escape::换码
+            date = QDate.currentDate().toString(DATE_FORMAT)  # 获得当前时间.
+            address = Qt.escape(statement.address).replace( ",", "<br>")  # escape::换码
             contact = Qt.escape(statement.contact)
             balance = statement.balance()
             html += ("<p align=right><img src=':/logo.png'></p>"
@@ -144,7 +145,7 @@ class Form(QDialog):
                          "with you.")
             html += ("</p><p>&nbsp;</p><p>"
                      "<table border=1 cellpadding=2 "
-                     "cellspacing=2><tr><td colspan=3>" #<tr>==行,<td>==单元格
+                     "cellspacing=2><tr><td colspan=3>"  # <tr>==行,<td>==单元格
                      "Transactions</td></tr>")
             for date, amount in statement.transactions:
                 color, status = "black", "Credit"
@@ -155,7 +156,7 @@ class Form(QDialog):
                          "<font color={2}>{3}</font></td></tr>".format(
                          date.toString(DATE_FORMAT), status, color,
                          "$ {:,.2f}".format(abs(amount))))
-            html += ("</table></p><p style='page-break-after:always;'>" #page-break-after:插入分页符,after:在指定组件之后插入.(ps::http://bbs.csdn.net/topics/380127102)
+            html += ("</table></p><p style='page-break-after:always;'>"  # page-break-after:插入分页符,after:在指定组件之后插入.todo:http://bbs.csdn.net/topics/380127102
                      "We hope to continue doing "
                      "business with you,<br>Yours sincerely,"
                      "<br><br>K.&nbsp;Longrey, Manager</p>")
@@ -165,7 +166,7 @@ class Form(QDialog):
             document.setHtml(html)
             document.print_(self.printer)
 
-    #用光标方法生成文字和表格后打印.
+    # 用光标方法生成文字和表格后打印.
     def printViaQCursor(self):
         dialog = QPrintDialog(self.printer, self)
         if not dialog.exec_():
@@ -173,12 +174,12 @@ class Form(QDialog):
         logo = QPixmap(":/logo.png")
         headFormat = QTextBlockFormat()
         headFormat.setAlignment(Qt.AlignLeft)
-        headFormat.setTextIndent(   #设置_文本_缩进
+        headFormat.setTextIndent(   # 设置_文本_缩进
                 self.printer.pageRect().width() - logo.width() - 216)
         bodyFormat = QTextBlockFormat()
-        bodyFormat.setAlignment(Qt.AlignJustify)    #AlignJustify::对齐_两端(两端对齐)
+        bodyFormat.setAlignment(Qt.AlignJustify)    # AlignJustify::对齐_两端(两端对齐)
         lastParaBodyFormat = QTextBlockFormat(bodyFormat)
-        lastParaBodyFormat.setPageBreakPolicy(      #设置_分页_规则
+        lastParaBodyFormat.setPageBreakPolicy(      # 设置_分页_规则
                 QTextFormat.PageBreak_AlwaysAfter)
         rightBodyFormat = QTextBlockFormat()
         rightBodyFormat.setAlignment(Qt.AlignRight)
@@ -194,9 +195,9 @@ class Form(QDialog):
         tableFormat.setBorder(1)
         tableFormat.setCellPadding(2)
 
-        document = QTextDocument()  #创建文本文件对象.
-        cursor = QTextCursor(document)  #创建 文本_光标::以文本文件对象创建一个光标.
-        mainFrame = cursor.currentFrame() #光标.当前_框架 ???
+        document = QTextDocument()  # 创建文本文件对象.
+        cursor = QTextCursor(document)  # 创建 文本_光标::以文本文件对象创建一个光标.
+        mainFrame = cursor.currentFrame()  # 光标.当前_框架 ???
         page = 1
         for statement in self.statements:
             cursor.insertBlock(headFormat, headCharFormat)  #insertBlock::插入_块
@@ -209,7 +210,7 @@ class Form(QDialog):
             for line in statement.address.split(", "):
                 cursor.insertBlock(bodyFormat, bodyCharFormat)
                 cursor.insertText(line)
-            cursor.insertBlock(bodyFormat)  #以bodyFormat格式插入空行
+            cursor.insertBlock(bodyFormat)  # 以bodyFormat格式插入空行
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("Dear {},".format(statement.contact))
             cursor.insertBlock(bodyFormat)
@@ -231,8 +232,8 @@ class Form(QDialog):
                                        tableFormat)
             row = 0
             for date, amount in statement.transactions:
-                cellCursor = table.cellAt(row, 0).firstCursorPosition() #firstCursorPosition::第一_光标_位置()
-                cellCursor.setBlockFormat(rightBodyFormat)  #光标_单元格.设置_块_格式
+                cellCursor = table.cellAt(row, 0).firstCursorPosition()  # firstCursorPosition::第一_光标_位置()
+                cellCursor.setBlockFormat(rightBodyFormat)  # 光标_单元格.设置_块_格式
                 cellCursor.insertText(date.toString(DATE_FORMAT), bodyCharFormat)
                 cellCursor = table.cellAt(row, 1).firstCursorPosition()
                 if amount > 0:
@@ -245,8 +246,8 @@ class Form(QDialog):
                 if amount < 0:
                     format = redBodyCharFormat
                 cellCursor.insertText("$ {:,.2f}".format(amount), format)
-                row += 1    #行 +=1
-            cursor.setPosition(mainFrame.lastPosition())    #主_框架.最后_位置()::定位到主框架最后位置.
+                row += 1    # 行 +=1
+            cursor.setPosition(mainFrame.lastPosition())    # 主_框架.最后_位置()::定位到主框架最后位置.
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("We hope to continue doing business "
                               "with you,")
@@ -259,24 +260,24 @@ class Form(QDialog):
                 cursor.insertBlock(lastParaBodyFormat, bodyCharFormat)
             cursor.insertText("K. Longrey, Manager")
             page += 1
-        document.print_(self.printer)   #document对象向printer对象输出内容.
+        document.print_(self.printer)   # document对象向printer对象输出内容.
 
 
     def printViaQPainter(self):
         dialog = QPrintDialog(self.printer, self)
         if not dialog.exec_():
             return
-        LeftMargin = 72 #左_边缘
+        LeftMargin = 72  # 左_边缘
         sansFont = QFont("Helvetica", 10)
         sansLineHeight = QFontMetrics(sansFont).height()
-        serifFont = QFont("Times", 11)  #衬线字体
+        serifFont = QFont("Times", 11)  # 衬线字体
         fm = QFontMetrics(serifFont)
-        DateWidth = fm.width(" September 99, 2999 ")    #日期栏_宽度
-        CreditWidth = fm.width(" Credit ")      #信贷栏_宽度
-        AmountWidth = fm.width(" W999999.99 ")  #合计栏_宽度
+        DateWidth = fm.width(" September 99, 2999 ")    # 日期栏_宽度
+        CreditWidth = fm.width(" Credit ")      # 信贷栏_宽度
+        AmountWidth = fm.width(" W999999.99 ")  # 合计栏_宽度
         serifLineHeight = fm.height()
         logo = QPixmap(":/logo.png")
-        painter = QPainter(self.printer)        #Painter::画(画纸).
+        painter = QPainter(self.printer)  # Painter::画(画纸).
         pageRect = self.printer.pageRect()
         page = 1
         for statement in self.statements:
@@ -360,8 +361,8 @@ class Form(QDialog):
             font = QFont("Helvetica", 9)
             font.setItalic(True)
             painter.setFont(font)
-            option = QTextOption(Qt.AlignCenter)    #TextOption::文件选项
-            option.setWrapMode(QTextOption.WordWrap)    #setWrapMode::设置_循环_模式,WordWrap::自动(整字)换行
+            option = QTextOption(Qt.AlignCenter)    # TextOption::文件选项
+            option.setWrapMode(QTextOption.WordWrap)    # setWrapMode::设置_换行_模式,WordWrap::自动(整字)换行
             painter.drawText(
                     QRectF(x, y, pageRect.width() - 2 * LeftMargin, 31),
                     "The contents of this letter are for information "
@@ -369,8 +370,8 @@ class Form(QDialog):
                     option)
             page += 1
             if page <= len(self.statements):
-                self.printer.newPage()  #newPage::新页
-            painter.restore()  #restore::恢复/还原
+                self.printer.newPage()  # newPage::新页
+            painter.restore()  # restore::恢复/还原
 
 
 if __name__ == "__main__":

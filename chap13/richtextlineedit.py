@@ -203,7 +203,7 @@ class RichTextLineEdit(QTextEdit):
     def toSimpleHtml(self): # to_简单_Html
         html = ""
         black = QColor(Qt.black)
-        block = self.document().begin()
+        block = self.document().begin()  # P299
         while block.isValid():
             iterator = block.begin()
             while iterator != block.end():
@@ -235,7 +235,7 @@ class RichTextLineEdit(QTextEdit):
                             attribs += ' face="{}"'.format(family)
                         text = "<font{}>{}</font>".format(attribs, text)
                     html += text
-                iterator += 1
+                iterator += 1  # P300
             block = block.next()
         return html
 
