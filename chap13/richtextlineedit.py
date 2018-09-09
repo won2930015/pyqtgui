@@ -24,52 +24,52 @@ class RichTextLineEdit(QTextEdit):
     def __init__(self, parent=None):
         super(RichTextLineEdit, self).__init__(parent)
 
-        self.monofamily = "courier" #等宽字体
-        self.sansfamily = "helvetica"   #无衬线字体
-        self.seriffamily = "times"  #有衬线字体
-        self.setLineWrapMode(QTextEdit.NoWrap)  #setLineWrapMode::设置_自动换行_模式, NoWrap::不自动换行.
-        self.setTabChangesFocus(True)   #设置_Tab_变化_焦点=True
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  #setVerticalScrollBarPolicy::设置_垂直_滚动_条_策略 ,Qt.ScrollBarAlwaysOff::滚动_条_总是_关闭
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)    #setHorizontalScrollBarPolicy::设置_水平_滚动_条_策略
-        fm = QFontMetrics(self.font())      #创建 字体_度量 对象.
+        self.monofamily = "courier"  # 等宽字体
+        self.sansfamily = "helvetica"   # 无衬线字体
+        self.seriffamily = "times"  # 有衬线字体
+        self.setLineWrapMode(QTextEdit.NoWrap)  # setLineWrapMode::设置_自动换行_模式, NoWrap::不自动换行.
+        self.setTabChangesFocus(True)   # 设置_Tab_变化_焦点=True
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  # setVerticalScrollBarPolicy::设置_垂直_滚动_条_策略 ,Qt.ScrollBarAlwaysOff::滚动_条_总是_关闭
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)    # setHorizontalScrollBarPolicy::设置_水平_滚动_条_策略
+        fm = QFontMetrics(self.font())  # 创建 字体_度量 对象.
         h = int(fm.height() * (1.4 if platform.system() == "Windows"
                                    else 1.2))
-        self.setMinimumHeight(h) #设置 LineEdit 最小高度
-        self.setMaximumHeight(int(h * 1.2)) ##设置 LineEdit 最大高度
-        self.setToolTip("Press <b>Ctrl+M</b> for the text effects " #Ctrl+M == 文本效果
-                "menu and <b>Ctrl+K</b> for the color menu")    #Ctrl+k == 颜色
+        self.setMinimumHeight(h)  # 设置 LineEdit 最小高度
+        self.setMaximumHeight(int(h * 1.2))  # 设置 LineEdit 最大高度
+        self.setToolTip("Press <b>Ctrl+M</b> for the text effects "  # Ctrl+M >>文本效果
+                "menu and <b>Ctrl+K</b> for the color menu")  # Ctrl+k >>颜色
 
-    
-    def toggleItalic(self): #斜体
+    # 斜体_开关
+    def toggleItalic(self):
         self.setFontItalic(not self.fontItalic())
 
-
-    def toggleUnderline(self):  #下划线
+    # 下划线_开关
+    def toggleUnderline(self):
         self.setFontUnderline(not self.fontUnderline())
 
-
-    def toggleBold(self):   #粗体
+    # 粗体_开关
+    def toggleBold(self):
         self.setFontWeight(QFont.Normal
                 if self.fontWeight() > QFont.Normal else QFont.Bold)    #字体类形之间可以比较.
 
-
-    def sizeHint(self): #大小提示
-        return QSize(self.document().idealWidth() + 5,  #idealWidth::理想_宽度   (宽/高)
+    # 尺寸提示
+    def sizeHint(self):
+        return QSize(self.document().idealWidth() + 5,  # idealWidth::理想_宽度 :QSize(宽 ,高)
                      self.maximumHeight())
 
-
-    def minimumSizeHint(self):  # 最小值提示
+    # 最小尺寸提示
+    def minimumSizeHint(self):
         fm = QFontMetrics(self.font())
         return QSize(fm.width("WWWW"), self.minimumHeight())
 
+    # 上下文 菜单事件
+    def contextMenuEvent(self, event):
+        self.textEffectMenu()  # 文本_效果_菜单
 
-    def contextMenuEvent(self, event):  # 环境/上下文 菜单事件
-        self.textEffectMenu()   #文本_效果_菜单
-
-        
-    def keyPressEvent(self, event): # 键按下事件
+    # 键按下事件
+    def keyPressEvent(self, event):
         if event.modifiers() & Qt.ControlModifier:
-            handled = False     # handled::处理
+            handled = False  # handled::处理
             if event.key() == Qt.Key_B:
                 self.toggleBold()
                 handled = True
@@ -94,8 +94,8 @@ class RichTextLineEdit(QTextEdit):
         else:
             QTextEdit.keyPressEvent(self, event)
 
-
-    def colorMenu(self):    #颜色菜单
+    # 颜色菜单
+    def colorMenu(self):
         pixmap = QPixmap(22, 22)
         menu = QMenu("Colour")
         for text, color in (
@@ -114,60 +114,60 @@ class RichTextLineEdit(QTextEdit):
             pixmap.fill(color)
             action = menu.addAction(QIcon(pixmap), text, self.setColor)
             action.setData(color)
-        self.ensureCursorVisible()  #确保_光标_可见()
+        self.ensureCursorVisible()  # 确保_光标_可见()
         menu.exec_(self.viewport().mapToGlobal(
                    self.cursorRect().center()))
 
 
     def setColor(self):
-        action = self.sender()  #将当前触发的动作 关联 action对象.
+        action = self.sender()  # 将当前触发的动作 关联 action对象.
         if action is not None and isinstance(action, QAction):
             color = QColor(action.data())
-            if color.isValid(): #is_有效的....
+            if color.isValid():  # is_有效的....
                 self.setTextColor(color)
 
-
-    def textEffectMenu(self):   # 文本_效果_菜单.
-        format = self.currentCharFormat()   # 当前_字符_格式
+    # 文本_效果_菜单.
+    def textEffectMenu(self):
+        format = self.currentCharFormat()  # 当前_字符_格式
         menu = QMenu("Text Effect")
         for text, shortcut, data, checked in (
-                ("&Bold", "Ctrl+B", RichTextLineEdit.Bold,  #粗体
+                ("&Bold", "Ctrl+B", RichTextLineEdit.Bold,  # 粗体
                  self.fontWeight() > QFont.Normal),
-                ("&Italic", "Ctrl+I", RichTextLineEdit.Italic,  #斜体
+                ("&Italic", "Ctrl+I", RichTextLineEdit.Italic,  # 斜体
                  self.fontItalic()),
-                ("Strike &out", None, RichTextLineEdit.StrikeOut,   #删除线
+                ("Strike &out", None, RichTextLineEdit.StrikeOut,  # 删除线
                  format.fontStrikeOut()),
-                ("&Underline", "Ctrl+U", RichTextLineEdit.Underline,    #下划线
+                ("&Underline", "Ctrl+U", RichTextLineEdit.Underline,  # 下划线
                  self.fontUnderline()),
-                ("&Monospaced", None, RichTextLineEdit.Monospaced,  #等宽字体
+                ("&Monospaced", None, RichTextLineEdit.Monospaced,  # 等宽字体
                  format.fontFamily() == self.monofamily),
-                ("&Serifed", None, RichTextLineEdit.Serif,  #衬线体
+                ("&Serifed", None, RichTextLineEdit.Serif,  # 衬线体
                  format.fontFamily() == self.seriffamily),
-                ("S&ans Serif", None, RichTextLineEdit.Sans,    #无衬线体
+                ("S&ans Serif", None, RichTextLineEdit.Sans,  # 无衬线体
                  format.fontFamily() == self.sansfamily),
-                ("&No super or subscript", None,        # 没有超级或下标???
+                ("&No super or subscript", None,  # 没有超级或下标???
                  RichTextLineEdit.NoSuperOrSubscript,
-                 format.verticalAlignment() ==  #verticalAlignment::垂直_对齐
-                 QTextCharFormat.AlignNormal),  #AlignNormal::对齐_标准
-                ("Su&perscript", None, RichTextLineEdit.Superscript,    #上标
+                 format.verticalAlignment() ==  # verticalAlignment::垂直_对齐
+                 QTextCharFormat.AlignNormal),  # AlignNormal::对齐_标准
+                ("Su&perscript", None, RichTextLineEdit.Superscript,  # 上标
                  format.verticalAlignment() ==
                  QTextCharFormat.AlignSuperScript),
-                ("Subs&cript", None, RichTextLineEdit.Subscript,    #下标
+                ("Subs&cript", None, RichTextLineEdit.Subscript,  # 下标
                  format.verticalAlignment() ==
                  QTextCharFormat.AlignSubScript)):
             action = menu.addAction(text, self.setTextEffect)
             if shortcut is not None:
                 action.setShortcut(QKeySequence(shortcut))
             action.setData(data)
-            action.setCheckable(True)   #设置成复选
+            action.setCheckable(True)  # 设置成复选
             action.setChecked(checked)
-            self.ensureCursorVisible()  #确保_光标_可见()
+            self.ensureCursorVisible()  # 确保_光标_可见()
         menu.exec_(self.viewport().mapToGlobal(
                    self.cursorRect().center()))
 
-
-    def setTextEffect(self):    #设置_文本_效果
-        action = self.sender()  #将当前被触发的动作关联到action对象.
+    # 设置_文本_效果
+    def setTextEffect(self):
+        action = self.sender()  # 将当前被触发的动作关联到action对象.
         if action is not None and isinstance(action, QAction):
             what = int(action.data())
             if what == RichTextLineEdit.Bold:
@@ -197,23 +197,23 @@ class RichTextLineEdit(QTextEdit):
             elif what == RichTextLineEdit.Subscript:
                 format.setVerticalAlignment(
                         QTextCharFormat.AlignSubScript)
-            self.mergeCurrentCharFormat(format) #mergeCurrentCharFormat::合并_当前_字符_格式.
+            self.mergeCurrentCharFormat(format)  # mergeCurrentCharFormat::合并_当前_字符_格式.
 
-
-    def toSimpleHtml(self): # to_简单_Html
+    # to_简单_Html
+    def toSimpleHtml(self):
         html = ""
         black = QColor(Qt.black)
         block = self.document().begin()  # P299
         while block.isValid():
             iterator = block.begin()
             while iterator != block.end():
-                fragment = iterator.fragment()  #fragment::片段
+                fragment = iterator.fragment()  # fragment::片段
                 if fragment.isValid():
                     format = fragment.charFormat()
                     family = format.fontFamily()
                     color = format.foreground().color()
                     text = Qt.escape(fragment.text())
-                    if (format.verticalAlignment() ==           #verticalAlignment::垂直_对齐
+                    if (format.verticalAlignment() ==  # verticalAlignment::垂直_对齐
                         QTextCharFormat.AlignSubScript):
                         text = "<sub>{}</sub>".format(text)
                     elif (format.verticalAlignment() ==

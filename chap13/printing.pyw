@@ -120,9 +120,9 @@ class Form(QDialog):
                                     statement.balance()))
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
             self.table.setItem(row, 3, item)
-        self.table.resizeColumnsToContents()  #调整_栏_to_内容::调整栏宽度适配内容.
+        self.table.resizeColumnsToContents()  # 调整_栏_to_内容::调整栏宽度适配内容.
 
-    #用Html方式生成文字表格后打印.
+    # 用Html方式生成文字表格后打印.
     def printViaHtml(self):
         html = ""
         for statement in self.statements:
@@ -200,7 +200,7 @@ class Form(QDialog):
         mainFrame = cursor.currentFrame()  # 光标.当前_框架 ???
         page = 1
         for statement in self.statements:
-            cursor.insertBlock(headFormat, headCharFormat)  #insertBlock::插入_块
+            cursor.insertBlock(headFormat, headCharFormat)  # insertBlock::插入_块
             cursor.insertImage(":/logo.png")
             for text in ("Greasy Hands Ltd.", "New Lombard Street",
                          "London", "WC13 4PX",
@@ -217,7 +217,7 @@ class Form(QDialog):
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             balance = statement.balance()
             cursor.insertText("The balance of your account is $ {:,.2f}."
-                    .format(balance))
+                              .format(balance))
             if balance < 0:
                 cursor.insertBlock(bodyFormat, redBodyCharFormat)
                 cursor.insertText("Please remit the amount owing "
@@ -228,7 +228,7 @@ class Form(QDialog):
                                   "business with you.")
             cursor.insertBlock(bodyFormat, bodyCharFormat)
             cursor.insertText("Transactions:")
-            table = cursor.insertTable(len(statement.transactions), 3,  #插入表格(行,列)
+            table = cursor.insertTable(len(statement.transactions), 3,  # 插入表格(行,列)
                                        tableFormat)
             row = 0
             for date, amount in statement.transactions:
@@ -268,7 +268,7 @@ class Form(QDialog):
         if not dialog.exec_():
             return
         LeftMargin = 72  # 左_边缘
-        sansFont = QFont("Helvetica", 10)
+        sansFont = QFont("Helvetica", 10)  # 无衬线字体
         sansLineHeight = QFontMetrics(sansFont).height()
         serifFont = QFont("Times", 11)  # 衬线字体
         fm = QFontMetrics(serifFont)
