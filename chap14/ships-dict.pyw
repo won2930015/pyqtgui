@@ -96,7 +96,7 @@ class MainForm(QDialog):
                         "Failed to load: {}".format(e))
         self.populateList()
         self.populateTable()
-        self.tableWidget.sortItems(0)   #排序_项
+        self.tableWidget.sortItems(0)  # 排序_项
         self.populateTree()
 
 

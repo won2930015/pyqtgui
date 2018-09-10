@@ -1,4 +1,12 @@
 pythoneditor.pyw    13.1 Rich文本的编辑
-pythoneditor_ans.pyw
+pythoneditor_ans.pyw   python编辑器
 pythoneditor2.pyw
-richtextlineedit.py
+richtextlineedit.py    富文本行编辑器
+printing.py            三种打印方法
+printing2.py
+
+
+关于图形与打印:
+第 6章:imagechanger.pyw    视口打印图形
+第12章:pagediesigner       12.1 图形项的自定义和交互
+第13章:printing.py         13.2 文档打印:三种打印方法(HTML ,Cursor ,Painter)

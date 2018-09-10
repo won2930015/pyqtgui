@@ -1,3 +1,8 @@
 imagechanger.pyw::主窗口
 
 dockWin.py::关于浮动窗口的参考.
+
+关于图形与打印:
+第 6章:imagechanger.pyw    视口打印图形
+第12章:pagediesigner       12.1 图形项的自定义和交互
+第13章:printing.py         13.2 文档打印:三种打印方法(HTML ,Cursor ,Painter)

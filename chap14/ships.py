@@ -20,44 +20,44 @@ NAME, OWNER, COUNTRY, DESCRIPTION, TEU = range(5)
 MAGIC_NUMBER = 0x570C4
 FILE_VERSION = 1
 
-
+# 船类
 class Ship(object):
 
     def __init__(self, name, owner, country, teu=0, description=""):
-        self.name = name    #名
-        self.owner = owner  #物主
-        self.country = country  #国家
-        self.teu = teu  #标准箱
-        self.description = description  #描述
+        self.name = name    # 名
+        self.owner = owner  # 物主
+        self.country = country  # 国家
+        self.teu = teu  # 标准箱
+        self.description = description  # 描述
 
-
-    def __hash__(self):     #哈希表|散列表
+    # 哈希表|散列表
+    def __hash__(self):
         return super(Ship, self).__hash__()
 
-
-    def __lt__(self, other):    # 比较符 <
+    # 比较符 <
+    def __lt__(self, other):
         return self.name.lower() < other.name.lower()
 
-
-    def __eq__(self, other):    # 比较符 ==
+    # 比较符 ==
+    def __eq__(self, other):
         return self.name.lower() == other.name.lower()
 
-
-class ShipContainer(object):    #船_容器
+# 船_容器
+class ShipContainer(object):
 
     def __init__(self, filename=""):
-        self.filename = filename    #文件名
-        self.dirty = False  #dirty::脏的(文件修改标记)
-        self.ships = {}     #ships::N条船
-        self.owners = set() #owners::物主们
+        self.filename = filename  # 文件名
+        self.dirty = False  # dirty::脏的(文件修改标记)
+        self.ships = {}     # ships::N条船
+        self.owners = set()  # owners::物主们
         self.countries = set()  #countries::国家们
 
 
-    def ship(self, identity):   #identity::身份
+    def ship(self, identity):  # identity::身份
         return self.ships.get(identity)
 
         
-    def addShip(self, ship):    #加入_船
+    def addShip(self, ship):  # 加入_船
         self.ships[id(ship)] = ship
         self.owners.add(ship.owner)
         self.countries.add(ship.country)
@@ -74,21 +74,21 @@ class ShipContainer(object):    #船_容器
         return len(self.ships)
 
 
-    def __iter__(self):     #迭代器(返回ships的值集(values).
+    def __iter__(self):  # 迭代器(返回ships的值集(values).
         for ship in self.ships.values():
             yield ship
 
 
-    def inOrder(self):  #执行排序(按values排序)
+    def inOrder(self):  # 执行排序(按values排序)
         return sorted(self.ships.values())
 
 
-    def inCountryOwnerOrder(self):  #执行 国家&物主&名 排序
+    def inCountryOwnerOrder(self):  # 执行 国家&物主&名 排序
         return sorted(self.ships.values(), key=lambda x: (x.country, x.owner, x.name))
 
 
     def load(self):
-        exception = None    #exception::异常
+        exception = None  # exception::异常
         fh = None
         try:
             if not self.filename:
