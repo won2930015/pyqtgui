@@ -20,7 +20,7 @@ NAME, OWNER, COUNTRY, DESCRIPTION, TEU = range(5)
 MAGIC_NUMBER = 0x570C4
 FILE_VERSION = 1
 
-# 船类
+# 船
 class Ship(object):
 
     def __init__(self, name, owner, country, teu=0, description=""):
@@ -152,8 +152,8 @@ class ShipContainer(object):
             if exception is not None:
                 raise exception
 
-
-class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::抽象_表_模型)
+# 船_表_模型(AbstractTableModel::抽象_表_模型)
+class ShipTableModel(QAbstractTableModel):
 
     def __init__(self, filename=""):
         super(ShipTableModel, self).__init__()
@@ -164,27 +164,27 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
         self.countries = set()
 
 
-    def sortByName(self):   #按名字排序
+    def sortByName(self):  # 按名字排序
         self.ships = sorted(self.ships)
-        self.reset()    #重置::数据重置.
+        self.reset()  # 重置::数据重置.
 
 
-    def sortByCountryOwner(self):   #按 国家&物主 排序
+    def sortByCountryOwner(self):  # 按 国家&物主 排序
         self.ships = sorted(self.ships, key=lambda x: (x.country, x.owner, x.name))
         self.reset()
 
 
-    def flags(self, index): #标志???
-        if not index.isValid(): #isValid::is_有效的
+    def flags(self, index):  # 标志???
+        if not index.isValid():  # isValid::is_有效的
             return Qt.ItemIsEnabled
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)| Qt.ItemIsEditable)
 
 
-    def data(self, index, role=Qt.DisplayRole): #DisplayRole::显示_角色
+    def data(self, index, role=Qt.DisplayRole):  # DisplayRole::显示_角色
         if (not index.isValid() or not (0 <= index.row() < len(self.ships))):
             return None
         ship = self.ships[index.row()]
-        column = index.column() #column::列
+        column = index.column()  # column::列
         if role == Qt.DisplayRole:
             if column == NAME:
                 return ship.name
@@ -195,12 +195,12 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
             elif column == DESCRIPTION:
                 return ship.description
             elif column == TEU:
-                return "{:,}".format(ship.teu)  #"{:,}"::添加千位分隔符?
-        elif role == Qt.TextAlignmentRole:  #TextAlignmentRole::文本_对齐_角色
+                return "{:,}".format(ship.teu)  # "{:,}"::添加千位分隔符?
+        elif role == Qt.TextAlignmentRole:  # TextAlignmentRole::文本_对齐_角色
             if column == TEU:
                 return int(Qt.AlignRight|Qt.AlignVCenter)
             return int(Qt.AlignLeft|Qt.AlignVCenter)
-        elif role == Qt.TextColorRole and column == TEU:    #文本_色_角色
+        elif role == Qt.TextColorRole and column == TEU:  # 文本_色_角色
             if ship.teu < 80000:
                 return QColor(Qt.black)
             elif ship.teu < 100000:
@@ -209,7 +209,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
                 return QColor(Qt.blue)
             else:
                 return QColor(Qt.red)
-        elif role == Qt.BackgroundColorRole:    #BackgroundColorRole::背景_色_角色
+        elif role == Qt.BackgroundColorRole:  # BackgroundColorRole::背景_色_角色
             if ship.country in ("Bahamas", "Cyprus", "Denmark",
                     "France", "Germany", "Greece"):
                 return QColor(250, 230, 250)
@@ -221,8 +221,8 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型(AbstractTableModel::
                 return QColor(210, 230, 230)
         return None
 
-
-    def headerData(self, section, orientation, role=Qt.DisplayRole):    # headerData::(表)头数据,section::区段, orientation::方向
+    # headerData::(表)头数据,section::区段, orientation::方向
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.TextAlignmentRole:
             if orientation == Qt.Horizontal:    #Horizontal::水平
                 return int(Qt.AlignLeft|Qt.AlignVCenter)
