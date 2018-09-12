@@ -174,12 +174,13 @@ class ShipTableModel(QAbstractTableModel):
         self.reset()
 
 
-    def flags(self, index):  # 标志???
-        if not index.isValid():  # isValid::is_有效的
+    def flags(self, index):  # 标志??? P325
+        if not index.isValid():  # isValid::is_有效的(判断index是否有数据(有效))
             return Qt.ItemIsEnabled
+                                # 如果有效 就将已有项↓的标识与Qt.ItemIsEditable进行结合,返回.
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)| Qt.ItemIsEditable)
 
-
+    #  P324
     def data(self, index, role=Qt.DisplayRole):  # DisplayRole::显示_角色
         if (not index.isValid() or not (0 <= index.row() < len(self.ships))):
             return None
@@ -221,7 +222,7 @@ class ShipTableModel(QAbstractTableModel):
                 return QColor(210, 230, 230)
         return None
 
-    # headerData::(表)头数据,section::区段, orientation::方向
+    # headerData::(表)头数据,section::区段, orientation::方向 P325
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.TextAlignmentRole:
             if orientation == Qt.Horizontal:    #Horizontal::水平

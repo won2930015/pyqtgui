@@ -42,7 +42,7 @@ class MainForm(QDialog):
             removeShipButton.setFocusPolicy(Qt.NoFocus)
             quitButton.setFocusPolicy(Qt.NoFocus)
 
-        splitter = QSplitter(Qt.Horizontal)
+        splitter = QSplitter(Qt.Horizontal)  # 创建分隔器
         vbox = QVBoxLayout()
         vbox.addWidget(listLabel)
         vbox.addWidget(self.listWidget)
@@ -135,11 +135,11 @@ class MainForm(QDialog):
     def populateTable(self, selectedShip=None):
         selected = None
         self.tableWidget.clear()
-        self.tableWidget.setSortingEnabled(False)   #设置_排序_允许 == False
-        self.tableWidget.setRowCount(len(self.ships))
+        self.tableWidget.setSortingEnabled(False)   # 设置_排序_允许 == False
+        self.tableWidget.setRowCount(len(self.ships))  # 设置行数
         headers = ["Name", "Owner", "Country", "Description", "TEU"]
-        self.tableWidget.setColumnCount(len(headers))
-        self.tableWidget.setHorizontalHeaderLabels(headers)
+        self.tableWidget.setColumnCount(len(headers))  # 设置列数
+        self.tableWidget.setHorizontalHeaderLabels(headers)  # 设置表头标签
         for row, ship in enumerate(self.ships):
             item = QTableWidgetItem(ship.name)
             item.setData(Qt.UserRole, int(id(ship)))
@@ -152,7 +152,7 @@ class MainForm(QDialog):
                     QTableWidgetItem(ship.country))
             self.tableWidget.setItem(row, ships.DESCRIPTION,
                     QTableWidgetItem(ship.description))
-            item = QTableWidgetItem("{:10}".format(ship.teu))   #"{:10}"::10 == 十进制
+            item = QTableWidgetItem("{:10}".format(ship.teu))   # "{:10}"::10 == 十进制
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
             self.tableWidget.setItem(row, ships.TEU, item)
         self.tableWidget.setSortingEnabled(True)    #设置_排序_允许 == True
@@ -165,8 +165,8 @@ class MainForm(QDialog):
     def populateTree(self, selectedShip=None):
         selected = None
         self.treeWidget.clear()
-        self.treeWidget.setColumnCount(2)
-        self.treeWidget.setHeaderLabels(["Country/Owner/Name", "TEU"])  #设置2列的标题.
+        self.treeWidget.setColumnCount(2)  # 设置列数 ==2
+        self.treeWidget.setHeaderLabels(["Country/Owner/Name", "TEU"])  # 设置两列的标题.
         self.treeWidget.setItemsExpandable(True)    #设置_项_可扩展(设置项是否可扩展)
         parentFromCountry = {}
         parentFromCountryOwner = {}
@@ -209,7 +209,7 @@ class MainForm(QDialog):
             return
         column = self.tableWidget.currentColumn()
         if column == ships.NAME:
-            ship.name = item.text().strip() #strip::去除字符头尾空白字符.
+            ship.name = item.text().strip()  # strip::去除字符头尾空白字符.
         elif column == ships.OWNER:
             ship.owner = item.text().strip()
         elif column == ships.COUNTRY:
@@ -223,7 +223,7 @@ class MainForm(QDialog):
         self.populateTree()
 
 
-    def currentTableShip(self): #返回当前选定行(row)的Ship对象.
+    def currentTableShip(self):  # 返回当前选定行(row)的Ship对象.
         item = self.tableWidget.item(self.tableWidget.currentRow(), 0)
         if item is None:
             return None
