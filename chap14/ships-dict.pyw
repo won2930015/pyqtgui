@@ -14,7 +14,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ships
 
-MAC = "qt_mac_set_native_menubar" in dir()  #判断是否在MAC系统.
+MAC = "qt_mac_set_native_menubar" in dir()  # 判断是否在MAC系统.
 
 
 class MainForm(QDialog):
@@ -99,7 +99,7 @@ class MainForm(QDialog):
         self.tableWidget.sortItems(0)  # 排序_项
         self.populateTree()
 
-
+    # X 键
     def reject(self):
         self.accept()
 
@@ -155,8 +155,8 @@ class MainForm(QDialog):
             item = QTableWidgetItem("{:10}".format(ship.teu))   # "{:10}"::10 == 十进制
             item.setTextAlignment(Qt.AlignRight|Qt.AlignVCenter)
             self.tableWidget.setItem(row, ships.TEU, item)
-        self.tableWidget.setSortingEnabled(True)    #设置_排序_允许 == True
-        self.tableWidget.resizeColumnsToContents()  #调整列宽适配内容
+        self.tableWidget.setSortingEnabled(True)    # 设置_排序_允许 == True
+        self.tableWidget.resizeColumnsToContents()  # 调整列宽适配内容
         if selected is not None:
             selected.setSelected(True)
             self.tableWidget.setCurrentItem(selected)
@@ -167,7 +167,7 @@ class MainForm(QDialog):
         self.treeWidget.clear()
         self.treeWidget.setColumnCount(2)  # 设置列数 ==2
         self.treeWidget.setHeaderLabels(["Country/Owner/Name", "TEU"])  # 设置两列的标题.
-        self.treeWidget.setItemsExpandable(True)    #设置_项_可扩展(设置项是否可扩展)
+        self.treeWidget.setItemsExpandable(True)    # 设置_项_可扩展(设置项是否可扩展)
         parentFromCountry = {}
         parentFromCountryOwner = {}
         for ship in self.ships.inCountryOwnerOrder():
@@ -184,10 +184,10 @@ class MainForm(QDialog):
             item.setTextAlignment(1, Qt.AlignRight|Qt.AlignVCenter)
             if selectedShip is not None and selectedShip == id(ship):
                 selected = item
-            self.treeWidget.expandItem(parent)      #expandItem::展开_项
+            self.treeWidget.expandItem(parent)      # expandItem::展开_项
             self.treeWidget.expandItem(ancestor)
-        self.treeWidget.resizeColumnToContents(0)   #调整_列宽适配内容
-        self.treeWidget.resizeColumnToContents(1)
+        self.treeWidget.resizeColumnToContents(0)   # 调整_0列宽适配内容
+        self.treeWidget.resizeColumnToContents(1)   # 调整_1列宽适配内容
         if selected is not None:
             selected.setSelected(True)
             self.treeWidget.setCurrentItem(selected)

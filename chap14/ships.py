@@ -42,15 +42,15 @@ class Ship(object):
     def __eq__(self, other):
         return self.name.lower() == other.name.lower()
 
-# 船_容器
+# 船_容器 (ships-dict示列引用)
 class ShipContainer(object):
 
     def __init__(self, filename=""):
         self.filename = filename  # 文件名
         self.dirty = False  # dirty::脏的(文件修改标记)
-        self.ships = {}     # ships::N条船
-        self.owners = set()  # owners::物主们
-        self.countries = set()  #countries::国家们
+        self.ships = {}     # ships::N条船(字典)
+        self.owners = set()  # owners::物主们(集)
+        self.countries = set()  #countries::国家们(集)
 
 
     def ship(self, identity):  # identity::身份
@@ -74,7 +74,7 @@ class ShipContainer(object):
         return len(self.ships)
 
 
-    def __iter__(self):  # 迭代器(返回ships的值集(values).
+    def __iter__(self):  # 迭代器(返回ships集的所有值 values).
         for ship in self.ships.values():
             yield ship
 
@@ -175,9 +175,9 @@ class ShipTableModel(QAbstractTableModel):
 
 
     def flags(self, index):  # 标志??? P325
-        if not index.isValid():  # isValid::is_有效的(判断index是否有数据(有效))
+        if not index.isValid():  # isValid::is_有效的(判断index是否有效(有数据))
             return Qt.ItemIsEnabled
-                                # 如果有效 就将已有项↓的标识与Qt.ItemIsEditable进行结合,返回.
+                                # 如果index有效 就将项已有的标志↓与Qt.ItemIsEditable进行结合,返回.
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)| Qt.ItemIsEditable)
 
     #  P324
@@ -225,7 +225,7 @@ class ShipTableModel(QAbstractTableModel):
     # headerData::(表)头数据,section::区段, orientation::方向 P325
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.TextAlignmentRole:
-            if orientation == Qt.Horizontal:    #Horizontal::水平
+            if orientation == Qt.Horizontal:  # Horizontal::水平
                 return int(Qt.AlignLeft|Qt.AlignVCenter)
             return int(Qt.AlignRight|Qt.AlignVCenter)
         if role != Qt.DisplayRole:
@@ -244,11 +244,11 @@ class ShipTableModel(QAbstractTableModel):
         return int(section + 1)
 
 
-    def rowCount(self, index=QModelIndex()):    #rowCount::行数, ModelIndex::模型_索引
+    def rowCount(self, index=QModelIndex()):  # rowCount::行数, ModelIndex::模型_索引
         return len(self.ships)
 
 
-    def columnCount(self, index=QModelIndex()): #columnCount::例数
+    def columnCount(self, index=QModelIndex()):  # columnCount::例数
         return 5
 
 
@@ -272,7 +272,7 @@ class ShipTableModel(QAbstractTableModel):
         return False
 
 
-    def insertRows(self, position, rows=1, index=QModelIndex()):    #插入_行.
+    def insertRows(self, position, rows=1, index=QModelIndex()):  # 插入_行.
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
         for row in range(rows):
             self.ships.insert(position + row, Ship(" Unknown", " Unknown", " Unknown"))
@@ -281,9 +281,9 @@ class ShipTableModel(QAbstractTableModel):
         return True
 
 
-    def removeRows(self, position, rows=1, index=QModelIndex()):    #移除_行
+    def removeRows(self, position, rows=1, index=QModelIndex()):  # 移除_行
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.ships = (self.ships[:position] + self.ships[position + rows:]) #这是一种排除 自身 重新赋值的方法.
+        self.ships = (self.ships[:position] + self.ships[position + rows:])  # 这是一种排除 自身 重新赋值的方法.
         self.endRemoveRows()
         self.dirty = True
         return True
@@ -356,7 +356,7 @@ class ShipTableModel(QAbstractTableModel):
                 raise exception
 
 
-class ShipDelegate(QStyledItemDelegate): #船_委托
+class ShipDelegate(QStyledItemDelegate):  # 船_委托
 
     def __init__(self, parent=None):
         super(ShipDelegate, self).__init__(parent)

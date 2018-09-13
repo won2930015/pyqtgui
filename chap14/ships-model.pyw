@@ -86,7 +86,7 @@ class MainForm(QDialog):
                 self.model.ships.append(ship)
                 self.model.owners.add(ship.owner)
                 self.model.countries.add(ship.country)
-            self.model.reset()  #reset::重置(重置数据)
+            self.model.reset()  # reset::重置(刷新数据)
             self.model.dirty = False
         else:
             try:
@@ -95,7 +95,7 @@ class MainForm(QDialog):
                 QMessageBox.warning(self, "Ships - Error",
                         "Failed to load: {}".format(e))
         self.model.sortByName()
-        self.resizeColumns()    #调整列宽适配内容.
+        self.resizeColumns()  # 调整列宽适配内容.
 
 
     def resizeColumns(self):
@@ -123,7 +123,7 @@ class MainForm(QDialog):
         QDialog.accept(self)
 
     
-    def sortTable(self, section):   #排序表
+    def sortTable(self, section):  # 排序表
         if section in (ships.OWNER, ships.COUNTRY):
             self.model.sortByCountryOwner()
         else:
