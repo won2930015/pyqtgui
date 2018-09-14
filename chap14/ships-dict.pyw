@@ -23,15 +23,15 @@ class MainForm(QDialog):
         super(MainForm, self).__init__(parent)
 
         listLabel = QLabel("&List")
-        self.listWidget = QListWidget()
+        self.listWidget = QListWidget()  # 简便项视图控件.P313-1
         listLabel.setBuddy(self.listWidget)
 
         tableLabel = QLabel("&Table")
-        self.tableWidget = QTableWidget()
+        self.tableWidget = QTableWidget()  # 简便项视图控件.P313-1
         tableLabel.setBuddy(self.tableWidget)
 
         treeLabel = QLabel("Tre&e")
-        self.treeWidget = QTreeWidget()
+        self.treeWidget = QTreeWidget()  # 简便项视图控件.P313-1
         treeLabel.setBuddy(self.treeWidget)
 
         addShipButton = QPushButton("&Add Ship")

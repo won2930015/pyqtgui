@@ -25,12 +25,12 @@ class MainForm(QDialog):
         self.model = ships.ShipTableModel("ships.dat")  #创建模型.
 
         tableLabel1 = QLabel("Table &1")
-        self.tableView1 = QTableView()
+        self.tableView1 = QTableView()  # 纯视图部件 必须与外部模型配合使用.P313-2
         tableLabel1.setBuddy(self.tableView1)
         self.tableView1.setModel(self.model)    #LOAD入模型.
 
         tableLabel2 = QLabel("Table &2")
-        self.tableView2 = QTableView()
+        self.tableView2 = QTableView()  # 纯视图部件 必须与外部模型配合使用.P313-2
         tableLabel2.setBuddy(self.tableView2)
         self.tableView2.setModel(self.model)    #LOAD入模型.
 
