@@ -14,7 +14,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import ships
 
-MAC = "qt_mac_set_native_menubar" in dir()  #判断是否在MAC系统.
+MAC = "qt_mac_set_native_menubar" in dir()  # 判断是否在MAC系统.
 
 
 class MainForm(QDialog):
@@ -22,17 +22,17 @@ class MainForm(QDialog):
     def __init__(self, parent=None):
         super(MainForm, self).__init__(parent)
 
-        self.model = ships.ShipTableModel("ships.dat")  #创建模型.
+        self.model = ships.ShipTableModel("ships.dat")  # 创建模型.
 
         tableLabel1 = QLabel("Table &1")
-        self.tableView1 = QTableView()  # 纯视图部件 必须与外部模型配合使用.P313-2
+        self.tableView1 = QTableView()  # 纯视图 必须与外部模型配合使用.P313-2
         tableLabel1.setBuddy(self.tableView1)
-        self.tableView1.setModel(self.model)    #LOAD入模型.
+        self.tableView1.setModel(self.model)    # LOAD入模型.
 
         tableLabel2 = QLabel("Table &2")
-        self.tableView2 = QTableView()  # 纯视图部件 必须与外部模型配合使用.P313-2
+        self.tableView2 = QTableView()  # 纯视图 必须与外部模型配合使用.P313-2
         tableLabel2.setBuddy(self.tableView2)
-        self.tableView2.setModel(self.model)    #LOAD入模型.
+        self.tableView2.setModel(self.model)    # LOAD入模型.
 
         addShipButton = QPushButton("&Add Ship")
         removeShipButton = QPushButton("&Remove Ship")
@@ -104,10 +104,8 @@ class MainForm(QDialog):
                            ships.TEU):
                 tableView.resizeColumnToContents(column)
 
-
     def reject(self):
         self.accept()
-
 
     def accept(self):
         if (self.model.dirty and
@@ -122,7 +120,6 @@ class MainForm(QDialog):
                         "Failed to save: {}".format(e))
         QDialog.accept(self)
 
-    
     def sortTable(self, section):  # 排序表
         if section in (ships.OWNER, ships.COUNTRY):
             self.model.sortByCountryOwner()
@@ -136,7 +133,7 @@ class MainForm(QDialog):
         self.model.insertRow(row)
         index = self.model.index(row, 0)
         tableView = self.tableView1
-        if self.tableView2.hasFocus():  #hasFocus::有_焦点
+        if self.tableView2.hasFocus():  # hasFocus::有_焦点
             tableView = self.tableView2
         tableView.setFocus()
         tableView.setCurrentIndex(index)

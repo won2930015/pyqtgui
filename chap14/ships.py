@@ -20,6 +20,7 @@ NAME, OWNER, COUNTRY, DESCRIPTION, TEU = range(5)
 MAGIC_NUMBER = 0x570C4
 FILE_VERSION = 1
 
+
 # 船
 class Ship(object):
 
@@ -42,6 +43,7 @@ class Ship(object):
     def __eq__(self, other):
         return self.name.lower() == other.name.lower()
 
+
 # 船_容器 (ships-dict示列引用)
 class ShipContainer(object):
 
@@ -52,40 +54,32 @@ class ShipContainer(object):
         self.owners = set()  # owners::物主们(集)
         self.countries = set()  #countries::国家们(集)
 
-
     def ship(self, identity):  # identity::身份
         return self.ships.get(identity)
 
-        
     def addShip(self, ship):  # 加入_船
         self.ships[id(ship)] = ship
         self.owners.add(ship.owner)
         self.countries.add(ship.country)
         self.dirty = True
 
-
     def removeShip(self, ship):
         del self.ships[id(ship)]
         del ship
         self.dirty = True
 
-
     def __len__(self):
         return len(self.ships)
-
 
     def __iter__(self):  # 迭代器(返回ships集的所有值 values).
         for ship in self.ships.values():
             yield ship
 
-
     def inOrder(self):  # 执行排序(按values排序)
         return sorted(self.ships.values())
 
-
     def inCountryOwnerOrder(self):  # 执行 国家&物主&名 排序
         return sorted(self.ships.values(), key=lambda x: (x.country, x.owner, x.name))
-
 
     def load(self):
         exception = None  # exception::异常
@@ -123,7 +117,6 @@ class ShipContainer(object):
             if exception is not None:
                 raise exception
 
-
     def save(self):
         exception = None
         fh = None
@@ -152,6 +145,7 @@ class ShipContainer(object):
             if exception is not None:
                 raise exception
 
+
 # 船_表_模型(AbstractTableModel::抽象_表_模型)
 class ShipTableModel(QAbstractTableModel):
 
@@ -163,16 +157,13 @@ class ShipTableModel(QAbstractTableModel):
         self.owners = set()
         self.countries = set()
 
-
     def sortByName(self):  # 按名字排序
         self.ships = sorted(self.ships)
-        self.reset()  # 重置::数据重置.
-
+        self.reset()  # 重置::数据_重置/更新.
 
     def sortByCountryOwner(self):  # 按 国家&物主 排序
         self.ships = sorted(self.ships, key=lambda x: (x.country, x.owner, x.name))
         self.reset()
-
 
     def flags(self, index):  # 标志??? P325
         if not index.isValid():  # isValid::is_有效的(判断index是否有效(有数据))
@@ -243,14 +234,11 @@ class ShipTableModel(QAbstractTableModel):
                 return "TEU"
         return int(section + 1)
 
-
     def rowCount(self, index=QModelIndex()):  # rowCount::行数, ModelIndex::模型_索引
         return len(self.ships)
 
-
     def columnCount(self, index=QModelIndex()):  # columnCount::例数
         return 5
-
 
     def setData(self, index, value, role=Qt.EditRole):
         if index.isValid() and 0 <= index.row() < len(self.ships):
@@ -271,8 +259,7 @@ class ShipTableModel(QAbstractTableModel):
             return True
         return False
 
-
-    def insertRows(self, position, rows=1, index=QModelIndex()):  # 插入_行.
+    def insertRows(self, position, rows=1, index=QModelIndex()):  # 插入_行. position:插入位置, rows:插入行数
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
         for row in range(rows):
             self.ships.insert(position + row, Ship(" Unknown", " Unknown", " Unknown"))
@@ -280,14 +267,12 @@ class ShipTableModel(QAbstractTableModel):
         self.dirty = True
         return True
 
-
     def removeRows(self, position, rows=1, index=QModelIndex()):  # 移除_行
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
         self.ships = (self.ships[:position] + self.ships[position + rows:])  # 这是一种排除 自身 重新赋值的方法.
         self.endRemoveRows()
         self.dirty = True
         return True
-
 
     def load(self):
         exception = None
@@ -326,7 +311,6 @@ class ShipTableModel(QAbstractTableModel):
             if exception is not None:
                 raise exception
 
-
     def save(self):
         exception = None
         fh = None
@@ -361,7 +345,6 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
     def __init__(self, parent=None):
         super(ShipDelegate, self).__init__(parent)
 
-
     def paint(self, painter, option, index):
         if index.column() == DESCRIPTION:#处理描述项的字符.
             text = index.model().data(index)
@@ -385,7 +368,6 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
-
     def sizeHint(self, option, index):
         fm = option.fontMetrics
         if index.column() == TEU:
@@ -397,7 +379,6 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             document.setHtml(text)
             return QSize(document.idealWidth() + 5, fm.height())    #idealWidth::理想_宽度
         return QStyledItemDelegate.sizeHint(self, option, index)
-
 
     def createEditor(self, parent, option, index):
         if index.column() == TEU:
@@ -427,13 +408,11 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         else:
             return QStyledItemDelegate.createEditor(self, parent, option, index)
 
-
     def commitAndCloseEditor(self):
         editor = self.sender()
         if isinstance(editor, (QTextEdit, QLineEdit)):
             self.emit(SIGNAL("commitData(QWidget*)"), editor)
             self.emit(SIGNAL("closeEditor(QWidget*)"), editor)
-
 
     def setEditorData(self, editor, index): #定义各栏设置数据的方式.
         text = index.model().data(index, Qt.DisplayRole)
@@ -457,7 +436,6 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         else:
             QStyledItemDelegate.setEditorData(self, editor, index)
 
-
     def setModelData(self, editor, model, index):   #设置_模型_数据
         if index.column() == TEU:
             model.setData(index, editor.value())
@@ -469,7 +447,6 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             model.setData(index, editor.toSimpleHtml())
         else:
             QStyledItemDelegate.setModelData(self, editor, model, index)
-
 
 def generateFakeShips():    #生成_伪造_船舶
     for name, owner, country, teu, description in (

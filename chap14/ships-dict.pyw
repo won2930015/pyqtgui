@@ -184,7 +184,7 @@ class MainForm(QDialog):
             item.setTextAlignment(1, Qt.AlignRight|Qt.AlignVCenter)
             if selectedShip is not None and selectedShip == id(ship):
                 selected = item
-            self.treeWidget.expandItem(parent)      # expandItem::展开_项
+            self.treeWidget.expandItem(parent)      #expandItem::展开_项
             self.treeWidget.expandItem(ancestor)
         self.treeWidget.resizeColumnToContents(0)   # 调整_0列宽适配内容
         self.treeWidget.resizeColumnToContents(1)   # 调整_1列宽适配内容
