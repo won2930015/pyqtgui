@@ -135,14 +135,14 @@ class MainForm(QDialog):
     def populateTable(self, selectedShip=None):
         selected = None
         self.tableWidget.clear()
-        self.tableWidget.setSortingEnabled(False)   # 设置_排序_允许 == False
+        self.tableWidget.setSortingEnabled(False)   # 设置_排序_允许 == False P316-1
         self.tableWidget.setRowCount(len(self.ships))  # 设置行数
         headers = ["Name", "Owner", "Country", "Description", "TEU"]
         self.tableWidget.setColumnCount(len(headers))  # 设置列数
         self.tableWidget.setHorizontalHeaderLabels(headers)  # 设置表头标签
         for row, ship in enumerate(self.ships):
             item = QTableWidgetItem(ship.name)
-            item.setData(Qt.UserRole, int(id(ship)))
+            item.setData(Qt.UserRole, int(id(ship)))  # P316-2
             if selectedShip is not None and selectedShip == id(ship):
                 selected = item
             self.tableWidget.setItem(row, ships.NAME, item)
