@@ -21,25 +21,26 @@ MAGIC_NUMBER = 0x570C4
 FILE_VERSION = 1
 
 
+# 船
 class Ship(object):
 
     def __init__(self, name, owner, country, teu=0, description=""):
-        self.name = name
-        self.owner = owner
-        self.country = country
-        self.teu = teu
-        self.description = description
+        self.name = name    # 名
+        self.owner = owner  # 物主
+        self.country = country  # 国家
+        self.teu = teu  # 标准箱
+        self.description = description  # 描述
 
-
-    def __hash__(self): #哈希表|散列表
+    # 哈希表|散列表
+    def __hash__(self):
         return super(Ship, self).__hash__()
 
-
-    def __lt__(self, other):    #小于::实现比较排序需要
+    # 比较符 <
+    def __lt__(self, other):
         return self.name.lower() < other.name.lower()
 
-
-    def __eq__(self, other):    #等于::实现比较排序需要
+    # 比较符 ==
+    def __eq__(self, other):
         return self.name.lower() == other.name.lower()
 
 
@@ -50,39 +51,39 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
         self.filename = filename
         self.dirty = False
         self.ships = []
-        self.owners = set() #set()::元组(不存在重复元素.)
+        self.owners = set()  # set()::集(不存在重复元素.)
         self.countries = set()
 
-
-    def sortByName(self):
+    def sortByName(self):  # 按名字排序
         self.ships = sorted(self.ships)
         self.reset()
 
 
-    def sortByTEU(self):    #采用 封装-排序-解封 方法排序
-        ships = [(ship.teu, ship) for ship in self.ships]   #1.封装
-        ships.sort()    #2.排序
-        self.ships = [ship for teu, ship in ships]  #3.解封
+    def sortByTEU(self):    # 采用 封装-排序-解封 方法排序
+        ships = [(ship.teu, ship) for ship in self.ships]   # 1.封装
+        ships.sort()    # 2.排序
+        self.ships = [ship for teu, ship in ships]  # 3.解封
         self.reset()
 
 
-    def sortByCountryOwner(self):   #按 国家/物主 排序(排序函数,参数key用匿名函数lambda定义.)
+    def sortByCountryOwner(self):   # 按 国家/物主 排序(排序函数,参数key用匿名函数lambda定义.)
         self.ships = sorted(self.ships, key=lambda s: (s.country, s.owner))
         self.reset()
 
 
-    def flags(self, index): #实现 可编辑_模型表 必须实现.
+    def flags(self, index): # 实现 可编辑_模型表 必须实现.
         if not index.isValid():
-            return Qt.ItemIsEnabled     #项_只读可选的
+            return Qt.ItemIsEnabled     # 项_只读可选的
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)|
-                            Qt.ItemIsEditable)  #项_可选可读写
+                            Qt.ItemIsEditable)  # 项_可选可读写
 
 
-    def data(self, index, role=Qt.DisplayRole):
+    #  P324
+    def data(self, index, role=Qt.DisplayRole):  # DisplayRole::显示_角色
         if (not index.isValid() or not (0 <= index.row() < len(self.ships))):
             return None
         ship = self.ships[index.row()]
-        column = index.column()
+        column = index.column()  # column::列
         if role == Qt.DisplayRole:
             if column == NAME:
                 return ship.name
@@ -93,12 +94,12 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
             elif column == DESCRIPTION:
                 return ship.description
             elif column == TEU:
-                return "{:,}".format(ship.teu)
-        elif role == Qt.TextAlignmentRole:
+                return "{:,}".format(ship.teu)  # "{:,}"::添加千位分隔符?
+        elif role == Qt.TextAlignmentRole:  # TextAlignmentRole::文本_对齐_角色
             if column == TEU:
                 return int(Qt.AlignRight|Qt.AlignVCenter)
             return int(Qt.AlignLeft|Qt.AlignVCenter)
-        elif role == Qt.TextColorRole and column == TEU:
+        elif role == Qt.TextColorRole and column == TEU:  # 文本_色_角色
             if ship.teu < 80000:
                 return QColor(Qt.black)
             elif ship.teu < 100000:
@@ -107,7 +108,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
                 return QColor(Qt.blue)
             else:
                 return QColor(Qt.red)
-        elif role == Qt.BackgroundColorRole:
+        elif role == Qt.BackgroundColorRole:  # BackgroundColorRole::背景_色_角色
             if ship.country in ("Bahamas", "Cyprus", "Denmark",
                     "France", "Germany", "Greece"):
                 return QColor(250, 230, 250)
@@ -131,15 +132,15 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
                 return "{:,} twenty foot equivalents".format(ship.teu)
         return None
 
-
-    def headerData(self, section, orientation, role=Qt.DisplayRole):    #表头数据相关::section:区段, orientation:方向
+    # headerData::(表)头数据,section::区段, orientation::方向 P325
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.TextAlignmentRole:
-            if orientation == Qt.Horizontal:        #.Horizontal:水平
+            if orientation == Qt.Horizontal:  # Horizontal::水平
                 return int(Qt.AlignLeft|Qt.AlignVCenter)
             return int(Qt.AlignRight|Qt.AlignVCenter)
         if role != Qt.DisplayRole:
             return None
-        if orientation == Qt.Horizontal:    #列表头(栏目)
+        if orientation == Qt.Horizontal:    # 列表头(栏目)
             if section == NAME:
                 return "Name"
             elif section == OWNER:
@@ -150,16 +151,13 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
                 return "Description"
             elif section == TEU:
                 return "TEU"
-        return int(section + 1)  #行表头(序号)
+        return int(section + 1)  # 行表头(序号)
 
-
-    def rowCount(self, index=QModelIndex()):
+    def rowCount(self, index=QModelIndex()):  # rowCount::行数, ModelIndex::模型_索引
         return len(self.ships)
 
-
-    def columnCount(self, index=QModelIndex()):
+    def columnCount(self, index=QModelIndex()):  # columnCount::例数
         return 5
-
 
     def setData(self, index, value, role=Qt.EditRole):
         if index.isValid() and 0 <= index.row() < len(self.ships):
@@ -180,8 +178,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
             return True
         return False
 
-
-    def insertRows(self, position, rows=1, index=QModelIndex()):
+    def insertRows(self, position, rows=1, index=QModelIndex()):  # 插入_行. position:插入位置, rows:插入行数
         self.beginInsertRows(QModelIndex(), position, position + rows - 1)
         for row in range(rows):
             self.ships.insert(position + row, Ship(" Unknown", " Unknown", " Unknown"))
@@ -189,14 +186,12 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
         self.dirty = True
         return True
 
-
-    def removeRows(self, position, rows=1, index=QModelIndex()):
+    def removeRows(self, position, rows=1, index=QModelIndex()):  # 移除_行
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.ships = (self.ships[:position] + self.ships[position + rows:]) #用排除自身的方法更新ships列表.
+        self.ships = (self.ships[:position] + self.ships[position + rows:])  # 用排除自身的方法更新ships列表.
         self.endRemoveRows()
         self.dirty = True
         return True
-
 
     def load(self):
         exception = None
@@ -234,7 +229,6 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
             if exception is not None:
                 raise exception
 
-
     def save(self):
         exception = None
         fh = None
@@ -264,7 +258,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
                 raise exception
 
 
-class ShipDelegate(QStyledItemDelegate):
+class ShipDelegate(QStyledItemDelegate):  # 船_委托
 
     def __init__(self, parent=None):
         super(ShipDelegate, self).__init__(parent)
@@ -273,10 +267,10 @@ class ShipDelegate(QStyledItemDelegate):
     def paint(self, painter, option, index):    #painter::绘画器,option::模型表_项(各种状态选项), index::模型表索引对象
         if index.column() == DESCRIPTION:
             text = index.model().data(index)
-            palette = QApplication.palette()    #palette::调色板
+            palette = QApplication.palette()   # palette::调色板
             document = QTextDocument()
             document.setDefaultFont(option.font)
-            if option.state & QStyle.State_Selected:    #表模型_项.状态 如果是被选中时执行...
+            if option.state & QStyle.State_Selected:    # 表模型_项.状态 如果是被选中时执行...
                 document.setHtml("<font color={}>{}</font>".format(
                         palette.highlightedText().color().name(), text))
             else:
@@ -285,17 +279,16 @@ class ShipDelegate(QStyledItemDelegate):
                      if option.state & QStyle.State_Selected
                      else QColor(index.model().data(index,
                                  Qt.BackgroundColorRole)))
-            painter.save()
+            painter.save()  # 先保存painter原始状态
             painter.fillRect(option.rect, color)
-            painter.translate(option.rect.x(), option.rect.y()) #translate::转化,将painter xy坐标 转化到option.rect.xy坐标上.
+            painter.translate(option.rect.x(), option.rect.y())  # translate::转化(本地化:option逻辑坐标转化为painter的物理坐标,为drawContents作准备?)
             document.drawContents(painter)
-            painter.restore()
+            painter.restore()   # restore::恢复(恢复painter状态)
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
-
     def sizeHint(self, option, index):  #option::项(包含项的所有状态)
-        fm = option.fontMetrics
+        fm = option.fontMetrics  # 选项.字体度量值
         if index.column() == TEU:
             return QSize(fm.width("9,999,999"), fm.height())
         if index.column() == DESCRIPTION:
@@ -306,7 +299,7 @@ class ShipDelegate(QStyledItemDelegate):
             return QSize(document.idealWidth() + 5, fm.height())
         return QStyledItemDelegate.sizeHint(self, option, index)
 
-
+    # 创建编辑器
     def createEditor(self, parent, option, index):
         if index.column() == TEU:
             spinbox = QSpinBox(parent)
@@ -317,7 +310,7 @@ class ShipDelegate(QStyledItemDelegate):
         elif index.column() == OWNER:
             combobox = QComboBox(parent)
             combobox.addItems(sorted(index.model().owners))
-            combobox.setEditable(True)  #设置_可编辑==
+            combobox.setEditable(True)  # setEditable::设置_可编辑
             return combobox
         elif index.column() == COUNTRY:
             combobox = QComboBox(parent)
@@ -345,31 +338,30 @@ class ShipDelegate(QStyledItemDelegate):
             self.emit(SIGNAL("commitData(QWidget*)"), editor)
             self.emit(SIGNAL("closeEditor(QWidget*)"), editor)
 
-
+    # 定义各栏设置数据的方式.
     def setEditorData(self, editor, index):
         text = index.model().data(index, Qt.DisplayRole)
-        if index.column() == TEU:
+        if index.column() == TEU:   # TEU栏
             if text is None:
                 value = 0
             elif isinstance(text, int):
                 value = text
             else:
-                value = int(re.sub(r"[., ]", "", text))
+                value = int(re.sub(r"[., ]", "", text))  # 将".,"替换为""空白字符.::https://zhidao.baidu.com/question/369467791671548644.html
             editor.setValue(value)
-        elif index.column() in (OWNER, COUNTRY):
+        elif index.column() in (OWNER, COUNTRY):    # 物主,国家 栏.
             i = editor.findText(text)
             if i == -1:
                 i = 0
             editor.setCurrentIndex(i)
-        elif index.column() == NAME:
+        elif index.column() == NAME:    # 名称 栏.
             editor.setText(text)
-        elif index.column() == DESCRIPTION:
+        elif index.column() == DESCRIPTION:  # 描述 栏.
             editor.setHtml(text)
         else:
             QStyledItemDelegate.setEditorData(self, editor, index)
 
-
-    def setModelData(self, editor, model, index):
+    def setModelData(self, editor, model, index):   # 设置_模型_数据
         if index.column() == TEU:
             model.setData(index, editor.value())
         elif index.column() in (OWNER, COUNTRY):
@@ -385,8 +377,7 @@ class ShipDelegate(QStyledItemDelegate):
         else:
             QStyledItemDelegate.setModelData(self, editor, model, index)
 
-
-def generateFakeShips():
+def generateFakeShips():    # 生成_伪造_船舶
     for name, owner, country, teu, description in (
 ("Emma M\u00E6rsk", "M\u00E6rsk Line", "Denmark", 151687,
  "<b>W\u00E4rtsil\u00E4-Sulzer RTA96-C</b> main engine,"

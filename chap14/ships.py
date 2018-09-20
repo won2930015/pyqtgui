@@ -154,7 +154,7 @@ class ShipTableModel(QAbstractTableModel):
         self.filename = filename
         self.dirty = False
         self.ships = []
-        self.owners = set()
+        self.owners = set()  # set()::集(不存在重复元素.)
         self.countries = set()
 
     def sortByName(self):  # 按名字排序
@@ -221,7 +221,7 @@ class ShipTableModel(QAbstractTableModel):
             return int(Qt.AlignRight|Qt.AlignVCenter)
         if role != Qt.DisplayRole:
             return None
-        if orientation == Qt.Horizontal:
+        if orientation == Qt.Horizontal:    # 列表头(栏目)
             if section == NAME:
                 return "Name"
             elif section == OWNER:
@@ -232,7 +232,7 @@ class ShipTableModel(QAbstractTableModel):
                 return "Description"
             elif section == TEU:
                 return "TEU"
-        return int(section + 1)
+        return int(section + 1)  # 行表头(序号)
 
     def rowCount(self, index=QModelIndex()):  # rowCount::行数, ModelIndex::模型_索引
         return len(self.ships)
@@ -269,7 +269,7 @@ class ShipTableModel(QAbstractTableModel):
 
     def removeRows(self, position, rows=1, index=QModelIndex()):  # 移除_行
         self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
-        self.ships = (self.ships[:position] + self.ships[position + rows:])  # 这是一种排除 自身 重新赋值的方法.
+        self.ships = (self.ships[:position] + self.ships[position + rows:])  # 用排除自身的方法更新ships列表.
         self.endRemoveRows()
         self.dirty = True
         return True
@@ -346,12 +346,12 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         super(ShipDelegate, self).__init__(parent)
 
     def paint(self, painter, option, index):
-        if index.column() == DESCRIPTION:#处理描述项的字符.
+        if index.column() == DESCRIPTION:  # 处理描述项的字符.
             text = index.model().data(index)
-            palette = QApplication.palette()    #palette::调色板
+            palette = QApplication.palette()   # palette::调色板
             document = QTextDocument()
             document.setDefaultFont(option.font)
-            if option.state & QStyle.State_Selected:
+            if option.state & QStyle.State_Selected:  # 当选项的状态 是选中状态时...执行.
                 document.setHtml("<font color={}>{}</font>".format(
                         palette.highlightedText().color().name(), text))
             else:
@@ -360,16 +360,16 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
                      if option.state & QStyle.State_Selected
                      else QColor(index.model().data(index,
                                  Qt.BackgroundColorRole)))
-            painter.save()
+            painter.save()  # 先保存painter原始状态
             painter.fillRect(option.rect, color)
-            painter.translate(option.rect.x(), option.rect.y()) #translate::翻译 转化???
+            painter.translate(option.rect.x(), option.rect.y())  # translate::转化(本地化:option逻辑坐标转化为painter的物理坐标,为drawContents作准备?)
             document.drawContents(painter)
-            painter.restore()   #restore::恢复
+            painter.restore()   # restore::恢复(恢复painter状态)
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
-    def sizeHint(self, option, index):
-        fm = option.fontMetrics
+    def sizeHint(self, option, index):  #option::项(包含项的所有状态)
+        fm = option.fontMetrics  # 选项.字体度量值
         if index.column() == TEU:
             return QSize(fm.width("9,999,999"), fm.height())
         if index.column() == DESCRIPTION:
@@ -377,9 +377,10 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             document = QTextDocument()
             document.setDefaultFont(option.font)
             document.setHtml(text)
-            return QSize(document.idealWidth() + 5, fm.height())    #idealWidth::理想_宽度
+            return QSize(document.idealWidth() + 5, fm.height())    # idealWidth::理想_宽度
         return QStyledItemDelegate.sizeHint(self, option, index)
 
+    # 创建编辑器
     def createEditor(self, parent, option, index):
         if index.column() == TEU:
             spinbox = QSpinBox(parent)
@@ -390,7 +391,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         elif index.column() == OWNER:
             combobox = QComboBox(parent)
             combobox.addItems(sorted(index.model().owners))
-            combobox.setEditable(True)  #setEditable::设置_可编辑
+            combobox.setEditable(True)  # setEditable::设置_可编辑
             return combobox
         elif index.column() == COUNTRY:
             combobox = QComboBox(parent)
@@ -402,7 +403,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             self.connect(editor, SIGNAL("returnPressed()"), self.commitAndCloseEditor)
             return editor
         elif index.column() == DESCRIPTION:
-            editor = richtextlineedit.RichTextLineEdit(parent)  #rich,text,line,edit::富_文本_行_编辑框
+            editor = richtextlineedit.RichTextLineEdit(parent)  # rich,text,line,edit::富_文本_行_编辑框(自定义)
             self.connect(editor, SIGNAL("returnPressed()"), self.commitAndCloseEditor)
             return editor
         else:
@@ -414,29 +415,30 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             self.emit(SIGNAL("commitData(QWidget*)"), editor)
             self.emit(SIGNAL("closeEditor(QWidget*)"), editor)
 
-    def setEditorData(self, editor, index): #定义各栏设置数据的方式.
+    # 定义各栏设置数据的方式.
+    def setEditorData(self, editor, index):
         text = index.model().data(index, Qt.DisplayRole)
-        if index.column() == TEU:   #TEU栏
+        if index.column() == TEU:   # TEU栏
             if text is None:
                 value = 0
             elif isinstance(text, int):
                 value = text
             else:
-                value = int(re.sub(r"[., ]", "", text)) #将".,"替换为""空白字符.::https://zhidao.baidu.com/question/369467791671548644.html
+                value = int(re.sub(r"[., ]", "", text))  # 将".,"替换为""空白字符.::https://zhidao.baidu.com/question/369467791671548644.html
             editor.setValue(value)
-        elif index.column() in (OWNER, COUNTRY):    #物主,国家 栏.
+        elif index.column() in (OWNER, COUNTRY):    # 物主,国家 栏.
             i = editor.findText(text)
             if i == -1:
                 i = 0
             editor.setCurrentIndex(i)
-        elif index.column() == NAME:    #名称 栏.
+        elif index.column() == NAME:    # 名称 栏.
             editor.setText(text)
-        elif index.column() == DESCRIPTION: #描述 栏.
+        elif index.column() == DESCRIPTION:  # 描述 栏.
             editor.setHtml(text)
         else:
             QStyledItemDelegate.setEditorData(self, editor, index)
 
-    def setModelData(self, editor, model, index):   #设置_模型_数据
+    def setModelData(self, editor, model, index):   # 设置_模型_数据
         if index.column() == TEU:
             model.setData(index, editor.value())
         elif index.column() in (OWNER, COUNTRY):
@@ -448,7 +450,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         else:
             QStyledItemDelegate.setModelData(self, editor, model, index)
 
-def generateFakeShips():    #生成_伪造_船舶
+def generateFakeShips():    # 生成_伪造_船舶
     for name, owner, country, teu, description in (
 ("Emma M\u00E6rsk", "M\u00E6rsk Line", "Denmark", 151687,
  "<b>W\u00E4rtsil\u00E4-Sulzer RTA96-C</b> main engine,"

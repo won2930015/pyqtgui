@@ -23,13 +23,13 @@ class MainForm(QDialog):
     def __init__(self, parent=None):
         super(MainForm, self).__init__(parent)
 
-        self.model = ships.ShipTableModel("ships.dat")
+        self.model = ships.ShipTableModel("ships.dat")  # 创建 船_表_模型 对象
 
         tableLabel1 = QLabel("Table &1")
         self.tableView1 = QTableView()
         tableLabel1.setBuddy(self.tableView1)
-        self.tableView1.setModel(self.model)
-        self.tableView1.setItemDelegate(ships.ShipDelegate(self))
+        self.tableView1.setModel(self.model)    # 关联 船_表_模型
+        self.tableView1.setItemDelegate(ships.ShipDelegate(self))   # 关联 船_委托(自定义):控制项的外观与使用的编辑器.
 
         tableLabel2 = QLabel("Table &2")
         self.tableView2 = QTableView()
@@ -90,7 +90,7 @@ class MainForm(QDialog):
                 self.model.ships.append(ship)
                 self.model.owners.add(ship.owner)
                 self.model.countries.add(ship.country)
-            self.model.reset()
+            self.model.reset()  # 重置数据.(继承自父类的方法)
             self.model.dirty = False
         else:
             try:
@@ -100,15 +100,12 @@ class MainForm(QDialog):
         self.model.sortByName()
         self.resizeColumns()
 
-
-    def resizeColumns(self):
+    def resizeColumns(self):    # 调整列宽
         self.tableView1.resizeColumnsToContents()
         self.tableView2.resizeColumnsToContents()
 
-
     def reject(self):
         self.accept()
-
 
     def accept(self):
         if (self.model.dirty and
@@ -123,8 +120,7 @@ class MainForm(QDialog):
                         "Failed to save: {}".format(e))
         QDialog.accept(self)
 
-    
-    def sortTable(self, section):
+    def sortTable(self, section):   # section::区段==int
         if section in (ships.OWNER, ships.COUNTRY):
             self.model.sortByCountryOwner()
         elif section == ships.TEU:

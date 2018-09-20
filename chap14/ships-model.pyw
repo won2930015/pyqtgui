@@ -86,7 +86,7 @@ class MainForm(QDialog):
                 self.model.ships.append(ship)
                 self.model.owners.add(ship.owner)
                 self.model.countries.add(ship.country)
-            self.model.reset()  # reset::重置(刷新数据)
+            self.model.reset()  # reset::重置(重置数据)
             self.model.dirty = False
         else:
             try:
