@@ -264,7 +264,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         super(ShipDelegate, self).__init__(parent)
 
 
-    def paint(self, painter, option, index):    #painter::绘画器,option::模型表_项(各种状态选项), index::模型表索引对象
+    def paint(self, painter, option, index):    # painter::绘画器,option::模型表_项(各种状态选项), index::模型表索引对象
         if index.column() == DESCRIPTION:
             text = index.model().data(index)
             palette = QApplication.palette()   # palette::调色板
@@ -287,7 +287,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
-    def sizeHint(self, option, index):  #option::项(包含项的所有状态)
+    def sizeHint(self, option, index):  # option::项(包含项的所有状态)
         fm = option.fontMetrics  # 选项.字体度量值
         if index.column() == TEU:
             return QSize(fm.width("9,999,999"), fm.height())
@@ -296,10 +296,10 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             document = QTextDocument()
             document.setDefaultFont(option.font)
             document.setHtml(text)
-            return QSize(document.idealWidth() + 5, fm.height())
+            return QSize(document.idealWidth() + 5, fm.height())  # idealWidth:理想宽度
         return QStyledItemDelegate.sizeHint(self, option, index)
 
-    # 创建编辑器
+    # 创建编辑器:负责创建编辑器与setEditorData()配对使用
     def createEditor(self, parent, option, index):
         if index.column() == TEU:
             spinbox = QSpinBox(parent)

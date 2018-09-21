@@ -255,7 +255,7 @@ class ShipTableModel(QAbstractTableModel):
             elif column == TEU:
                 ship.teu = int(value)
             self.dirty = True
-            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)  # 发射dataChanged()信号 ,刷新数据.
             return True
         return False
 
