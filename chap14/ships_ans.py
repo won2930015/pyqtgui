@@ -331,7 +331,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             return QStyledItemDelegate.createEditor(self, parent, option,
                                                     index)
 
-
+    # 用到QTextEdit, QLineEdit时必要实现此方法.
     def commitAndCloseEditor(self):
         editor = self.sender()
         if isinstance(editor, (QTextEdit, QLineEdit)):
