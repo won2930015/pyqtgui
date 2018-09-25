@@ -287,6 +287,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
+    # P332
     def sizeHint(self, option, index):  # option::项(包含项的所有状态)
         fm = option.fontMetrics  # 选项.字体度量值
         if index.column() == TEU:
@@ -338,7 +339,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             self.emit(SIGNAL("commitData(QWidget*)"), editor)
             self.emit(SIGNAL("closeEditor(QWidget*)"), editor)
 
-    # 定义各栏设置数据的方式.
+    # 定义各栏设置数据的方式.P333-1
     def setEditorData(self, editor, index):
         text = index.model().data(index, Qt.DisplayRole)
         if index.column() == TEU:   # TEU栏
@@ -361,6 +362,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         else:
             QStyledItemDelegate.setEditorData(self, editor, index)
 
+    # 编辑器(setEditorData)回写数据到模型.P334-5
     def setModelData(self, editor, model, index):   # 设置_模型_数据
         if index.column() == TEU:
             model.setData(index, editor.value())
