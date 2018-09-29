@@ -100,7 +100,7 @@ def createFakeData():
         outcomeid = int(query.value(OUTCOMEID))
         subquery = QSqlQuery("SELECT name FROM outcomes "
                              "WHERE id = {}".format(outcomeid))
-        outcome = "invalid foreign key"
+        outcome = "invalid foreign key"  # 译文：“无效的外键”
         if subquery.next():
             outcome = subquery.value(0)
         print("{0:02d}: {1} {2} - {3} {4} [{5}]".format(id, caller,
@@ -191,10 +191,10 @@ class PhoneLogDlg(QDialog):
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
-        self.model = QSqlRelationalTableModel(self) #创建 SQL_关系_表_模型
+        self.model = QSqlRelationalTableModel(self)  # 创建 SQL_关系_表_模型
         self.model.setTable("calls")
-        self.model.setRelation(OUTCOMEID, QSqlRelation("outcomes", "id", "name")) #<<---注意!!!
-        self.model.setSort(STARTTIME, Qt.AscendingOrder)    #AscendingOrder::升序排序
+        self.model.setRelation(OUTCOMEID, QSqlRelation("outcomes", "id", "name"))  # <<---注意!!!
+        self.model.setSort(STARTTIME, Qt.AscendingOrder)    # AscendingOrder::升序排序
         self.model.select()
 
         self.mapper = QDataWidgetMapper(self)

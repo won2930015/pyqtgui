@@ -22,13 +22,13 @@ ID, CALLER, STARTTIME, ENDTIME, TOPIC = range(5)
 DATETIME_FORMAT = "yyyy-MM-dd hh:mm"
 
 
-def createFakeData():   #创建伪数据.
+def createFakeData():   # 创建伪数据.
     import random
 
     print("Dropping table...")
     query = QSqlQuery()
-    query.exec_("DROP TABLE calls") #DROP TABLE::丢弃_表
-    QApplication.processEvents()    #processEvents::进程_事件
+    query.exec_("DROP TABLE calls")  # DROP TABLE::丢弃_表
+    QApplication.processEvents()    # processEvents::进程_事件(将控制权交还给程序防止假死现象).
 
     print("Creating table...")
     query.exec_("""CREATE TABLE calls (
@@ -41,8 +41,8 @@ def createFakeData():   #创建伪数据.
               "Information supplied", "Complaint", "Complaint")
     now = QDateTime.currentDateTime()
 
-    print("Populating table...")    #填充_表
-    query.prepare("INSERT INTO calls (caller, starttime, endtime, "
+    print("Populating table...")    # 填充_表
+    query.prepare("INSERT INTO calls (caller, starttime, endtime, "  # 预查询.P338
                   "topic) VALUES (?, ?, ?, ?)")
     for name in ('Joshan Cockerall', 'Ammanie Ingham',
             'Diarmuid Bettington', 'Juliana Bannister',
@@ -65,13 +65,13 @@ def createFakeData():   #创建伪数据.
         start = now.addDays(-random.randint(1, 30))
         start = now.addSecs(-random.randint(60 * 5, 60 * 60 * 2))
         end = start.addSecs(random.randint(20, 60 * 13))
-        topic = random.choice(topics)   #choice::选择(随机的.)
+        topic = random.choice(topics)   # choice::选择(随机的.)
         query.addBindValue(name)
         query.addBindValue(start)
         query.addBindValue(end)
         query.addBindValue(topic)
         query.exec_()
-    QApplication.processEvents()    #processEvents::进程_事件
+    QApplication.processEvents()  # processEvents::进程_事件(将控制权交还给程序防止假死现象).
 
     print("Calls:")
     query.exec_("SELECT id, caller, starttime, endtime, topic FROM calls "
@@ -84,7 +84,7 @@ def createFakeData():   #创建伪数据.
         topic = query.value(4)
         print("{0:02d}: {1} {2} - {3} {4}".format(id, caller,
               starttime, endtime, topic))
-    QApplication.processEvents()    #processEvents::进程_事件
+    QApplication.processEvents()    # processEvents::进程_事件(将控制权交还给程序防止假死现象).
 
 
 class PhoneLogDlg(QDialog):
@@ -136,7 +136,7 @@ class PhoneLogDlg(QDialog):
             addButton.setFocusPolicy(Qt.NoFocus)
             deleteButton.setFocusPolicy(Qt.NoFocus)
 
-        fieldLayout = QGridLayout() #创建网格布局.
+        fieldLayout = QGridLayout()  # 创建网格布局.
         fieldLayout.addWidget(callerLabel, 0, 0)
         fieldLayout.addWidget(self.callerEdit, 0, 1, 1, 3)
         fieldLayout.addWidget(startLabel, 1, 0)
@@ -161,13 +161,13 @@ class PhoneLogDlg(QDialog):
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
-        self.model = QSqlTableModel(self)   #创建 Sql_表_模型 对象
+        self.model = QSqlTableModel(self)   # 创建 Sql_表_模型 对象
         self.model.setTable("calls")
-        self.model.setSort(STARTTIME, Qt.AscendingOrder)    #(栏目,排序方式= AscendingOrder::升序顺序)
+        self.model.setSort(STARTTIME, Qt.AscendingOrder)    # (栏目,排序方式= AscendingOrder::升序顺序)
         self.model.select()
 
         self.mapper = QDataWidgetMapper(self)
-        self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit) #设置_提交_政策,ManualSubmit::手动_提交
+        self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置_提交_政策,ManualSubmit::手动_提交
         self.mapper.setModel(self.model)
         self.mapper.addMapping(self.callerEdit, CALLER)
         self.mapper.addMapping(self.startDateTime, STARTTIME)
