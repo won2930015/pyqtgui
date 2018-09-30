@@ -41,8 +41,8 @@ def createFakeData():   # 创建伪数据.
               "Information supplied", "Complaint", "Complaint")
     now = QDateTime.currentDateTime()
 
-    print("Populating table...")    # 填充_表
-    query.prepare("INSERT INTO calls (caller, starttime, endtime, "  # 预查询.P338
+    print("Populating table...")    # 译文：填充_表
+    query.prepare("INSERT INTO calls (caller, starttime, endtime, "  # prepare::预查询.P338
                   "topic) VALUES (?, ?, ?, ?)")
     for name in ('Joshan Cockerall', 'Ammanie Ingham',
             'Diarmuid Bettington', 'Juliana Bannister',
@@ -166,10 +166,11 @@ class PhoneLogDlg(QDialog):
         self.model.setSort(STARTTIME, Qt.AscendingOrder)    # (栏目,排序方式= AscendingOrder::升序顺序)
         self.model.select()
 
-        self.mapper = QDataWidgetMapper(self)
+        # P342
+        self.mapper = QDataWidgetMapper(self)  # 数据_控件_映射
         self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置_提交_政策,ManualSubmit::手动_提交
         self.mapper.setModel(self.model)
-        self.mapper.addMapping(self.callerEdit, CALLER)
+        self.mapper.addMapping(self.callerEdit, CALLER)  # 加入_映射
         self.mapper.addMapping(self.startDateTime, STARTTIME)
         self.mapper.addMapping(self.endDateTime, ENDTIME)
         self.mapper.addMapping(topicEdit, TOPIC)
@@ -258,27 +259,27 @@ def main():
             "Database Error: {}".format(db.lastError().text()))
         sys.exit(1)
 
-    splash = None
+    splash = None  # 创建闪屏对象.
     if create:
-        app.setOverrideCursor(QCursor(Qt.WaitCursor))
+        app.setOverrideCursor(QCursor(Qt.WaitCursor))  # setOverrideCursor::设置_重载_光标 ,WaitCursor::等待光标
         splash = QLabel()
         pixmap = QPixmap(":/phonelogsplash.png")
         splash.setPixmap(pixmap)
-        splash.setMask(pixmap.createHeuristicMask())
-        splash.setWindowFlags(Qt.SplashScreen)
-        rect = app.desktop().availableGeometry()
+        splash.setMask(pixmap.createHeuristicMask())  # setMask::设置_蒙版(遮罩) createHeuristicMask::创建_启发式_蒙版(遮罩)::启动时的蒙版
+        splash.setWindowFlags(Qt.SplashScreen)  # setWindowFlags::设置_窗口_标志 ,SplashScreen::闪烁屏幕
+        rect = app.desktop().availableGeometry()  # 获取桌面几何图形.
         splash.move((rect.width() - pixmap.width()) / 2,
                     (rect.height() - pixmap.height()) / 2)
         splash.show()
-        app.processEvents()
+        app.processEvents()  # processEvents::进程_事件(将控制权交还给程序防止假死现象).
         createFakeData()
 
     form = PhoneLogDlg()
     form.show()
     if create:
         splash.close()
-        app.processEvents()
-        app.restoreOverrideCursor()
+        app.processEvents()  # processEvents::进程_事件(将控制权交还给程序防止假死现象).
+        app.restoreOverrideCursor()  # 恢复_重载_光标
     sys.exit(app.exec_())
 
 main()
