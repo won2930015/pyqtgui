@@ -22,12 +22,12 @@ ID, CALLER, STARTTIME, ENDTIME, TOPIC, OUTCOMEID = range(6)
 DATETIME_FORMAT = "yyyy-MM-dd hh:mm"
 
 
-def createFakeData():
+def createFakeData():   # 创建伪数据.
     import random
 
     print("Dropping tables...")
     query = QSqlQuery()
-    query.exec_("DROP TABLE calls")
+    query.exec_("DROP TABLE calls")  # DROP TABLE::丢弃_表
     query.exec_("DROP TABLE outcomes")
     QApplication.processEvents()
 
@@ -78,7 +78,7 @@ def createFakeData():
         start = now.addDays(-random.randint(1, 30))
         start = now.addSecs(-random.randint(60 * 5, 60 * 60 * 2))
         end = start.addSecs(random.randint(20, 60 * 13))
-        topic = random.choice(topics)
+        topic = random.choice(topics)   # choice::选择(随机的.)
         outcomeid = int(random.randint(1, 5))
         query.bindValue(":caller", name)
         query.bindValue(":starttime", start)
@@ -86,7 +86,7 @@ def createFakeData():
         query.bindValue(":topic", topic)
         query.bindValue(":outcomeid", outcomeid)
         query.exec_()
-    QApplication.processEvents()
+    QApplication.processEvents()  # processEvents::进程_事件(将控制权交还给程序防止假死现象).
 
     print("Calls:")
     query.exec_("SELECT id, caller, starttime, endtime, topic, "
@@ -105,7 +105,7 @@ def createFakeData():
             outcome = subquery.value(0)
         print("{0:02d}: {1} {2} - {3} {4} [{5}]".format(id, caller,
               starttime, endtime, topic, outcome))
-    QApplication.processEvents()
+    QApplication.processEvents()    # processEvents::进程_事件(将控制权交还给程序防止假死现象).
 
 
 class PhoneLogDlg(QDialog):
@@ -161,7 +161,7 @@ class PhoneLogDlg(QDialog):
             addButton.setFocusPolicy(Qt.NoFocus)
             deleteButton.setFocusPolicy(Qt.NoFocus)
 
-        fieldLayout = QGridLayout()
+        fieldLayout = QGridLayout()  # 创建网格布局.
         fieldLayout.addWidget(callerLabel, 0, 0)
         fieldLayout.addWidget(self.callerEdit, 0, 1, 1, 3)
         fieldLayout.addWidget(startLabel, 1, 0)
@@ -197,8 +197,9 @@ class PhoneLogDlg(QDialog):
         self.model.setSort(STARTTIME, Qt.AscendingOrder)    # AscendingOrder::升序排序
         self.model.select()
 
-        self.mapper = QDataWidgetMapper(self)
-        self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)
+        # P342
+        self.mapper = QDataWidgetMapper(self)  # 数据_控件_映射
+        self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置_提交_政策,ManualSubmit::手动_提交
         self.mapper.setModel(self.model)
         self.mapper.setItemDelegate(QSqlRelationalDelegate(self))   #<<--注意!!!
         self.mapper.addMapping(self.callerEdit, CALLER)
@@ -256,7 +257,7 @@ class PhoneLogDlg(QDialog):
         row = self.mapper.currentIndex()
         self.model.removeRow(row)
         self.model.submitAll()
-        if row + 1 >= self.model.rowCount():
+        if row + 1 >= self.model.rowCount():    #如果删除的是最后一条记录.
             row = self.model.rowCount() - 1
         self.mapper.setCurrentIndex(row)
 

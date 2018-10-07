@@ -44,7 +44,7 @@ class Ship(object):
         return self.name.lower() == other.name.lower()
 
 
-class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractTableModel(抽象_表_模型)
+class ShipTableModel(QAbstractTableModel):  # 船_表_模型::继承于QAbstractTableModel(抽象_表_模型)
 
     def __init__(self, filename=""):
         super(ShipTableModel, self).__init__()
@@ -65,18 +65,15 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
         self.ships = [ship for teu, ship in ships]  # 3.解封
         self.reset()
 
-
     def sortByCountryOwner(self):   # 按 国家/物主 排序(排序函数,参数key用匿名函数lambda定义.)
         self.ships = sorted(self.ships, key=lambda s: (s.country, s.owner))
         self.reset()
 
-
-    def flags(self, index): # 实现 可编辑_模型表 必须实现.
+    def flags(self, index):  # 实现 可编辑_模型表 必须实现.
         if not index.isValid():
-            return Qt.ItemIsEnabled     # 项_只读可选的
+            return Qt.ItemIsEnabled     # 项_激活(只读和选中的)
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)|
-                            Qt.ItemIsEditable)  # 项_可选可读写
-
+                            Qt.ItemIsEditable)  # 项_选中 和 可编辑
 
     #  P324
     def data(self, index, role=Qt.DisplayRole):  # DisplayRole::显示_角色
@@ -179,7 +176,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
         return False
 
     def insertRows(self, position, rows=1, index=QModelIndex()):  # 插入_行. position:插入位置, rows:插入行数
-        self.beginInsertRows(QModelIndex(), position, position + rows - 1)
+        self.beginInsertRows(QModelIndex(), position, position + rows - 1)  # 与 endInsertRows()配套使用. 通知视图开始播入动作.
         for row in range(rows):
             self.ships.insert(position + row, Ship(" Unknown", " Unknown", " Unknown"))
         self.endInsertRows()
@@ -187,7 +184,7 @@ class ShipTableModel(QAbstractTableModel):  #船_表_模型::继承于QAbstractT
         return True
 
     def removeRows(self, position, rows=1, index=QModelIndex()):  # 移除_行
-        self.beginRemoveRows(QModelIndex(), position, position + rows - 1)
+        self.beginRemoveRows(QModelIndex(), position, position + rows - 1)  # 与 endRemoveRows()配套使用. 通知视图开始移除动作.
         self.ships = (self.ships[:position] + self.ships[position + rows:])  # 用排除自身的方法更新ships列表.
         self.endRemoveRows()
         self.dirty = True
@@ -305,7 +302,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         if index.column() == TEU:
             spinbox = QSpinBox(parent)
             spinbox.setRange(0, 200000)
-            spinbox.setSingleStep(1000)
+            spinbox.setSingleStep(1000)  # 设置单步(1000)
             spinbox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
             return spinbox
         elif index.column() == OWNER:

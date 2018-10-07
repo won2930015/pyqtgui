@@ -596,3 +596,6 @@ def generateFakeShips():    # 生成_伪造_船舶
 ("OOCL Tokyo", "OOCL", "Hong Kong", 89097, "")):
         yield Ship(name, owner, country, teu, description)
 
+
+
+
