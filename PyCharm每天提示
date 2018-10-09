@@ -428,6 +428,8 @@ PyCharm让你从你的签到评论跳到你的任务跟踪器中的一个问题�
 
 译文：使用切换器（Ctrl+Tab）在打开的文件和工具窗口之间切换。按下Ctrl键，使用上下箭头键，标签或Shift+Tab，Alt导航;使用Delete或BackSpace关闭编辑器选项卡或隐藏工具窗口
 
+译文：你可以直接跳转到任何深埋的文件，如果你按Ctrl+Shift+N，并输入封闭目录和文件名的几个字符
+例:t/l/l/l/d == MyProject/topLevelDir/level1Dir/level2Dir/Level3dir
 Ctrl + / :注释
 Ctrl + D :复制
 Ctrl + Y :删除

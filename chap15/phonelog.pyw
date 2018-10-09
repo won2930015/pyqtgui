@@ -224,7 +224,7 @@ class PhoneLogDlg(QDialog):
             return
         row = self.mapper.currentIndex()
         self.model.removeRow(row)
-        self.model.submitAll()
+        self.model.submitAll()  # P344
         if row + 1 >= self.model.rowCount():    #如果删除的是最后一条记录.
             row = self.model.rowCount() - 1
         self.mapper.setCurrentIndex(row)
