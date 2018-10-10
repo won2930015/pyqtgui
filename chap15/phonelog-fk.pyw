@@ -126,14 +126,14 @@ class PhoneLogDlg(QDialog):
         self.startDateTime = QDateTimeEdit()
         startLabel.setBuddy(self.startDateTime)
         # self.startDateTime.setDateRange(today, today)
-        self.startDateTime.setDateRange(today.addMonths(-10), today)
+        self.startDateTime.setDateRange(today.addYears(-1), today)
         self.startDateTime.setDisplayFormat(DATETIME_FORMAT)
 
         endLabel = QLabel("&End:")
         self.endDateTime = QDateTimeEdit()
         endLabel.setBuddy(self.endDateTime)
         # self.endDateTime.setDateRange(today, today)
-        self.endDateTime.setDateRange(today.addMonths(-10), today)
+        self.endDateTime.setDateRange(today.addYears(-1), today)
         self.endDateTime.setDisplayFormat(DATETIME_FORMAT)
 
         topicLabel = QLabel("&Topic:")
@@ -259,7 +259,7 @@ class PhoneLogDlg(QDialog):
         row = self.mapper.currentIndex()
         self.model.removeRow(row)
         self.model.submitAll()
-        if row + 1 >= self.model.rowCount():    #如果删除的是最后一条记录.
+        if row + 1 >= self.model.rowCount():  # 如果删除的是最后一条记录.
             row = self.model.rowCount() - 1
         self.mapper.setCurrentIndex(row)
 
@@ -299,9 +299,9 @@ def main():
         splash = QLabel()
         pixmap = QPixmap(":/phonelogsplash.png")
         splash.setPixmap(pixmap)
-        splash.setMask(pixmap.createHeuristicMask())    #createHeuristicMask:: 创建_启发式_掩码
-        splash.setWindowFlags(Qt.SplashScreen)  #SplashScreen::泼开_屏幕(在屏幕上泼开),setWindowFlags::设置_窗口_标记(设置在屏幕上采用的动作)
-        rect = app.desktop().availableGeometry()    #availableGeometry::可用_几何.
+        splash.setMask(pixmap.createHeuristicMask())  # createHeuristicMask:: 创建_启发式_掩码
+        splash.setWindowFlags(Qt.SplashScreen)  # SplashScreen::泼开_屏幕(在屏幕上泼开),setWindowFlags::设置_窗口_标记(设置在屏幕上采用的动作)
+        rect = app.desktop().availableGeometry()  # availableGeometry::可用_几何.
         splash.move((rect.width() - pixmap.width()) / 2,
                     (rect.height() - pixmap.height()) / 2)
         splash.show()

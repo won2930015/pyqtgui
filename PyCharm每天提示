@@ -428,6 +428,11 @@ PyCharm让你从你的签到评论跳到你的任务跟踪器中的一个问题�
 
 译文：使用切换器（Ctrl+Tab）在打开的文件和工具窗口之间切换。按下Ctrl键，使用上下箭头键，标签或Shift+Tab，Alt导航;使用Delete或BackSpace关闭编辑器选项卡或隐藏工具窗口
 
+译文：
+您可以排除项目中的任何文件。因此，这样的文件将被索引、检查和代码完成所忽略。
+在项目工具窗口中，选择您想忽略的文件，并在其上下文菜单中选择Mark作为纯文本。
+如果有必要，您可以使用Mark作为filetype上下文菜单命令将文件返回到原始类型。
+
 译文：你可以直接跳转到任何深埋的文件，如果你按Ctrl+Shift+N，并输入封闭目录和文件名的几个字符
 例:t/l/l/l/d == MyProject/topLevelDir/level1Dir/level2Dir/Level3dir
 Ctrl + / :注释

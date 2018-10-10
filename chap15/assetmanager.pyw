@@ -22,27 +22,27 @@ try:
 except ImportError:
     MAC = False
 
-#ASSETID::资产ID, CATEGORYID:种类ID, DATE::日期, DESCRIPTION::描述, ROOM::房间, ACTIONID::动作ID
+# ASSETID::资产ID, CATEGORYID:种类ID, DATE::日期, DESCRIPTION::描述, ROOM::房间, ACTIONID::动作ID
 ID = 0
 NAME = ASSETID = 1
 CATEGORYID = DATE = DESCRIPTION = 2
 ROOM = ACTIONID = 3
 
-ACQUIRED = 1
+ACQUIRED = 1  # 取得
 
 
-def createFakeData():   #创建伪数据.
+def createFakeData():   # 创建伪数据.
     import random
 
-    print("Dropping tables...") #删除_表
+    print("Dropping tables...")  # 译文：删除表……
     query = QSqlQuery()
-    query.exec_("DROP TABLE assets")    #资产_表
-    query.exec_("DROP TABLE logs")      #日志_表
-    query.exec_("DROP TABLE actions")   #动作_表
-    query.exec_("DROP TABLE categories")#种类_表
-    QApplication.processEvents()    #processEvents::进程_事件
+    query.exec_("DROP TABLE assets")    # 资产_表
+    query.exec_("DROP TABLE logs")      # 日志_表
+    query.exec_("DROP TABLE actions")   # 动作_表
+    query.exec_("DROP TABLE categories")  # 种类_表
+    QApplication.processEvents()    # processEvents::进程_事件
 
-    print("Creating tables...") #创建_表
+    print("Creating tables...")  # 创建_表
     query.exec_("""CREATE TABLE actions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
                 name VARCHAR(20) NOT NULL,
@@ -66,59 +66,59 @@ def createFakeData():   #创建伪数据.
                 FOREIGN KEY (actionid) REFERENCES actions)""")
     QApplication.processEvents()
 
-    print("Populating tables...")   #填充_表
+    print("Populating tables...")   # 译文：填充表……
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Acquired', 'When installed')")   #Acquired::取得
+                "VALUES ('Acquired', 'When installed')")   # Acquired::取得
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Broken', 'When failed and unusable')")    #Broken::损坏
+                "VALUES ('Broken', 'When failed and unusable')")    # Broken::损坏
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Repaired', 'When back in service')")  #Repaired::修理
+                "VALUES ('Repaired', 'When back in service')")  # Repaired::修理
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Routine maintenance', "   #Routine maintenance::例行维修
+                "VALUES ('Routine maintenance', "   # Routine maintenance::例行维修
                 "'When tested, refilled, etc.')")
 
     query.exec_("INSERT INTO categories (name, description) VALUES "
                 "('Computer Equipment', "
-                "'Monitors, System Units, Peripherals, etc.')") #Computer Equipment::电脑_设备
+                "'Monitors, System Units, Peripherals, etc.')")  # Computer Equipment::电脑_设备
     query.exec_("INSERT INTO categories (name, description) VALUES "
-                "('Furniture', 'Chairs, Tables, Desks, etc.')") #Furniture::家具
+                "('Furniture', 'Chairs, Tables, Desks, etc.')")  # Furniture::家具
     query.exec_("INSERT INTO categories (name, description) VALUES "
-                "('Electrical Equipment', 'Non-computer electricals')") #Electrical Equipment::电器_设置
+                "('Electrical Equipment', 'Non-computer electricals')")  # Electrical Equipment::电器_设备
     today = QDate.currentDate()
 
-    #楼层
-    floors = list(range(1, 12)) + list(range(14, 28))   #创建一个列表,排除13层.
+    # 楼层
+    floors = list(range(1, 12)) + list(range(14, 28))   # 创建一个列表,排除13层.
 
-    #电脑相关==1, 家具==2 ,电器==3
-    #显示器
+    # 电脑相关==1, 家具==2 ,电器==3
+    # 显示器
     monitors = (('17" LCD Monitor', 1),
                 ('20" LCD Monitor', 1),
                 ('21" LCD Monitor', 1),
                 ('21" CRT Monitor', 1),
                 ('24" CRT Monitor', 1))
-    #电脑
+    # 电脑:1
     computers = (("Computer (32-bit/80GB/0.5GB)", 1),
                  ("Computer (32-bit/100GB/1GB)", 1),
                  ("Computer (32-bit/120GB/1GB)", 1),
                  ("Computer (64-bit/240GB/2GB)", 1),
                  ("Computer (64-bit/320GB/4GB)", 1))
-    #打印机
+    # 打印机:1
     printers = (("Laser Printer (4 ppm)", 1),
                 ("Laser Printer (6 ppm)", 1),
                 ("Laser Printer (8 ppm)", 1),
                 ("Laser Printer (16 ppm)", 1))
-    #椅子
+    # 椅子:2
     chairs = (("Secretary Chair", 2),
               ("Executive Chair (Basic)", 2),
               ("Executive Chair (Ergonimic)", 2),
               ("Executive Chair (Hi-Tech)", 2))
-    #桌子
+    # 桌子:2
     desks = (("Desk (Basic, 3 drawer)", 2),
              ("Desk (Standard, 3 drawer)", 2),
              ("Desk (Executive, 3 drawer)", 2),
              ("Desk (Executive, 4 drawer)", 2),
              ("Desk (Large, 4 drawer)", 2))
-    #家具
+    # 家具:2
     furniture = (("Filing Cabinet (3 drawer)", 2),
                  ("Filing Cabinet (4 drawer)", 2),
                  ("Filing Cabinet (5 drawer)", 2),
@@ -127,7 +127,7 @@ def createFakeData():   #创建伪数据.
                  ("Table (4 seater)", 2),
                  ("Table (8 seater)", 2),
                  ("Table (12 seater)", 2))
-    #电器
+    # 电器:3
     electrical = (("Fan (3 speed)", 3),
                   ("Fan (5 speed)", 3),
                   ("Photocopier (4 ppm)", 3),
@@ -142,7 +142,7 @@ def createFakeData():   #创建伪数据.
     assetid = 1
     for i in range(20):
         room = "{0:02d}{1:02d}".format(
-                random.choice(floors), random.randint(1, 62))
+                random.choice(floors), random.randint(1, 62))  # 返回随机楼层, 房号.
         for name, category in (random.choice(monitors),
                 random.choice(computers), random.choice(chairs),
                 random.choice(desks), random.choice(furniture)):

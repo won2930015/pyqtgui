@@ -74,8 +74,8 @@ def createFakeData():
             'Mari Foston', 'Sunil Manson', 'Donald Wykes',
             'Rosie Higham', 'Karmin Raines', 'Tayyibah Leathem',
             'Kara-jay Knoll', 'Shail Dalgleish', 'Jaimie Sells'):
-        start = now.addDays(-random.randint(1, 30))
-        start = now.addSecs(-random.randint(60 * 5, 60 * 60 * 2))
+        start = now.addDays(-random.randint(1, 30)).addSecs(-random.randint(60 * 5, 60 * 60 * 2))
+        # start = now.addSecs(-random.randint(60 * 5, 60 * 60 * 2))
         end = start.addSecs(random.randint(20, 60 * 13))
         topic = random.choice(topics)
         outcomeid = int(random.randint(1, 5))
@@ -99,7 +99,7 @@ def createFakeData():
         starttime = query.value(STARTTIME)
         endtime = query.value(ENDTIME)
         topic = query.value(TOPIC)
-        outcome = query.value(6)
+        outcome = query.value(6)  # 忽略calls.outcomeid, 直接返回outcomes.name.
         print("{0:02d}: {1} {2} - {3} {4} [{5}]".format(id, caller,
               starttime, endtime, topic, outcome))
     QApplication.processEvents()
@@ -115,23 +115,29 @@ class PhoneLogDlg(QDialog):
         callerLabel = QLabel("&Caller:")
         self.callerEdit = QLineEdit()
         callerLabel.setBuddy(self.callerEdit)
+
         today = QDate.currentDate()
+
         startLabel = QLabel("&Start:")
         self.startDateTime = QDateTimeEdit()
         startLabel.setBuddy(self.startDateTime)
-        self.startDateTime.setDateRange(today, today)
+        self.startDateTime.setDateRange(today.addYears(-1), today)
         self.startDateTime.setDisplayFormat(DATETIME_FORMAT)
+
         endLabel = QLabel("&End:")
         self.endDateTime = QDateTimeEdit()
         endLabel.setBuddy(self.endDateTime)
-        self.endDateTime.setDateRange(today, today)
+        self.endDateTime.setDateRange(today.addYears(-1), today)
         self.endDateTime.setDisplayFormat(DATETIME_FORMAT)
+
         topicLabel = QLabel("&Topic:")
         topicEdit = QLineEdit()
         topicLabel.setBuddy(topicEdit)
+
         outcomeLabel = QLabel("&Outcome:")
         self.outcomeComboBox = QComboBox()
         outcomeLabel.setBuddy(self.outcomeComboBox)
+
         firstButton = QPushButton()
         firstButton.setIcon(QIcon(":/first.png"))
         prevButton = QPushButton()
@@ -140,6 +146,7 @@ class PhoneLogDlg(QDialog):
         nextButton.setIcon(QIcon(":/next.png"))
         lastButton = QPushButton()
         lastButton.setIcon(QIcon(":/last.png"))
+
         addButton = QPushButton("&Add")
         addButton.setIcon(QIcon(":/add.png"))
         deleteButton = QPushButton("&Delete")
@@ -177,25 +184,25 @@ class PhoneLogDlg(QDialog):
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
-        self.model = QSqlRelationalTableModel(self)
+        # 创建模型
+        self.model = QSqlRelationalTableModel(self)  # 创建sql_关系_表_模型(用于对 数据进行 增删查改 操作)
         self.model.setTable("calls")
-        self.model.setRelation(OUTCOMEID,
-                QSqlRelation("outcomes", "id", "name"))
-        self.model.setSort(STARTTIME, Qt.AscendingOrder)
+        self.model.setRelation(OUTCOMEID, QSqlRelation("outcomes", "id", "name"))  # 设置关系.
+        self.model.setSort(STARTTIME, Qt.AscendingOrder)  # 升序排序
         self.model.select()
 
-        self.mapper = QDataWidgetMapper(self)
-        self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)
-        self.mapper.setModel(self.model)
-        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))
+        # 设置映射
+        self.mapper = QDataWidgetMapper(self)  # 创建 数据_控件_映射 对象.
+        self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置提交规则(手动_提交)
+        self.mapper.setModel(self.model)  # 设置_模型(self.model).
+        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))  # 设置_项_委托(sql关系委托_对象)
         self.mapper.addMapping(self.callerEdit, CALLER)
         self.mapper.addMapping(self.startDateTime, STARTTIME)
         self.mapper.addMapping(self.endDateTime, ENDTIME)
         self.mapper.addMapping(topicEdit, TOPIC)
-        relationModel = self.model.relationModel(OUTCOMEID)
+        relationModel = self.model.relationModel(OUTCOMEID)  # 创建 关系模型_对象
         self.outcomeComboBox.setModel(relationModel)
-        self.outcomeComboBox.setModelColumn(
-                relationModel.fieldIndex("name"))
+        self.outcomeComboBox.setModelColumn(relationModel.fieldIndex("name"))
         self.mapper.addMapping(self.outcomeComboBox, OUTCOMEID)
         self.mapper.toFirst()
 
@@ -208,14 +215,13 @@ class PhoneLogDlg(QDialog):
         self.connect(lastButton, SIGNAL("clicked()"),
                      lambda: self.saveRecord(PhoneLogDlg.LAST))
         self.connect(addButton, SIGNAL("clicked()"), self.addRecord)
-        self.connect(deleteButton, SIGNAL("clicked()"),
-                     self.deleteRecord)
+        self.connect(deleteButton, SIGNAL("clicked()"), self.deleteRecord)
         self.connect(quitButton, SIGNAL("clicked()"), self.done)
 
         self.setWindowTitle("Phone Log")
 
 
-    def done(self, result=None):
+    def done(self, result=None):  # 点击 窗口×键 或按ESC键时执行些过程.
         self.mapper.submit()
         QDialog.done(self, True)
 
