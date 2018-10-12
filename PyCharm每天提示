@@ -440,6 +440,7 @@ Ctrl + D :复制
 Ctrl + Y :删除
 Ctrl + F :查找
 Ctrl + R :替换
+Ctrl + K :提交改变(版本管理)
 选择多行 + Tab :向后缩进四个空格.
 选择多行 + shift + Tab :向前缩进四个空格.
 shift + Enter 穿墙回车

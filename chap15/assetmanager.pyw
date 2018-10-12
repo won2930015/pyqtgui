@@ -67,6 +67,8 @@ def createFakeData():   # 创建伪数据.
     QApplication.processEvents()
 
     print("Populating tables...")   # 译文：填充表……
+
+    # 填充动作表
     query.exec_("INSERT INTO actions (name, description) "
                 "VALUES ('Acquired', 'When installed')")   # Acquired::取得
     query.exec_("INSERT INTO actions (name, description) "
@@ -77,6 +79,7 @@ def createFakeData():   # 创建伪数据.
                 "VALUES ('Routine maintenance', "   # Routine maintenance::例行维修
                 "'When tested, refilled, etc.')")
 
+    # 填充类别表
     query.exec_("INSERT INTO categories (name, description) VALUES "
                 "('Computer Equipment', "
                 "'Monitors, System Units, Peripherals, etc.')")  # Computer Equipment::电脑_设备
@@ -84,12 +87,13 @@ def createFakeData():   # 创建伪数据.
                 "('Furniture', 'Chairs, Tables, Desks, etc.')")  # Furniture::家具
     query.exec_("INSERT INTO categories (name, description) VALUES "
                 "('Electrical Equipment', 'Non-computer electricals')")  # Electrical Equipment::电器_设备
+
     today = QDate.currentDate()
 
-    # 楼层
-    floors = list(range(1, 12)) + list(range(14, 28))   # 创建一个列表,排除13层.
+    # 楼层(创建一个列表,排除13层.)
+    floors = list(range(1, 12)) + list(range(14, 28))
 
-    # 电脑相关==1, 家具==2 ,电器==3
+    # 资产清单::电脑相关==1, 家具==2 ,电器==3
     # 显示器
     monitors = (('17" LCD Monitor', 1),
                 ('20" LCD Monitor', 1),
@@ -134,6 +138,7 @@ def createFakeData():   # 创建伪数据.
                   ("Photocopier (6 ppm)", 3),
                   ("Photocopier (8 ppm)", 3),
                   ("Shredder", 3))
+    # 填充资产表和日志表
     query.prepare("INSERT INTO assets (name, categoryid, room) "
                   "VALUES (:name, :categoryid, :room)")
     logQuery = QSqlQuery()
@@ -224,25 +229,25 @@ def createFakeData():   # 创建伪数据.
     QApplication.processEvents()
 
 
-class ReferenceDataDlg(QDialog):    #引用_数据_窗口::继承Dialog(对话框)窗口
+class ReferenceDataDlg(QDialog):    # 引用_数据_窗口::继承Dialog(对话框)窗口
 
     def __init__(self, table, title, parent=None):
         super(ReferenceDataDlg, self).__init__(parent)
 
         self.model = QSqlTableModel(self)
-        self.model.setTable(table)  #setTable::设置_表(载入数据库表)
-        self.model.setSort(NAME, Qt.AscendingOrder) #setSort::设置_排序,(栏目,排列方式)
-        self.model.setHeaderData(ID, Qt.Horizontal, "ID")   #setHeaderData::设置_表头_数据
+        self.model.setTable(table)  # setTable::设置_表(载入数据库表)
+        self.model.setSort(NAME, Qt.AscendingOrder)  # setSort::设置_排序,(栏目,升序排序)
+        self.model.setHeaderData(ID, Qt.Horizontal, "ID")   # setHeaderData::设置_表头_数据
         self.model.setHeaderData(NAME, Qt.Horizontal, "Name")
         self.model.setHeaderData(DESCRIPTION, Qt.Horizontal, "Description")
-        self.model.select() #填充表.
+        self.model.select()  # 填充表.
 
         self.view = QTableView()
         self.view.setModel(self.model)
-        self.view.setSelectionMode(QTableView.SingleSelection) #SingleSelection::单选
-        self.view.setSelectionBehavior(QTableView.SelectRows)   #setSelectionBehavior::设置_选择_行为, SelectRows::行_选择
-        self.view.setColumnHidden(ID, True) #setColumnHidden::设置_列_隐藏(隐藏列.)
-        self.view.resizeColumnsToContents()
+        self.view.setSelectionMode(QTableView.SingleSelection)  # SingleSelection::单选
+        self.view.setSelectionBehavior(QTableView.SelectRows)   # setSelectionBehavior::设置_选择_行为, SelectRows::行_选择
+        self.view.setColumnHidden(ID, True)  # setColumnHidden::设置_列_隐藏(隐藏列.)
+        self.view.resizeColumnsToContents()  # 重置_列_适配到内容
 
         addButton = QPushButton("&Add")
         deleteButton = QPushButton("&Delete")
@@ -263,7 +268,7 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口::继承Dialog(对话�
 
         self.connect(addButton, SIGNAL("clicked()"), self.addRecord)
         self.connect(deleteButton, SIGNAL("clicked()"), self.deleteRecord)
-        self.connect(okButton, SIGNAL("clicked()"), self.accept)    #accept::自带内置方法.
+        self.connect(okButton, SIGNAL("clicked()"), self.accept)  # accept::自带内置方法.
 
         self.setWindowTitle("Asset Manager - Edit {} Reference Data".format(title))
 
@@ -276,11 +281,11 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口::继承Dialog(对话�
         self.view.edit(index)
 
 
-    def deleteRecord(self): #删除_记录
+    def deleteRecord(self):  # 删除_记录
         index = self.view.currentIndex()
         if not index.isValid():
             return
-        #QSqlDatabase.database().transaction()
+        # QSqlDatabase.database().transaction()  # 事务(创建事务???)
         record = self.model.record(index.row())
         id = int(record.value(ID))
         table = self.model.tableName()
@@ -294,18 +299,18 @@ class ReferenceDataDlg(QDialog):    #引用_数据_窗口::继承Dialog(对话�
         count = 0
         if query.next():
             count = int(query.value(0))
-        if count:   #如果 日志表(logs)或资产表(assets)有该 动作/种类 记录的,弹出信息不删除该记录.
+        if count:   # 如果 日志表(logs)或资产表(assets)有该 动作/种类 记录的,弹出信息不删除该记录.
             QMessageBox.information(self,
                     "Delete {}".format(table),
                     "Cannot delete {}<br>"
                     "from the {} table because it is used by "
                     "{} records".format(
                     record.value(NAME), table, count))
-            #QSqlDatabase.database().rollback()
+            # QSqlDatabase.database().rollback()  # 回滚事务
             return
         self.model.removeRow(index.row())
-        self.model.submitAll()  #提交_全部::更新数据库.
-        #QSqlDatabase.database().commit()
+        self.model.submitAll()  # 提交_全部::更新数据库.
+        # QSqlDatabase.database().commit()  # 提交
 
 
 class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
