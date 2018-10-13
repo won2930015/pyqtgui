@@ -285,7 +285,7 @@ class ReferenceDataDlg(QDialog):    # 引用_数据_窗口::继承Dialog(对话�
         index = self.view.currentIndex()
         if not index.isValid():
             return
-        # QSqlDatabase.database().transaction()  # 事务(创建事务???)
+        # QSqlDatabase.database().transaction()  # 事务(开始事务???)
         record = self.model.record(index.row())
         id = int(record.value(ID))
         table = self.model.tableName()
@@ -318,9 +318,9 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
     def __init__(self, parent=None):
         super(AssetDelegate, self).__init__(parent)
 
-
+    # 显示ROOM(房间)列时设置为 右中对齐.
     def paint(self, painter, option, index):
-        myoption = QStyleOptionViewItem(option) #样式选项_视图_项::项 的样式选项集合.
+        myoption = QStyleOptionViewItem(option)  # 样式选项_视图_项:: 创建视图项 的样式选项对象.
         if index.column() == ROOM:
             myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)
         QSqlRelationalDelegate.paint(self, painter, myoption, index)
@@ -329,18 +329,18 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
     def createEditor(self, parent, option, index):
         if index.column() == ROOM:
             editor = QLineEdit(parent)
-            regex = QRegExp(r"(?:0[1-9]|1[0124-9]|2[0-7])"          #层数
-                                   r"(?:0[1-9]|[1-5][0-9]|6[012])") #房号
-            validator = QRegExpValidator(regex, parent) #创建验证器
-            editor.setValidator(validator)  #设置验证器
-            editor.setInputMask("9999") #设置_输入_掩码.
+            regex = QRegExp(r"(?:0[1-9]|1[0124-9]|2[0-7])"           # 层数
+                                   r"(?:0[1-9]|[1-5][0-9]|6[012])")  # 房号
+            validator = QRegExpValidator(regex, parent)  # 创建验证器
+            editor.setValidator(validator)  # 设置验证器
+            editor.setInputMask("9999")  # 设置_输入_掩码.
             editor.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
             return editor
         else:
             return QSqlRelationalDelegate.createEditor(self, parent,
                                                        option, index)
 
-    def setEditorData(self, editor, index): #从 资产模型表 读room 域 数据填充到editor控件中.
+    def setEditorData(self, editor, index):  # 从 资产模型表 读room(房间)域 数据填充到editor控件中.
         if index.column() == ROOM:
             text = index.model().data(index, Qt.DisplayRole)
             editor.setText(text)
@@ -348,7 +348,7 @@ class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
             QSqlRelationalDelegate.setEditorData(self, editor, index)
 
 
-    def setModelData(self, editor, model, index):   #将eidtor数据填充到 资产模型表 中.
+    def setModelData(self, editor, model, index):   # 将editor数据填充到 资产模型表 中.
         if index.column() == ROOM:
             model.setData(index, editor.text())
         else:
@@ -362,23 +362,23 @@ class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
 
 
     def paint(self, painter, option, index):
-        myoption = QStyleOptionViewItem(option)
-        if index.column() == DATE:
+        myoption = QStyleOptionViewItem(option)  # 样式选项_视图_项:: 创建视图项 的样式选项对象.
+        if index.column() == DATE:  # DATE(日期)列 显示时右中对齐.
             myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)
         QSqlRelationalDelegate.paint(self, painter, myoption, index)
 
 
     def createEditor(self, parent, option, index):
-        if index.column() == ACTIONID:
+        if index.column() == ACTIONID:  # 是actionid(动作id)列时...
             text = index.model().data(index, Qt.DisplayRole)
-            if text.isdigit() and int(text) == ACQUIRED:    #isdigit::is数字
-                return # Acquired is read-only::取得 是 只读的.
+            if text.isdigit() and int(text) == ACQUIRED:    # isdigit::is数字
+                return  # Acquired is read-only::译:取得 是 只读的.
         if index.column() == DATE:
             editor = QDateEdit(parent)
             editor.setMaximumDate(QDate.currentDate())
             editor.setDisplayFormat("yyyy-MM-dd")
             if PYQT_VERSION_STR >= "4.1.0":
-                editor.setCalendarPopup(True)   #设置_日期_popup窗口 ==True
+                editor.setCalendarPopup(True)   # 设置_日期_popup窗口 ==True
             editor.setAlignment(Qt.AlignRight| Qt.AlignVCenter)
             return editor
         else:
@@ -386,7 +386,7 @@ class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
 
     def setEditorData(self, editor, index):
         if index.column() == DATE:
-            str_date = index.model().data(index, Qt.DisplayRole)    #<<<日期转换失败.没法修改日期...
+            str_date = index.model().data(index, Qt.DisplayRole)  # <<<日期转换失败.没法修改日期...
             date = QDate.fromString(str(str_date),"yyyy-MM-dd" )
             editor.setDate(date)
         else:
@@ -406,29 +406,29 @@ class MainForm(QDialog):
     def __init__(self):
         super(MainForm, self).__init__()
 
-        self.assetModel = QSqlRelationalTableModel(self)    #SqlRelationalTableModel::sql_关系_表_模型.
-        self.assetModel.setTable("assets")  #setTable::设置_表
+        self.assetModel = QSqlRelationalTableModel(self)    # SqlRelationalTableModel::sql_关系_表_模型.
+        self.assetModel.setTable("assets")  # setTable::设置_表
         self.assetModel.setRelation(CATEGORYID,
                 QSqlRelation("categories", "id", "name"))
-        self.assetModel.setSort(ROOM, Qt.AscendingOrder)    #AscendingOrder::升序排序
+        self.assetModel.setSort(ROOM, Qt.AscendingOrder)    # AscendingOrder::升序排序
         self.assetModel.setHeaderData(ID, Qt.Horizontal, "ID")
         self.assetModel.setHeaderData(NAME, Qt.Horizontal, "Name")
         self.assetModel.setHeaderData(CATEGORYID, Qt.Horizontal, "Category")
         self.assetModel.setHeaderData(ROOM, Qt.Horizontal, "Room")
-        self.assetModel.select()    #填充表
+        self.assetModel.select()    # 填充表
 
         self.assetView = QTableView()
         self.assetView.setModel(self.assetModel)
         self.assetView.setItemDelegate(AssetDelegate(self))
-        self.assetView.setSelectionMode(QTableView.SingleSelection) #setSelectionMode::设置_选择_模式, SingleSelection::单选
-        self.assetView.setSelectionBehavior(QTableView.SelectRows)  #setSelectionBehavior::设置_选择_行为
-        self.assetView.setColumnHidden(ID, True)    #setColumnHidden::设置_列_隐藏(将ID列设为隐藏).
+        self.assetView.setSelectionMode(QTableView.SingleSelection)  # setSelectionMode::设置_选择_模式, SingleSelection::单选
+        self.assetView.setSelectionBehavior(QTableView.SelectRows)  # setSelectionBehavior::设置_选择_行为
+        self.assetView.setColumnHidden(ID, True)    # setColumnHidden::设置_列_隐藏(将ID列设为隐藏).
         self.assetView.resizeColumnsToContents()
         assetLabel = QLabel("A&ssets")
         assetLabel.setBuddy(self.assetView)
 
-        self.logModel = QSqlRelationalTableModel(self)  #SqlRelationalTableModel::sql_关系_表_模型.
-        self.logModel.setTable("logs")  #setTable::设置_表
+        self.logModel = QSqlRelationalTableModel(self)  # SqlRelationalTableModel::sql_关系_表_模型.
+        self.logModel.setTable("logs")  # setTable::设置_表
         self.logModel.setRelation(ACTIONID,
                 QSqlRelation("actions", "id", "name"))
         self.logModel.setSort(DATE, Qt.AscendingOrder)
@@ -439,12 +439,12 @@ class MainForm(QDialog):
         self.logView = QTableView()
         self.logView.setModel(self.logModel)
         self.logView.setItemDelegate(LogDelegate(self))
-        self.logView.setSelectionMode(QTableView.SingleSelection)   #setSelectionMode::设置_选择_模式, SingleSelection::单选
-        self.logView.setSelectionBehavior(QTableView.SelectRows)    #setSelectionBehavior::设置_选择_行为
-        self.logView.setColumnHidden(ID, True)      #setColumnHidden::设置_列_隐藏(将ID列设为隐藏).
+        self.logView.setSelectionMode(QTableView.SingleSelection)   # setSelectionMode::设置_选择_模式, SingleSelection::单选
+        self.logView.setSelectionBehavior(QTableView.SelectRows)    # setSelectionBehavior::设置_选择_行为
+        self.logView.setColumnHidden(ID, True)      # setColumnHidden::设置_列_隐藏(将ID列设为隐藏).
         self.logView.setColumnHidden(ASSETID, True)
         self.logView.resizeColumnsToContents()
-        self.logView.horizontalHeader().setStretchLastSection(True) #setStretchLastSection::设置_伸展_末尾_栏
+        self.logView.horizontalHeader().setStretchLastSection(True)  # setStretchLastSection::设置_伸展_末尾_栏
         logLabel = QLabel("&Logs")
         logLabel.setBuddy(self.logView)
 
@@ -499,13 +499,13 @@ class MainForm(QDialog):
         self.connect(quitButton, SIGNAL("clicked()"), self.done)
 
         self.assetChanged(self.assetView.currentIndex())
-        self.setMinimumWidth(650)   #setMinimumWidth::设置_最小_宽度
+        self.setMinimumWidth(650)   # setMinimumWidth::设置_最小_宽度
         self.setWindowTitle("Asset Manager")
 
 
-    def done(self, result=1):   #done::完成
+    def done(self, result=1):  # done::完成.(按窗口×键或ESC键时执行)
         query = QSqlQuery()
-        query.exec_("DELETE FROM logs WHERE logs.assetid NOT IN"    #如果logs.assetid在assets.id中不存在,即删除!
+        query.exec_("DELETE FROM logs WHERE logs.assetid NOT IN"    # 如果logs.assetid在assets.id中不存在,即删除!
                     "(SELECT id FROM assets)")
         QDialog.done(self, 1)
 
