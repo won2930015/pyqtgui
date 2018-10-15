@@ -582,21 +582,21 @@ class MainForm(QDialog):
 
 
     def addAction(self):
-        index = self.assetView.currentIndex()   #得到 资产视图 的index对象.
+        index = self.assetView.currentIndex()   # 得到 资产视图 的index对象.
         if not index.isValid():
             return
-        QSqlDatabase.database().transaction()   #开始 数据库.事务
-        record = self.assetModel.record(index.row())    #获取 资产模型表 的记录(record)
-        assetid = int(record.value(ID)) #取 ID号.
+        QSqlDatabase.database().transaction()  # 开始 数据库.事务
+        record = self.assetModel.record(index.row())    # 获取 资产模型表 的记录(record)
+        assetid = int(record.value(ID))  # 取 ID号.
 
-        row = self.logModel.rowCount()  #取得日志模型表总行数.
+        row = self.logModel.rowCount()  # 取得日志模型表总行数.
         self.logModel.insertRow(row)    # 日志模型表 插入新行.
-        self.logModel.setData(self.logModel.index(row, ASSETID), assetid)   #插入新行 写入数据.
+        self.logModel.setData(self.logModel.index(row, ASSETID), assetid)   # 插入新行 写入数据.
         self.logModel.setData(self.logModel.index(row, DATE), QDate.currentDate())
-        QSqlDatabase.database().commit()    #提交数据库修改.
-        index = self.logModel.index(row, ACTIONID)  #取得 日志模型表ACTIONID项 的index对象.
-        self.logView.setCurrentIndex(index) #设置 index对象为 志日视图 的当前对象.
-        self.logView.edit(index)    #编辑当前对象.
+        QSqlDatabase.database().commit()  # 提交数据库修改.
+        index = self.logModel.index(row, ACTIONID)  # 取得 日志模型表ACTIONID项 的index对象.
+        self.logView.setCurrentIndex(index)  # 设置 index对象为 志日视图 的当前对象.
+        self.logView.edit(index)  # 编辑当前对象.
 
 
     def deleteAction(self):
@@ -648,9 +648,9 @@ def main():
         splash = QLabel()
         pixmap = QPixmap(":/assetmanagersplash.png")
         splash.setPixmap(pixmap)
-        splash.setMask(pixmap.createHeuristicMask())    #setMask::设置_掩码, createHeuristicMask::创建_启发式_掩码(将图片设置为启发式掩码)
-        splash.setWindowFlags(Qt.SplashScreen)      #SplashScreen::泼开_屏幕(在屏幕上泼开),setWindowFlags::设置_窗口_标记(设置在屏幕上采用的动作)
-        rect = app.desktop().availableGeometry()    #availableGeometry::可用_几何(获得桌面可用的几何范围.)
+        splash.setMask(pixmap.createHeuristicMask())    # setMask::设置_掩码, createHeuristicMask::创建_启发式_掩码(将图片设置为启发式掩码)
+        splash.setWindowFlags(Qt.SplashScreen)      # SplashScreen::泼开_屏幕(在屏幕上泼开),setWindowFlags::设置_窗口_标记(设置在屏幕上采用的动作)
+        rect = app.desktop().availableGeometry()    # availableGeometry::可用_几何(获得桌面可用的几何范围.)
         splash.move((rect.width() - pixmap.width()) / 2,
                     (rect.height() - pixmap.height()) / 2)
         splash.show()
@@ -663,7 +663,7 @@ def main():
         splash.close()
         app.processEvents()
         app.restoreOverrideCursor()
-    app.exec_() #开始事件循环.
+    app.exec_()  # 开始事件循环.
     del form
     del db
 
