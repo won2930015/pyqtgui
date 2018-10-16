@@ -313,7 +313,7 @@ class ReferenceDataDlg(QDialog):    # 引用_数据_窗口::继承Dialog(对话�
         # QSqlDatabase.database().commit()  # 提交
 
 
-class AssetDelegate(QSqlRelationalDelegate):    #AssetDelegate::资产_委托
+class AssetDelegate(QSqlRelationalDelegate):  # AssetDelegate::资产_委托
 
     def __init__(self, parent=None):
         super(AssetDelegate, self).__init__(parent)
@@ -371,7 +371,9 @@ class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
     def createEditor(self, parent, option, index):
         if index.column() == ACTIONID:  # 是actionid(动作id)列时...
             text = index.model().data(index, Qt.DisplayRole)
-            if text.isdigit() and int(text) == ACQUIRED:    # isdigit::is数字
+            # if text.isdigit() and int(text) == ACQUIRED:    # isdigit::is数字
+            if not isinstance(text, QPyNullVariant) and text.isdigit() and int(text) == ACQUIRED:    # isdigit::is数字
+                print(int(text))
                 return  # Acquired is read-only::译:取得 是 只读的.
         if index.column() == DATE:
             editor = QDateEdit(parent)
@@ -513,6 +515,7 @@ class MainForm(QDialog):
     def assetChanged(self, index):
         if index.isValid():
             record = self.assetModel.record(index.row())    #record::记录(取得 行 记录对象.)
+            # id = int(record.value("id"))
             id = int(record.value("id"))
             self.logModel.setFilter("assetid = {}".format(id))  #setFilter::设置过滤器.
         else:
