@@ -438,6 +438,8 @@ PyCharm让你从你的签到评论跳到你的任务跟踪器中的一个问题�
 当你在一个文件中执行搜索和替换时，按Ctrl+F显示搜索窗格。按Ctrl+R添加字段，您可以在其中输入替换字符串。
 在Path对话框中，你可以通过按Ctrl+Shift+r来替换。同样的，按Ctrl+Shift+F来隐藏替换字段，然后切换到纯粹的搜索。
 
+译文：在处理冗长的任务列表时，您不需要一个一个地删除它们。选择几个任务，使用shift或ctrl键，单击右箭头，然后单击Remove。
+
 译文：你可以直接跳转到任何深埋的文件，如果你按Ctrl+Shift+N，并输入封闭目录和文件名的几个字符
 例:t/l/l/l/d == MyProject/topLevelDir/level1Dir/level2Dir/Level3dir
 Ctrl + / :注释

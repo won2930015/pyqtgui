@@ -325,7 +325,7 @@ class AssetDelegate(QSqlRelationalDelegate):  # AssetDelegate::资产_委托
             myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)
         QSqlRelationalDelegate.paint(self, painter, myoption, index)
 
-
+    # 外键域列用QComboBox显示P356
     def createEditor(self, parent, option, index):
         if index.column() == ROOM:
             editor = QLineEdit(parent)
@@ -588,7 +588,7 @@ class MainForm(QDialog):
         index = self.assetView.currentIndex()   # 得到 资产视图 的index对象.
         if not index.isValid():
             return
-        QSqlDatabase.database().transaction()  # 开始 数据库.事务
+        QSqlDatabase.database().transaction()  # 开始 数据库.事务 P351-1/P352-1
         record = self.assetModel.record(index.row())    # 获取 资产模型表 的记录(record)
         assetid = int(record.value(ID))  # 取 ID号.
 

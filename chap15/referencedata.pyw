@@ -40,8 +40,8 @@ class ReferenceDataDlg(QDialog):
 
         self.view = QTableView()
         self.view.setModel(self.model)
-        self.view.setSelectionMode(QTableView.SingleSelection)
-        self.view.setSelectionBehavior(QTableView.SelectRows)
+        self.view.setSelectionMode(QTableView.SingleSelection)  # 设置_选择_模式
+        self.view.setSelectionBehavior(QTableView.SelectRows)   # 设置_选择_行为
         self.view.setColumnHidden(ID, True)
         self.view.resizeColumnsToContents()
 
@@ -58,7 +58,7 @@ class ReferenceDataDlg(QDialog):
         sortByCategoryAction = menu.addAction("Sort by &Category")
         sortByDescriptionAction = menu.addAction("Sort by &Description")
         sortByIDAction = menu.addAction("Sort by &ID")
-        sortButton.setMenu(menu)
+        sortButton.setMenu(menu)  # 给按键绑定菜单
         closeButton = buttonBox.addButton(QDialogButtonBox.Close)
 
         layout = QVBoxLayout()

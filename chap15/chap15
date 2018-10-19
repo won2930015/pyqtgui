@@ -6,8 +6,8 @@
         phonelog-fk2.py :QDataWidgetMapper的使用.
     15.4 使用数据库表视图
         assetmanager.pyw
-
-
-
+    练习
+        referencedata.pyw: 1.QDialogButtonBox()加入自定义按键
+                           2.给按键绑定菜单
 
 16章: 高级的用法::自定义视图的创建 \委托中重用代码的优化及树中表型数据的展示.
