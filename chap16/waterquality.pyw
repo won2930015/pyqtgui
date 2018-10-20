@@ -28,7 +28,7 @@ class WaterQualityModel(QAbstractTableModel):   #WaterQualityModel::水_质_模�
     def __init__(self, filename):
         super(WaterQualityModel, self).__init__()
         self.filename = filename
-        self.results = []   #结果们
+        self.results = []   #结果列表
 
 
     def load(self):
@@ -89,7 +89,7 @@ class WaterQualityModel(QAbstractTableModel):   #WaterQualityModel::水_质_模�
                 return QColor(Qt.darkGreen)
         return None
 
-
+    # 头数据 ,section:段, orientation:方向
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.TextAlignmentRole:
             if orientation == Qt.Horizontal:
@@ -101,7 +101,7 @@ class WaterQualityModel(QAbstractTableModel):   #WaterQualityModel::水_质_模�
             if section == TIMESTAMP:
                 return "Timestamp"
             elif section == TEMPERATURE:
-                return "\u00B0" + "C"
+                return "\u00B0" + "C"   # \u00B0:转义为unicode(唯一码)字符
             elif section == INLETFLOW:
                 return "Inflow"
             elif section == TURBIDITY:
@@ -114,7 +114,7 @@ class WaterQualityModel(QAbstractTableModel):   #WaterQualityModel::水_质_模�
                 return "Raw Ph"
             elif section == FLOCCULATEDPH:
                 return "Floc Ph"
-        return int(section + 1)
+        return int(section + 1)   # 返回行的值.
 
 
     def rowCount(self, index=QModelIndex()):
@@ -127,21 +127,21 @@ class WaterQualityModel(QAbstractTableModel):   #WaterQualityModel::水_质_模�
 
 class WaterQualityView(QWidget):
 
-    FLOWCHARS = (chr(0x21DC), chr(0x21DD), chr(0x21C9)) #FLOWCHARS::流_字符
+    FLOWCHARS = (chr(0x21DC), chr(0x21DD), chr(0x21C9))  # FLOWCHARS::流_字符 '⇜', '⇝', '⇉'.
 
     def __init__(self, parent=None):
         super(WaterQualityView, self).__init__(parent)
-        self.scrollarea = None  #滚动_区域
+        self.scrollarea = None  # 滚动_区域
         self.model = None
-        self.setFocusPolicy(Qt.StrongFocus) #StrongFocus::强制_焦点
+        self.setFocusPolicy(Qt.StrongFocus)  # StrongFocus::强制_焦点
         self.selectedRow = -1
-        self.flowfont = self.font() #flowfont::流_字体.
+        self.flowfont = self.font()  # flowfont::流_字体.
         size = self.font().pointSize()
         if platform.system() == "Windows":
             fontDb = QFontDatabase()
             for face in [face.lower() for face in fontDb.families()]:   #families::家族
                 #if face.contains("unicode"):
-                if face.find("unicode"):
+                if face.find("unicode"):   # 查找系统支持unicode码的字体,并设为流字体.
                     self.flowfont = QFont(face, size)
                     break
             else:
@@ -182,13 +182,13 @@ class WaterQualityView(QWidget):
         if self.model is None:
             return
         fm = QFontMetrics(self.font())
-        timestampWidth = fm.width("9999-99-99 99:99 ")
+        timestampWidth = fm.width("9999-99-99 99:99 ")  # timestampWidth:时间戳_宽.
         size = fm.height()
-        indicatorSize = int(size * 0.8)
-        offset = int(1.5 * (size - indicatorSize))
+        indicatorSize = int(size * 0.8)  # indicatorSize:标志_尺寸.
+        offset = int(1.5 * (size - indicatorSize))  # offset:位移
         minY = event.rect().y()
-        maxY = minY + event.rect().height() + size
-        minY -= size
+        maxY = minY + event.rect().height() + size  # 获取mxaY(最大Y值)
+        minY -= size  # 获取minY(最小Y值)
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)    #setRenderHint::设置_渲染_提示, Antialiasing::反锯齿
         painter.setRenderHint(QPainter.TextAntialiasing)
@@ -196,7 +196,7 @@ class WaterQualityView(QWidget):
         for row in range(self.model.rowCount()):
             x = 0
             if minY <= y <= maxY:
-                painter.save()
+                painter.save()  # 保存绘图器状态.
                 painter.setPen(self.palette().color(QPalette.Text))
                 if row == self.selectedRow:
                     painter.fillRect(x, y + (offset * 0.8), self.width(), size, self.palette().highlight())
@@ -204,18 +204,20 @@ class WaterQualityView(QWidget):
                 timestamp = self.model.data(self.model.index(row, TIMESTAMP))
                 painter.drawText(x, y + size, timestamp.toString("yyyy-MM-dd hh:mm"))   #输出 时间戳
 
+                # 绘制温度标志
                 x += timestampWidth
                 temperature = float(self.model.data(self.model.index(row, TEMPERATURE)))
                 if temperature < 20:
                     color = QColor(0, 0, int(255 * (20 - temperature) / 20))
                 elif temperature > 25:
                     color = QColor(int(255 * temperature / 100), 0, 0)
-                else:   #20-25C之间
+                else:   # 20-25C之间
                     color = QColor(0, int(255 * temperature / 100), 0)
                 painter.setPen(Qt.NoPen)
                 painter.setBrush(color)
                 painter.drawEllipse(x, y + offset, indicatorSize, indicatorSize)    #输出 温度
 
+                # 绘制rawPh标志
                 x += size
                 rawPh = float(self.model.data(self.model.index(row, RAWPH)))
                 if rawPh < 7:
@@ -227,6 +229,7 @@ class WaterQualityView(QWidget):
                 painter.setBrush(color)
                 painter.drawEllipse(x, y + offset, indicatorSize, indicatorSize)
 
+                # 绘制flocPh标志
                 x += size
                 flocPh = float(self.model.data(self.model.index(row, FLOCCULATEDPH)))
                 if flocPh < 7:
@@ -240,7 +243,7 @@ class WaterQualityView(QWidget):
                 painter.restore()
                 painter.save()
 
-
+                # 绘制流表示字符.
                 x += size
                 flow = float(self.model.data(self.model.index(row, INLETFLOW)))
                 char = None
@@ -261,7 +264,7 @@ class WaterQualityView(QWidget):
 
     def mousePressEvent(self, event):
         fm = QFontMetrics(self.font())
-        self.selectedRow = event.y() // fm.height() #计数出所在行.
+        self.selectedRow = event.y() // fm.height()  # 计数所在行.
         self.update()
         self.emit(SIGNAL("clicked(QModelIndex)"), self.model.index(self.selectedRow, 0))
 
@@ -279,7 +282,7 @@ class WaterQualityView(QWidget):
             if self.scrollarea is not None:
                 fm = QFontMetrics(self.font())
                 y = fm.height() * self.selectedRow
-                self.scrollarea.ensureVisible(0, y) #ensureVisible::确保_可见
+                self.scrollarea.ensureVisible(0, y)  # ensureVisible::确保_可见, 即滚动到行.
             self.update()
             self.emit(SIGNAL("clicked(QModelIndex)"), self.model.index(self.selectedRow, 0))
         else:
@@ -293,11 +296,11 @@ class MainForm(QDialog):
 
         self.model = WaterQualityModel(os.path.join(os.path.dirname(__file__), "waterdata.csv.gz"))
         self.tableView = QTableView()
-        self.tableView.setAlternatingRowColors(True)    #setAlternatingRowColors::设置_交替_行_颜色(True)
+        self.tableView.setAlternatingRowColors(True)    # setAlternatingRowColors::设置_交替_行_颜色(True)
         self.tableView.setModel(self.model)
         self.waterView = WaterQualityView()
-        self.waterView.setModel(self.model) #即 QWidget 也具有 setModel属性.
-        scrollArea = QScrollArea()  #滚动区域::是一个容器
+        self.waterView.setModel(self.model) # 即 QWidget 也具有 setModel属性.
+        scrollArea = QScrollArea()  # 滚动区域::是一个容器
         scrollArea.setBackgroundRole(QPalette.Light)    #setBackgroundRole::设置_背景_角色, QPalette.Light::调色板.光(滚动区域背景色.浅色光的颜色.)
         scrollArea.setWidget(self.waterView)    #将 waterView 加入到 滚动区域
         self.waterView.scrollarea = scrollArea  #将waterView.scrollarea属性 关联到 scrollArea容器对象.
@@ -315,7 +318,7 @@ class MainForm(QDialog):
 
 
     def initialLoad(self):
-        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))  #设置_重载_光标
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))  # 设置_重载_光标
 
         #开始设置 闪屏画面.
         splash = QLabel(self)
