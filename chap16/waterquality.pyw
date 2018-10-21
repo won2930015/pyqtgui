@@ -139,8 +139,8 @@ class WaterQualityView(QWidget):
         size = self.font().pointSize()
         if platform.system() == "Windows":
             fontDb = QFontDatabase()
-            for face in [face.lower() for face in fontDb.families()]:   #families::家族
-                #if face.contains("unicode"):
+            for face in [face.lower() for face in fontDb.families()]:   # families::家族
+                # if face.contains("unicode"):
                 if face.find("unicode"):   # 查找系统支持unicode码的字体,并设为流字体.
                     self.flowfont = QFont(face, size)
                     break
@@ -190,7 +190,7 @@ class WaterQualityView(QWidget):
         maxY = minY + event.rect().height() + size  # 获取mxaY(最大Y值)
         minY -= size  # 获取minY(最小Y值)
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)    #setRenderHint::设置_渲染_提示, Antialiasing::反锯齿
+        painter.setRenderHint(QPainter.Antialiasing)    # setRenderHint::设置_渲染_提示, Antialiasing::反锯齿
         painter.setRenderHint(QPainter.TextAntialiasing)
         y = 0
         for row in range(self.model.rowCount()):
@@ -202,7 +202,7 @@ class WaterQualityView(QWidget):
                     painter.fillRect(x, y + (offset * 0.8), self.width(), size, self.palette().highlight())
                     painter.setPen(self.palette().color(QPalette.HighlightedText))
                 timestamp = self.model.data(self.model.index(row, TIMESTAMP))
-                painter.drawText(x, y + size, timestamp.toString("yyyy-MM-dd hh:mm"))   #输出 时间戳
+                painter.drawText(x, y + size, timestamp.toString("yyyy-MM-dd hh:mm"))   # 输出 时间戳
 
                 # 绘制温度标志
                 x += timestampWidth
@@ -215,7 +215,7 @@ class WaterQualityView(QWidget):
                     color = QColor(0, int(255 * temperature / 100), 0)
                 painter.setPen(Qt.NoPen)
                 painter.setBrush(color)
-                painter.drawEllipse(x, y + offset, indicatorSize, indicatorSize)    #输出 温度
+                painter.drawEllipse(x, y + offset, indicatorSize, indicatorSize)    # 输出 温度
 
                 # 绘制rawPh标志
                 x += size
@@ -236,10 +236,10 @@ class WaterQualityView(QWidget):
                     color = QColor(int(255 * flocPh / 10), 0, 0)
                 elif flocPh >= 8:
                     color = QColor(0, 0, int(255 * flocPh / 10))
-                else:   #值 ==7~7.9时.
+                else:   # 值 ==7~7.9时.
                     color = QColor(0, int(255 * flocPh / 10), 0)
                 painter.setBrush(color)
-                painter.drawEllipse(x, y + offset, indicatorSize, indicatorSize)    #写 flocPh值.
+                painter.drawEllipse(x, y + offset, indicatorSize, indicatorSize)    # 写 flocPh值.
                 painter.restore()
                 painter.save()
 
@@ -249,7 +249,7 @@ class WaterQualityView(QWidget):
                 char = None
                 if flow <= 0:
                     char = WaterQualityView.FLOWCHARS[0]
-                elif flow < 3:  #0.1~2.9时   ::值在3~5.4的被排除不显示←
+                elif flow < 3:  # 0.1~2.9时   ::值在3~5.4的被排除不显示←
                     char = WaterQualityView.FLOWCHARS[1]
                 elif flow > 5.5:
                     char = WaterQualityView.FLOWCHARS[2]
@@ -301,9 +301,9 @@ class MainForm(QDialog):
         self.waterView = WaterQualityView()
         self.waterView.setModel(self.model) # 即 QWidget 也具有 setModel属性.
         scrollArea = QScrollArea()  # 滚动区域::是一个容器
-        scrollArea.setBackgroundRole(QPalette.Light)    #setBackgroundRole::设置_背景_角色, QPalette.Light::调色板.光(滚动区域背景色.浅色光的颜色.)
-        scrollArea.setWidget(self.waterView)    #将 waterView 加入到 滚动区域
-        self.waterView.scrollarea = scrollArea  #将waterView.scrollarea属性 关联到 scrollArea容器对象.
+        scrollArea.setBackgroundRole(QPalette.Light)    # setBackgroundRole::设置_背景_角色, QPalette.Light::调色板.光(滚动区域背景色.浅色光的颜色.)
+        scrollArea.setWidget(self.waterView)    # 将 waterView 加入到 滚动区域
+        self.waterView.scrollarea = scrollArea  # 将waterView.scrollarea属性 关联到 scrollArea容器对象.
 
         splitter = QSplitter(Qt.Horizontal)
         splitter.addWidget(self.tableView)
@@ -320,16 +320,16 @@ class MainForm(QDialog):
     def initialLoad(self):
         QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))  # 设置_重载_光标
 
-        #开始设置 闪屏画面.
+        # 开始设置 闪屏画面.
         splash = QLabel(self)
         pixmap = QPixmap(os.path.join(os.path.dirname(__file__),
                 "iss013-e-14802.jpg"))
         splash.setPixmap(pixmap)
-        splash.setWindowFlags(Qt.SplashScreen)  #setWindowFlags::设置_窗口_标志, SplashScreen::闪_屏(即 窗口是闪屏类型.)
-        splash.move(self.x() + ((self.width() - pixmap.width()) / 2),   #置中 闪屏窗口.
+        splash.setWindowFlags(Qt.SplashScreen)  # setWindowFlags::设置_窗口_标志, SplashScreen::闪_屏(即 窗口是闪屏类型.)
+        splash.move(self.x() + ((self.width() - pixmap.width()) / 2),   # 置中 闪屏窗口.
                     self.y() + ((self.height() - pixmap.height()) / 2))
         splash.show()
-        QApplication.processEvents()    #processEvents::进程_事件.
+        QApplication.processEvents()    # processEvents::进程_事件.
         try:
             self.model.load()
         except IOError as e:
@@ -338,7 +338,7 @@ class MainForm(QDialog):
             self.tableView.resizeColumnsToContents()
         splash.close()
         QApplication.processEvents()
-        QApplication.restoreOverrideCursor()    #restoreOverrideCursor::恢复_重载_光标
+        QApplication.restoreOverrideCursor()    # restoreOverrideCursor::恢复_重载_光标
 
 
 app = QApplication(sys.argv)

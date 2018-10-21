@@ -342,11 +342,13 @@ class AssetDelegate(QSqlRelationalDelegate):  # AssetDelegate::资产_委托
 
     def setEditorData(self, editor, index):  # 从 资产模型表 读room(房间)域 数据填充到editor控件中.
         if index.column() == ROOM:
+            # text = index.model().data(index, Qt.DisplayRole)
             text = index.model().data(index, Qt.DisplayRole)
+            if isinstance(text, QPyNullVariant):
+                text = None
             editor.setText(text)
         else:
             QSqlRelationalDelegate.setEditorData(self, editor, index)
-
 
     def setModelData(self, editor, model, index):   # 将editor数据填充到 资产模型表 中.
         if index.column() == ROOM:
@@ -355,15 +357,14 @@ class AssetDelegate(QSqlRelationalDelegate):  # AssetDelegate::资产_委托
             QSqlRelationalDelegate.setModelData(self, editor, model, index)
 
 
-class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
+class LogDelegate(QSqlRelationalDelegate):  # LogDelegate::日志_委托
 
     def __init__(self, parent=None):
         super(LogDelegate, self).__init__(parent)
 
-
     def paint(self, painter, option, index):
         myoption = QStyleOptionViewItem(option)  # 样式选项_视图_项:: 创建视图项 的样式选项对象.
-        if index.column() == DATE:  # DATE(日期)列 显示时右中对齐.
+        if index.column() == DATE:  # 设置DATE(日期)列 显示时右中对齐.
             myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)
         QSqlRelationalDelegate.paint(self, painter, myoption, index)
 
@@ -393,7 +394,6 @@ class LogDelegate(QSqlRelationalDelegate):  #LogDelegate::日志_委托
             editor.setDate(date)
         else:
             QSqlRelationalDelegate.setEditorData(self, editor, index)
-
 
     def setModelData(self, editor, model, index):
         if index.column() == DATE:
@@ -516,7 +516,7 @@ class MainForm(QDialog):
         if index.isValid():
             record = self.assetModel.record(index.row())    #record::记录(取得 行 记录对象.)
             # id = int(record.value("id"))
-            id = int(record.value("id"))
+            id = int(record.value("id")) if not isinstance(record.value("id"), QPyNullVariant) else None  # todo
             self.logModel.setFilter("assetid = {}".format(id))  #setFilter::设置过滤器.
         else:
             self.logModel.setFilter("assetid = -1")

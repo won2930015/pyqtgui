@@ -14,7 +14,7 @@ from PyQt4.QtGui import *
 import richtextlineedit
 
 
-class GenericDelegate(QStyledItemDelegate): #泛型委托
+class GenericDelegate(QStyledItemDelegate):  # 泛型委托
 
     def __init__(self, parent=None):
         super(GenericDelegate, self).__init__(parent)
@@ -63,7 +63,7 @@ class GenericDelegate(QStyledItemDelegate): #泛型委托
             QStyledItemDelegate.setModelData(self, editor, model, index)
 
 
-class IntegerColumnDelegate(QStyledItemDelegate):   #整数委托
+class IntegerColumnDelegate(QStyledItemDelegate):   # 整数委托
 
     def __init__(self, minimum=0, maximum=100, parent=None):
         super(IntegerColumnDelegate, self).__init__(parent)
@@ -84,7 +84,7 @@ class IntegerColumnDelegate(QStyledItemDelegate):   #整数委托
 
 
     def setModelData(self, editor, model, index):
-        editor.interpretText()  #解释_文本
+        editor.interpretText()  # 解释_文本::对文本进行解析.
         model.setData(index, editor.value())
 
 
