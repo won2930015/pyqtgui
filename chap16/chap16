@@ -3,3 +3,7 @@
 16章: 高级的用法::自定义视图的创建 \委托中重用代码的优化及树中表型数据的展示.
     16.1 自定义视图
         waterquality.pyw
+    16.2 泛型委托
+        carhirelog.pyw
+            genericdelegates.py # 通用委托
+            richtextlineedit.py # 自定义line富文本编缉器

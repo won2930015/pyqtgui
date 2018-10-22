@@ -27,10 +27,10 @@ class RichTextLineEdit(QTextEdit):
         self.monofamily = "courier"
         self.sansfamily = "helvetica"
         self.seriffamily = "times"
-        self.setLineWrapMode(QTextEdit.NoWrap)
+        self.setLineWrapMode(QTextEdit.NoWrap)  # 不换行
         self.setTabChangesFocus(True)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)   # 垂直(ScrollBarAlwaysOff:滚动条_永久切断)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)  #水平(滚动条_永久切断)
         fm = QFontMetrics(self.font())
         h = int(fm.height() * (1.4 if platform.system() == "Windows"
                                    else 1.2))
@@ -114,9 +114,9 @@ class RichTextLineEdit(QTextEdit):
             pixmap.fill(color)
             action = menu.addAction(QIcon(pixmap), text, self.setColor)
             action.setData(color)
-        self.ensureCursorVisible()
+        self.ensureCursorVisible()  # ensureCursorVisible:确保光标可见
         menu.exec_(self.viewport().mapToGlobal(
-                   self.cursorRect().center()))
+                   self.cursorRect().center()))   # windows(逻辑坐标系)转换为viewport(物理坐标系)
 
 
     def setColor(self):
@@ -128,7 +128,7 @@ class RichTextLineEdit(QTextEdit):
 
 
     def textEffectMenu(self):
-        format = self.currentCharFormat()
+        format = self.currentCharFormat()  # currentCharFormat:当前字符格式
         menu = QMenu("Text Effect")
         for text, shortcut, data, checked in (
                 ("&Bold", "Ctrl+B", RichTextLineEdit.Bold,
@@ -159,16 +159,17 @@ class RichTextLineEdit(QTextEdit):
             if shortcut is not None:
                 action.setShortcut(QKeySequence(shortcut))
             action.setData(data)
-            action.setCheckable(True)
-            action.setChecked(checked)
-        self.ensureCursorVisible()
+            action.setCheckable(True)  # 设置_可复选
+            action.setChecked(checked)  # 设置_复选
+        self.ensureCursorVisible()  # 确保光标可见
         menu.exec_(self.viewport().mapToGlobal(
-                   self.cursorRect().center()))
+                   self.cursorRect().center()))  # windows(逻辑坐标系)转换为viewport(物理坐标系)
 
 
     def setTextEffect(self):
         action = self.sender()
         if action is not None and isinstance(action, QAction):
+            # 格式(粗体, 斜体, 下划线)
             what = int(action.data())
             if what == RichTextLineEdit.Bold:
                 self.toggleBold()
@@ -179,13 +180,15 @@ class RichTextLineEdit(QTextEdit):
             if what == RichTextLineEdit.Underline:
                 self.toggleUnderline()
                 return
-            format = self.currentCharFormat()
+            # 字体
+            format = self.currentCharFormat()  # 当前字体格式
             if what == RichTextLineEdit.Monospaced:
                 format.setFontFamily(self.monofamily)
             elif what == RichTextLineEdit.Serif:
                 format.setFontFamily(self.seriffamily)
             elif what == RichTextLineEdit.Sans:
                 format.setFontFamily(self.sansfamily)
+            # 格式(删除线, 上下标)
             if what == RichTextLineEdit.StrikeOut:
                 format.setFontStrikeOut(not format.fontStrikeOut())
             if what == RichTextLineEdit.NoSuperOrSubscript:
@@ -197,7 +200,7 @@ class RichTextLineEdit(QTextEdit):
             elif what == RichTextLineEdit.Subscript:
                 format.setVerticalAlignment(
                         QTextCharFormat.AlignSubScript)
-            self.mergeCurrentCharFormat(format)
+            self.mergeCurrentCharFormat(format)  # 合并_当前_字符_格式.
 
 
     def toSimpleHtml(self):
@@ -205,16 +208,16 @@ class RichTextLineEdit(QTextEdit):
         black = QColor(Qt.black)
         block = self.document().begin()
         while block.isValid():
-            iterator = block.begin()
+            iterator = block.begin()  # iterator:迭代器
             while iterator != block.end():
-                fragment = iterator.fragment()
+                fragment = iterator.fragment()  # fragment:片段
                 if fragment.isValid():
                     format = fragment.charFormat()
                     family = format.fontFamily()
-                    color = format.foreground().color()
+                    color = format.foreground().color()  # foreground:前景
                     text = Qt.escape(fragment.text())
                     if (format.verticalAlignment() ==
-                        QTextCharFormat.AlignSubScript):
+                        QTextCharFormat.AlignSubScript):  # 下标字符
                         text = "<sub>{}</sub>".format(text)
                     elif (format.verticalAlignment() ==
                           QTextCharFormat.AlignSuperScript):
