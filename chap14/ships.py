@@ -165,7 +165,7 @@ class ShipTableModel(QAbstractTableModel):
         self.ships = sorted(self.ships, key=lambda x: (x.country, x.owner, x.name))
         self.reset()
 
-    def flags(self, index):  # 标志??? P325
+    def flags(self, index):  # 标志??? P325, P335
         if not index.isValid():  # isValid::is_有效的(判断index是否有效(有数据))
             return Qt.ItemIsEnabled
                                 # 如果index有效 就将项已有的标志↓与Qt.ItemIsEditable进行结合,返回.
