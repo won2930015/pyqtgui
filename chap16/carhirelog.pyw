@@ -9,33 +9,33 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import bisect   #bisect::二分模块(二分算法模块.)
+import bisect   # bisect::二分模块(二分算法模块.)
 import os
 import platform
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import genericdelegates #导入 泛型委托模块.
+import genericdelegates  # 导入 泛型委托模块.
+
+# :执照   : 客户   :租用(日期)           :返还时间               :注释            天数
+(LICENSE, CUSTOMER, HIRED, MILEAGEOUT, RETURNED, MILEAGEBACK, NOTES, MILEAGE, DAYS) = range(9)
+#                         :里程数(租出时)         :里程数(返还时)       :里程数
 
 
-(LICENSE, CUSTOMER, HIRED, MILEAGEOUT, RETURNED, MILEAGEBACK,
- NOTES, MILEAGE, DAYS) = range(9)
+class CarHireLog(object):   # 汽车_租用_日志.
 
+    def __init__(self, license, customer, hired, mileageout,  # license:执照,customer:客户,hired:租用(租出日期),mileageout:租出时里程
+                 returned=QDate(), mileageback=0, notes=""):  # returned:返还时间, mileageback:返还时里程, notes:注释
+        self.license = license          # plain text:执照
+        self.customer = customer        # plain text:客户
+        self.hired = hired              # QDate:租用(出租日期)
+        self.mileageout = mileageout    # int  :里程数_out(租出时)
+        self.returned = returned        # QDate:返回(归还日期)
+        self.mileageback = mileageback  # int  :里程数_back(归还时)
+        self.notes = notes              # HTML :备注
 
-class CarHireLog(object):   #汽车_租用_日志.
-
-    def __init__(self, license, customer, hired, mileageout,    #license::执照, customer::客户, hired::租用(租出日期), mileageout::里程数_out(租出时里程时.),
-                 returned=QDate(), mileageback=0, notes=""):    #returned::返回(归还时间), mileageback::里程数_back(归还时里程数), notes::注释
-        self.license = license          # plain text 执照
-        self.customer = customer        # plain text 客户
-        self.hired = hired              # QDate 租用(出租日期)
-        self.mileageout = mileageout    # int   里程数_out(租出时)
-        self.returned = returned        # QDate 返回(归还日期)
-        self.mileageback = mileageback  # int   里程数_back(归还时)
-        self.notes = notes              # HTML  备注
-
-
-    def field(self, column):    # 字段|域
+    # 字段|域 :返回相应 域的值.
+    def field(self, column):
         if column == LICENSE:
             return self.license
         elif column == CUSTOMER:
@@ -50,28 +50,29 @@ class CarHireLog(object):   #汽车_租用_日志.
             return self.mileageback
         elif column == NOTES:
             return self.notes
-        elif column == MILEAGE:     #里程
+        elif column == MILEAGE:     # 里程
             return self.mileage()
-        elif column == DAYS:        #天数
+        elif column == DAYS:        # 天数
             return self.days()
         assert False
 
-
+    # 返回使用里程.
     def mileage(self):
         return (0 if self.mileageback == 0
                   else self.mileageback - self.mileageout)
 
-
+    # 返回租出天数.
     def days(self):
         return (0 if not self.returned.isValid()
                   else self.hired.daysTo(self.returned))    #daysTo::天数To ,返回 hired 至 returned的天数.
 
-    #__hash__, __eq__, __lt__ 是实现排序算法的基础.
-    def __hash__(self): # hash::散列|哈希
+    # __hash__, __eq__, __lt__ 是实现排序算法的基础.
+    # hash::散列|哈希
+    def __hash__(self):
         return super(CarHireLog, self).__hash__()
 
-
-    def __eq__(self, other):    #eq::等于
+    # eq::等于
+    def __eq__(self, other):
         if self.hired != other.hired:
             return False
         if self.customer != other.customer:
@@ -80,8 +81,8 @@ class CarHireLog(object):   #汽车_租用_日志.
             return False
         return id(self) == id(other)
 
-
-    def __lt__(self, other):    #lt::小于
+    # lt::小于
+    def __lt__(self, other):
         if self.hired < other.hired:
             return True
         if self.customer < other.customer:
@@ -91,8 +92,7 @@ class CarHireLog(object):   #汽车_租用_日志.
         return id(self) < id(other)
 
 
-
-class CarHireModel(QAbstractTableModel):    #汽车_出租_模型.
+class CarHireModel(QAbstractTableModel):    # 汽车_出租_模型.
 
     def __init__(self, parent=None):
         super(CarHireModel, self).__init__(parent)
@@ -102,50 +102,48 @@ class CarHireModel(QAbstractTableModel):    #汽车_出租_模型.
         import gzip
         import random
         import string
-        surname_data = gzip.open(os.path.join(  #surname_data::性氏_数据
+        # surname_data::性氏_数据
+        surname_data = gzip.open(os.path.join(
                 os.path.dirname(__file__), "surnames.txt.gz")).read()
         surnames = surname_data.decode("utf-8").splitlines()
         years = ("06 ", "56 ", "07 ", "57 ", "08 ", "58 ")
-        titles = ("Ms ", "Mr ", "Ms ", "Mr ", "Ms ", "Mr ", "Dr ")    #Mr::女士, Ms::先生, Dr::未知????
-        notetexts = ("Returned <font color=red><b>damaged</b></font>",  #notetexts::备注_文本, Returned damaged::返回受损(车)
-                "Returned with <i>empty fuel tank</i>",                 #返回 空油箱(车)
-                "Customer <b>complained</b> about the <u>engine</u>",   #Customer complained about the engine::客户 抱怨 发动机
-                "Customer <b>complained</b> about the <u>gears</u>",    #Customer complained about the gears ::客户 抱怨 齿轮箱
-                "Customer <b>complained</b> about the <u>clutch</u>",   #Customer complained about the clutch ::客户 抱怨 离合器
-                "Returned <font color=darkred><b>dirty</b></font>",)    #Returned dirty ::返回 脏的(车)
-        today = QDate.currentDate()     #today::今天
+        titles = ("Ms ", "Mr ", "Ms ", "Mr ", "Ms ", "Mr ", "Dr ")    # Mr::女士, Ms::先生, Dr::未知????
+        notetexts = ("Returned <font color=red><b>damaged</b></font>",  # notetexts::备注_文本, Returned damaged::返回 受损(车)
+                "Returned with <i>empty fuel tank</i>",                 # 返回 空油箱(车)
+                "Customer <b>complained</b> about the <u>engine</u>",  # Customer complained about the engine::客户 抱怨 发动机
+                "Customer <b>complained</b> about the <u>gears</u>",   # Customer complained about the gears ::客户 抱怨 齿轮箱
+                "Customer <b>complained</b> about the <u>clutch</u>",  # Customer complained about the clutch :客户 抱怨 离合器
+                "Returned <font color=darkred><b>dirty</b></font>",)   # Returned dirty ::返回 脏的(车)
+        today = QDate.currentDate()     # today::今天
         for i in range(250):
-            license = []    #license::执照
+            license = []    # license::执照
             for c in range(5):
-                license.append(random.choice(string.ascii_uppercase))   #uppercase::大写字母
-            license = ("".join(license[:2]) + random.choice(years) +    #生成执照号
+                license.append(random.choice(string.ascii_uppercase))   # uppercase::大写字母
+            license = ("".join(license[:2]) + random.choice(years) +    # 生成执照号
                        "".join(license[2:]))
-            customer = random.choice(titles) + random.choice(surnames)  #生成客户(Ms|Mr|Dr+性)
-            hired = today.addDays(-random.randint(0, 365))  #生成出租日期
-            mileageout = random.randint(10000, 30000)   #生成里程(出租时)
+            customer = random.choice(titles) + random.choice(surnames)  # 生成客户(Ms|Mr|Dr+性)
+            hired = today.addDays(-random.randint(0, 365))  # 生成出租日期
+            mileageout = random.randint(10000, 30000)   # 生成里程(出租时)
             notes = ""
             if random.random() >= 0.2:
-                days = random.randint(1, 21)    #生成 天数
-                returned = hired.addDays(days)  #生成 返回(归还日期)
-                mileageback = (mileageout +     #生成 里程(归还时.)
+                days = random.randint(1, 21)    # 生成 天数
+                returned = hired.addDays(days)  # 生成 返回(归还日期)
+                mileageback = (mileageout +     # 生成 里程(归还时.)
                                (days * random.randint(30, 300)))
                 if random.random() > 0.75:
-                    notes = random.choice(notetexts)    #生成 注释
+                    notes = random.choice(notetexts)    # 生成 注释
             else:
                 returned = QDate()
                 mileageback = 0
             log = CarHireLog(license, customer, hired, mileageout,
                              returned, mileageback, notes)
-            bisect.insort(self.logs, log)   #insort::进入_排序(加入到 logs 并二分排序)
-
+            bisect.insort(self.logs, log)   # insort::进入_排序(加入到 logs 并二分排序)
 
     def rowCount(self, index=QModelIndex()):
         return len(self.logs)
 
-
     def columnCount(self, index=QModelIndex()):
         return 9
-
 
     def data(self, index, role):
         if not index.isValid():
@@ -165,9 +163,8 @@ class CarHireModel(QAbstractTableModel):    #汽车_出租_模型.
             if index.column() in (LICENSE, MILEAGE, DAYS):
                 return palette.alternateBase()  # alternateBase::交替_底色(返回交替色底色?)
             else:
-                return palette.base()   #base::底色
+                return palette.base()   # base::底色
         return None
-
 
     def setData(self, index, value, role=Qt.EditRole):
         if (index.isValid() and role == Qt.EditRole and
@@ -191,8 +188,8 @@ class CarHireModel(QAbstractTableModel):    #汽车_出租_模型.
             return True
         return False
 
-
-    def headerData(self, section, orientation, role):   #section::段|部分, orientation::方向, role::角色.
+    # section::段|部分, orientation::方向, role::角色.
+    def headerData(self, section, orientation, role):
         if role == Qt.TextAlignmentRole:
             if orientation == Qt.Horizontal:
                 return int(Qt.AlignCenter)
@@ -220,38 +217,38 @@ class CarHireModel(QAbstractTableModel):    #汽车_出租_模型.
                 return "Notes"
         return section + 1
 
-
+    # 标志! P325, P335 (可读写模型必需实现些函数)
     def flags(self, index):
         flag = QAbstractTableModel.flags(self, index)
         if index.column() not in (LICENSE, MILEAGE, DAYS):
-            flag |= Qt.ItemIsEditable   #ItemIsEditable::项_是_可编辑的(设置项为可编辑的.)
+            flag |= Qt.ItemIsEditable   # ItemIsEditable::项_是_可编辑的(设置项为可编辑的.)
         return flag
             
 
-class HireDateColumnDelegate(genericdelegates.DateColumnDelegate):  #出租_日期_列_委托
+class HireDateColumnDelegate(genericdelegates.DateColumnDelegate):  # 出租_日期_列_委托
 
     def createEditor(self, parent, option, index):
-        i = index.sibling(index.row(), RETURNED)    #sibling::兄弟
-        self.maximum = i.model().data(i, Qt.DisplayRole).addDays(-1)    #addDays(-1)::设置最大的出租日期为 Returned-1日.
+        i = index.sibling(index.row(), RETURNED)    # sibling::兄弟
+        self.maximum = i.model().data(i, Qt.DisplayRole).addDays(-1)    # addDays(-1)::设置最大的租出日期为 Returned(返还日)-1日.
         return genericdelegates.DateColumnDelegate.createEditor(
                 self, parent, option, index)
 
 
-class ReturnDateColumnDelegate(genericdelegates.DateColumnDelegate):    #归还日期_列_委托
+class ReturnDateColumnDelegate(genericdelegates.DateColumnDelegate):  # 归还日期_列_委托
 
     def createEditor(self, parent, option, index):
-        i = index.sibling(index.row(), HIRED)   #sibling::兄弟
-        self.minimum = i.model().data(i, Qt.DisplayRole).addDays(1) #addDays(1)::设置小归不日期为 Hire+1日.
+        i = index.sibling(index.row(), HIRED)   # sibling::兄弟
+        self.minimum = i.model().data(i, Qt.DisplayRole).addDays(1)  # addDays(1)::设置最小归还日期为 Hire(租出日)+1日.
         return genericdelegates.DateColumnDelegate.createEditor(
                 self, parent, option, index)
 
 
-class MileageOutColumnDelegate(genericdelegates.IntegerColumnDelegate): #里程(租出时)_列_委托
+class MileageOutColumnDelegate(genericdelegates.IntegerColumnDelegate):  # 里程(租出时)_列_委托
 
     def createEditor(self, parent, option, index):
         i = index.sibling(index.row(), MILEAGEBACK)
         maximum = int(i.model().data(i, Qt.DisplayRole))
-        self.maximum = 1000000 if maximum == 0 else maximum - 1 #设置MileageOut栏最大里程数(租出)为::MileageBack-1
+        self.maximum = 1000000 if maximum == 0 else maximum - 1  # ?设置MileageOut栏最大里程数(租出)为::MileageBack-1
         return genericdelegates.IntegerColumnDelegate.createEditor(
                 self, parent, option, index)
 
