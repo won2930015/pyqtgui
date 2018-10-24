@@ -368,7 +368,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
-    def sizeHint(self, option, index):  #option::项(包含项的所有状态)
+    def sizeHint(self, option, index):  # option::项(包含项的所有状态)
         fm = option.fontMetrics  # 选项.字体度量值
         if index.column() == TEU:
             return QSize(fm.width("9,999,999"), fm.height())
