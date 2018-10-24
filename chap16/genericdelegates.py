@@ -28,7 +28,7 @@ class GenericDelegate(QStyledItemDelegate):  # 通用(泛型)委托
         if column in self.delegates:
             del self.delegates[column]
 
-    def paint(self, painter, option, index):
+    def paint(self, painter, option, index):    # P369
         delegate = self.delegates.get(index.column())
         if delegate is not None:
             delegate.paint(painter, option, index)
@@ -139,7 +139,7 @@ class RichTextColumnDelegate(QStyledItemDelegate):
         document.setDefaultFont(option.font)
         if option.state & QStyle.State_Selected:    # 选项.状态 == 被选择时.
             document.setHtml("<font color={}>{}</font>".format(
-                    palette.highlightedText().color().name(), text))
+                    palette.highlightedText().color().name(), text))   # P370-1
         else:
             document.setHtml(text)
         painter.save()
