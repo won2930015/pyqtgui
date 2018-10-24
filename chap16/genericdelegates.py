@@ -20,16 +20,13 @@ class GenericDelegate(QStyledItemDelegate):  # 通用(泛型)委托
         super(GenericDelegate, self).__init__(parent)
         self.delegates = {}
 
-
     def insertColumnDelegate(self, column, delegate):
         delegate.setParent(self)
         self.delegates[column] = delegate
 
-
     def removeColumnDelegate(self, column):
         if column in self.delegates:
             del self.delegates[column]
-
 
     def paint(self, painter, option, index):
         delegate = self.delegates.get(index.column())
@@ -38,14 +35,12 @@ class GenericDelegate(QStyledItemDelegate):  # 通用(泛型)委托
         else:
             QStyledItemDelegate.paint(self, painter, option, index)
 
-
     def createEditor(self, parent, option, index):
         delegate = self.delegates.get(index.column())
         if delegate is not None:
             return delegate.createEditor(parent, option, index)
         else:
             return QStyledItemDelegate.createEditor(self, parent, option, index)
-
 
     def setEditorData(self, editor, index):
         delegate = self.delegates.get(index.column())
@@ -54,7 +49,6 @@ class GenericDelegate(QStyledItemDelegate):  # 通用(泛型)委托
         else:
             QStyledItemDelegate.setEditorData(self, editor, index)
 
-
     def setModelData(self, editor, model, index):
         delegate = self.delegates.get(index.column())
         if delegate is not None:
@@ -62,7 +56,8 @@ class GenericDelegate(QStyledItemDelegate):  # 通用(泛型)委托
         else:
             QStyledItemDelegate.setModelData(self, editor, model, index)
 
-   # 整数委托
+
+# 整数委托
 class IntegerColumnDelegate(QStyledItemDelegate):
 
     def __init__(self, minimum=0, maximum=100, parent=None):
@@ -70,22 +65,20 @@ class IntegerColumnDelegate(QStyledItemDelegate):
         self.minimum = minimum
         self.maximum = maximum
 
-
     def createEditor(self, parent, option, index):
         spinbox = QSpinBox(parent)
         spinbox.setRange(self.minimum, self.maximum)
         spinbox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
         return spinbox
 
-
     def setEditorData(self, editor, index):
         value = int(index.model().data(index, Qt.DisplayRole))
         editor.setValue(value)
 
-
     def setModelData(self, editor, model, index):
         editor.interpretText()  # 解释_文本::对文本进行解析.
         model.setData(index, editor.value())
+
 
 # 日期委托
 class DateColumnDelegate(QStyledItemDelegate):
@@ -98,7 +91,6 @@ class DateColumnDelegate(QStyledItemDelegate):
         self.maximum = maximum
         self.format = format
 
-
     def createEditor(self, parent, option, index):
         dateedit = QDateEdit(parent)
         dateedit.setDateRange(self.minimum, self.maximum)
@@ -107,21 +99,19 @@ class DateColumnDelegate(QStyledItemDelegate):
         dateedit.setCalendarPopup(True)  # CalendarPopup::日期_弹出(窗口)
         return dateedit
 
-
     def setEditorData(self, editor, index):
         value = index.model().data(index, Qt.DisplayRole)
         editor.setDate(value)
 
-
     def setModelData(self, editor, model, index):
         model.setData(index, editor.date())
+
 
 # 纯文本委托
 class PlainTextColumnDelegate(QStyledItemDelegate):
 
     def __init__(self, parent=None):
         super(PlainTextColumnDelegate, self).__init__(parent)
-
 
     def createEditor(self, parent, option, index):
         lineedit = QLineEdit(parent)
@@ -132,16 +122,15 @@ class PlainTextColumnDelegate(QStyledItemDelegate):
         value = index.model().data(index, Qt.DisplayRole)
         editor.setText(value)
 
-
     def setModelData(self, editor, model, index):
         model.setData(index, editor.text())
+
 
 # 富文本_列_委托
 class RichTextColumnDelegate(QStyledItemDelegate):
 
     def __init__(self, parent=None):
         super(RichTextColumnDelegate, self).__init__(parent)
-
 
     def paint(self, painter, option, index):
         text = index.model().data(index, Qt.DisplayRole)
@@ -162,8 +151,7 @@ class RichTextColumnDelegate(QStyledItemDelegate):
         # translate::转化(从option罗辑坐标系 转化到painter物理坐标系)即罗辑坐标x.y对齐到物理坐标x.y的 0.0处.
         painter.translate(option.rect.x(), option.rect.y())
         document.drawContents(painter)
-        painter.restore()   #restore ::恢复(更新数据)
-
+        painter.restore()   # restore ::恢复(更新数据)
 
     def sizeHint(self, option, index):
         text = index.model().data(index)
@@ -173,16 +161,13 @@ class RichTextColumnDelegate(QStyledItemDelegate):
         return QSize(document.idealWidth() + 5,
                      option.fontMetrics.height())
 
-
     def createEditor(self, parent, option, index):
         lineedit = richtextlineedit.RichTextLineEdit(parent)
         return lineedit
 
-
     def setEditorData(self, editor, index):
         value = index.model().data(index, Qt.DisplayRole)
         editor.setHtml(value)
-
 
     def setModelData(self, editor, model, index):
         model.setData(index, editor.toSimpleHtml())
