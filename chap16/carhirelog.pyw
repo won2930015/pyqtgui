@@ -253,11 +253,11 @@ class MileageOutColumnDelegate(genericdelegates.IntegerColumnDelegate):  # 里�
                 self, parent, option, index)
 
 
-class MileageBackColumnDelegate(genericdelegates.IntegerColumnDelegate):    #里程(归还时)_列_委托
+class MileageBackColumnDelegate(genericdelegates.IntegerColumnDelegate):    # 里程(归还时)_列_委托
 
     def createEditor(self, parent, option, index):
         i = index.sibling(index.row(), MILEAGEOUT)
-        self.minimum = int(i.model().data(i, Qt.DisplayRole)) + 1   #设置MileageBack栏最小里程数(归还)为::MileageOut+1
+        self.minimum = int(i.model().data(i, Qt.DisplayRole)) + 1   # 设置MileageBack栏最小里程数(归还)为::MileageOut+1
         return genericdelegates.IntegerColumnDelegate.createEditor(
                 self, parent, option, index)
 
