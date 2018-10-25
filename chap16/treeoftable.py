@@ -15,34 +15,31 @@ from PyQt4.QtCore import *
 KEY, NODE = range(2)
 
 
-class BranchNode(object):   #分支_节点
+# 分支_节点
+class BranchNode(object):
 
     def __init__(self, name, parent=None):
         super(BranchNode, self).__init__()
         self.name = name
         self.parent = parent
-        self.children = []  #children::孩子们
+        self.children = []  # children::孩子们
 
 
-    def __lt__(self, other):    #小于
+    def __lt__(self, other):    # 小于
         if isinstance(other, BranchNode):
             return self.orderKey() < other.orderKey()
         return False
 
-
     def orderKey(self):
         return self.name.lower()
-
 
     def toString(self):
         return self.name
 
-
-    def __len__(self):  #长度
+    def __len__(self):  # 长度
         return len(self.children)
 
-
-    def childAtRow(self, row):  #孩子_在_行(输入ROW号返回对应的NODE)
+    def childAtRow(self, row):  # 孩子_在_行(输入ROW号返回对应的NODE)
         assert 0 <= row < len(self.children)
         return self.children[row][NODE]
         

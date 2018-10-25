@@ -23,7 +23,7 @@ class ServerModel(treeoftable.TreeOfTableModel):
 
 
     def data(self, index, role):
-        if role == Qt.DecorationRole:   #DecorationRole::修饰角色(图标)
+        if role == Qt.DecorationRole:  # DecorationRole::修饰角色(图标)
             node = self.nodeFromIndex(index)
             if node is None:
                 return None

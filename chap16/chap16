@@ -4,6 +4,14 @@
     16.1 自定义视图
         waterquality.pyw
     16.2 泛型委托
-        carhirelog.pyw
+        carhirelog.pyw # 续承QAbstractTableModel 应用示例.
             genericdelegates.py # 通用委托
             richtextlineedit.py # 自定义line富文本编缉器
+
+    16.3 树中表达表格数据
+        serverinfo.pyw  继承QTreeView 应用示例.
+            treeoftable.py 继承QAbstractItemModel 应用示例.
+
+
+bargrapher.pyw 续承QAbstractListModel 应用示例.
+

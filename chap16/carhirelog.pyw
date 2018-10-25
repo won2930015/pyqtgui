@@ -9,7 +9,7 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import bisect   # bisect::二分模块(二分算法模块.)
+import bisect   #bisect::二分模块(二分算法模块.)
 import os
 import platform
 import sys
@@ -21,8 +21,8 @@ import genericdelegates  # 导入 泛型委托模块.
 (LICENSE, CUSTOMER, HIRED, MILEAGEOUT, RETURNED, MILEAGEBACK, NOTES, MILEAGE, DAYS) = range(9)
 #                         :里程数(租出时)         :里程数(返还时)       :里程数
 
-
-class CarHireLog(object):   # 汽车_租用_日志.
+# 汽车_租用_日志.
+class CarHireLog(object):
 
     def __init__(self, license, customer, hired, mileageout,  # license:执照,customer:客户,hired:租用(租出日期),mileageout:租出时里程
                  returned=QDate(), mileageback=0, notes=""):  # returned:返还时间, mileageback:返还时里程, notes:注释
@@ -248,7 +248,7 @@ class MileageOutColumnDelegate(genericdelegates.IntegerColumnDelegate):  # 里�
     def createEditor(self, parent, option, index):
         i = index.sibling(index.row(), MILEAGEBACK)
         maximum = int(i.model().data(i, Qt.DisplayRole))
-        self.maximum = 1000000 if maximum == 0 else maximum - 1  # ?设置MileageOut栏最大里程数(租出)为::MileageBack-1
+        self.maximum = 1000000 if maximum == 0 else maximum - 1  # 设置MileageOut栏最大里程数(租出)为::MileageBack-1
         return genericdelegates.IntegerColumnDelegate.createEditor(
                 self, parent, option, index)
 
