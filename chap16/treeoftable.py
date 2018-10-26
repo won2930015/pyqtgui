@@ -104,7 +104,7 @@ class LeafNode(object):  # 叶_节点
         return self.fields[column]
 
 
-# 树_的_表格_模型, AbstractItemModel::抽象_项_模型
+# 树_的_表格_模型, 继承于:AbstractItemModel::抽象_项_模型
 class TreeOfTableModel(QAbstractItemModel):
 
     def __init__(self, parent=None):
@@ -151,7 +151,7 @@ class TreeOfTableModel(QAbstractItemModel):
                 root = branch
         assert branch is not None
         items = fields[self.nesting:]
-        self.columns = max(self.columns, len(items))
+        self.columns = max(self.columns, len(items))  # 记录所需的最大列数.
         branch.insertChild(LeafNode(items, branch))
         if callReset:
             self.reset()

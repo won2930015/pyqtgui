@@ -47,25 +47,25 @@ class ServerModel(treeoftable.TreeOfTableModel):
 
 class TreeOfTableWidget(QTreeView):
 
-    def __init__(self, filename, nesting, separator, parent=None):  #nesting::嵌套, separator:分隔符
+    def __init__(self, filename, nesting, separator, parent=None):  # nesting::嵌套, separator:分隔符
         super(TreeOfTableWidget, self).__init__(parent)
-        self.setSelectionBehavior(QTreeView.SelectItems)    #setSelectionBehavior::设置_选择_行为, SelectItems::选择_项
-        self.setUniformRowHeights(True) #setUniformRowHeights::设置_统一_行_高度
-        model = ServerModel(self)   #服务器_模型P19_row
+        self.setSelectionBehavior(QTreeView.SelectItems)    # setSelectionBehavior::设置_选择_行为, SelectItems::选择_项
+        self.setUniformRowHeights(True)  # setUniformRowHeights::设置_统一_行_高度
+        model = ServerModel(self)   # 服务器_模型 ↑row_19
         self.setModel(model)
         try:
             model.load(filename, nesting, separator)
         except IOError as e:
             QMessageBox.warning(self, "Server Info - Error", e)
-        self.connect(self, SIGNAL("activated(QModelIndex)"),    #???activated::激活(双击项时)
+        self.connect(self, SIGNAL("activated(QModelIndex)"),    # ???activated::激活(双击项时)
                      self.activated)
-        self.connect(self, SIGNAL("expanded(QModelIndex)"),     #???expanded::扩展(节点被展开时)
+        self.connect(self, SIGNAL("expanded(QModelIndex)"),     # ???expanded::扩展(节点被展开时)
                      self.expanded)
         self.expanded()
 
 
     def currentFields(self):
-        return self.model().asRecord(self.currentIndex())   #返回 root 到 叶节点的所有路径.
+        return self.model().asRecord(self.currentIndex())   # 返回 root 到 叶节点的所有路径.
 
 
     def activated(self, index):
@@ -97,7 +97,7 @@ class MainForm(QMainWindow):
         self.treeWidget = TreeOfTableWidget(filename, nesting,
                                             separator)
         self.treeWidget.model().headers = headers
-        self.setCentralWidget(self.treeWidget)  #setCentralWidget::设置_中心_控件
+        self.setCentralWidget(self.treeWidget)  # setCentralWidget::设置_中心_控件
 
         QShortcut(QKeySequence("Escape"), self, self.close)
         QShortcut(QKeySequence("Ctrl+Q"), self, self.close)
@@ -109,8 +109,8 @@ class MainForm(QMainWindow):
         self.statusBar().showMessage("Ready...", 5000)
 
 
-    def picked(self):   #摘要
-        return self.treeWidget.currentFields()  #currentFields::当前_域|字段
+    def picked(self):   # 摘要
+        return self.treeWidget.currentFields()  # currentFields::当前_域|字段
 
 
     def activated(self, fields):
