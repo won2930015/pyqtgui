@@ -113,6 +113,7 @@ class TreeOfTableModel(QAbstractItemModel):
         self.root = BranchNode("")
         self.headers = []
 
+    # 载入servers.txt文本的数据.
     def load(self, filename, nesting, separator):  # nesting::嵌套, separator::分隔符
         assert nesting > 0   # 断言 嵌套>0
         self.nesting = nesting
@@ -129,7 +130,7 @@ class TreeOfTableModel(QAbstractItemModel):
         finally:
             if fh is not None:
                 fh.close()
-            self.reset()    # reset::重置
+            self.reset()    # reset::重置(更新数据)
             for i in range(self.columns):
                 self.headers.append("Column #{}".format(i))
             if exception is not None:
@@ -190,11 +191,11 @@ class TreeOfTableModel(QAbstractItemModel):
         return None
 
 
-    def index(self, row, column, parent):
+    def index(self, row, column, parent):   # parent参数引用row_201 parent函数.
         assert self.root
         branch = self.nodeFromIndex(parent)
         assert branch is not None
-        return self.createIndex(row, column, branch.childAtRow(row))
+        return self.createIndex(row, column, branch.childAtRow(row))  # 返回?行?列?对象的索引.
 
 
     def parent(self, child):
@@ -209,7 +210,7 @@ class TreeOfTableModel(QAbstractItemModel):
             return QModelIndex()
         row = grandparent.rowOfChild(parent)
         assert row != -1
-        return self.createIndex(row, 0, parent)
+        return self.createIndex(row, 0, parent)  # 返回父节点的索引.
 
     def nodeFromIndex(self, index):  # 返回当前 项 的 叶节点
         return (index.internalPointer()  # internalPointer::内部_指针(指向叶结点|分支点)

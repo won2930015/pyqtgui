@@ -57,9 +57,9 @@ class TreeOfTableWidget(QTreeView):
             model.load(filename, nesting, separator)
         except IOError as e:
             QMessageBox.warning(self, "Server Info - Error", e)
-        self.connect(self, SIGNAL("activated(QModelIndex)"),    # ???activated::激活(双击项时)
+        self.connect(self, SIGNAL("activated(QModelIndex)"),    # ???activated::激活(双击项时) P375
                      self.activated)
-        self.connect(self, SIGNAL("expanded(QModelIndex)"),     # ???expanded::扩展(节点被展开时)
+        self.connect(self, SIGNAL("expanded(QModelIndex)"),     # ???expanded::扩展(节点被展开时) P375
                      self.expanded)
         self.expanded()
 
