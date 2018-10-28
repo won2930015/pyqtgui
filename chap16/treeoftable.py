@@ -169,7 +169,7 @@ class TreeOfTableModel(QAbstractItemModel):
             return 0
         return len(node)
 
-    def columnCount(self, parent):  #返回总列数
+    def columnCount(self, parent):  # 返回总列数
         return self.columns
 
     def data(self, index, role):

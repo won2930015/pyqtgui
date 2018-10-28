@@ -82,7 +82,6 @@ class MainForm(QDialog):
         self.setWindowTitle("Ships (dict)")
         QTimer.singleShot(0, self.initialLoad)
 
-
     def initialLoad(self):
         if not QFile.exists(self.ships.filename):
             for ship in ships.generateFakeShips():
@@ -103,7 +102,6 @@ class MainForm(QDialog):
     def reject(self):
         self.accept()
 
-
     def accept(self):
         if (self.ships.dirty and
             QMessageBox.question(self, "Ships - Save?",
@@ -117,7 +115,6 @@ class MainForm(QDialog):
                         "Failed to save: {}".format(e))
         QDialog.accept(self)
 
-
     def populateList(self, selectedShip=None):
         selected = None
         self.listWidget.clear()
@@ -130,7 +127,6 @@ class MainForm(QDialog):
         if selected is not None:
             selected.setSelected(True)
             self.listWidget.setCurrentItem(selected)
-
 
     def populateTable(self, selectedShip=None):
         selected = None
@@ -161,7 +157,6 @@ class MainForm(QDialog):
             selected.setSelected(True)
             self.tableWidget.setCurrentItem(selected)
 
-
     def populateTree(self, selectedShip=None):
         selected = None
         self.treeWidget.clear()
@@ -184,14 +179,13 @@ class MainForm(QDialog):
             item.setTextAlignment(1, Qt.AlignRight|Qt.AlignVCenter)
             if selectedShip is not None and selectedShip == id(ship):
                 selected = item
-            self.treeWidget.expandItem(parent)      #expandItem::展开_项
+            self.treeWidget.expandItem(parent)      # expandItem::展开_项
             self.treeWidget.expandItem(ancestor)
         self.treeWidget.resizeColumnToContents(0)   # 调整_0列宽适配内容
         self.treeWidget.resizeColumnToContents(1)   # 调整_1列宽适配内容
         if selected is not None:
             selected.setSelected(True)
             self.treeWidget.setCurrentItem(selected)
-
 
     def addShip(self):
         ship = ships.Ship(" Unknown", " Unknown", " Unknown")
@@ -201,7 +195,6 @@ class MainForm(QDialog):
         self.populateTable(id(ship))
         self.tableWidget.setFocus()
         self.tableWidget.editItem(self.tableWidget.currentItem())
-
 
     def tableItemChanged(self, item):
         ship = self.currentTableShip()
@@ -221,7 +214,6 @@ class MainForm(QDialog):
         self.ships.dirty = True
         self.populateList()
         self.populateTree()
-
 
     def currentTableShip(self):  # 返回当前选定行(row)的Ship对象.
         item = self.tableWidget.item(self.tableWidget.currentRow(), 0)

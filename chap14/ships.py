@@ -52,7 +52,7 @@ class ShipContainer(object):
         self.dirty = False  # dirty::脏的(文件修改标记)
         self.ships = {}     # ships::N条船(字典)
         self.owners = set()  # owners::物主们(集)
-        self.countries = set()  #countries::国家们(集)
+        self.countries = set()  # countries::国家们(集)
 
     def ship(self, identity):  # identity::身份
         return self.ships.get(identity)
@@ -90,7 +90,7 @@ class ShipContainer(object):
             fh = QFile(self.filename)
             if not fh.open(QIODevice.ReadOnly):
                 raise IOError(fh.errorString())
-            stream = QDataStream(fh)    #创建 数据流文件(二进制)
+            stream = QDataStream(fh)    # 创建 数据流文件(二进制)
             magic = stream.readInt32()
             if magic != MAGIC_NUMBER:
                 raise IOError("unrecognized file type")
@@ -369,7 +369,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             QStyledItemDelegate.paint(self, painter, option, index)
 
     def sizeHint(self, option, index):  # option::项(包含项的所有状态)
-        fm = option.fontMetrics  # 选项.字体度量值
+        fm = option.fontMetrics  # 选项.字体度量对象
         if index.column() == TEU:
             return QSize(fm.width("9,999,999"), fm.height())
         if index.column() == DESCRIPTION:

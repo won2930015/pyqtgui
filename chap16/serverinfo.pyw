@@ -21,7 +21,6 @@ class ServerModel(treeoftable.TreeOfTableModel):
     def __init__(self, parent=None):
         super(ServerModel, self).__init__(parent)
 
-
     def data(self, index, role):
         if role == Qt.DecorationRole:  # DecorationRole::修饰角色(图标)
             node = self.nodeFromIndex(index)
@@ -36,7 +35,7 @@ class ServerModel(treeoftable.TreeOfTableModel):
                     return None
                 if parent == "USA":
                     filename = "USA_" + filename
-                filename = os.path.join(os.path.dirname(__file__),  #"...\chap16\flags\" +filename +".png"
+                filename = os.path.join(os.path.dirname(__file__),  # "...\chap16\flags\" +filename +".png"
                                         "flags", filename + ".png")
                 pixmap = QPixmap(filename)
                 if pixmap.isNull():

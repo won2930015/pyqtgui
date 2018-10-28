@@ -1,7 +1,7 @@
 14章 模型/视图编程
 15章: 模型/视图类用于数据库
     15.3 使用数据库窗体视图
-        phonelog.py
+        phonelog.py    QSqlTableModel使用示例 /闪屏的应用方法.
         phonelog-fk.py :外键的使用
         phonelog-fk2.py :QDataWidgetMapper的使用.
     15.4 使用数据库表视图
