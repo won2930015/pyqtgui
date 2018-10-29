@@ -90,7 +90,7 @@ def createFakeData():   # 创建伪数据.
 
     today = QDate.currentDate()
 
-    # 楼层(创建一个列表,排除13层.)
+    # 楼层(创建[],排除13层.)
     floors = list(range(1, 12)) + list(range(14, 28))
 
     # 资产清单::电脑相关==1, 家具==2 ,电器==3

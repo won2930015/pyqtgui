@@ -204,7 +204,7 @@ class PhoneLogDlg(QDialog):
         self.mapper = QDataWidgetMapper(self)  # 数据_控件_映射
         self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置_提交_政策,ManualSubmit::手动_提交
         self.mapper.setModel(self.model)
-        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))  # <<--注意!!!
+        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))  # <<--TODO::注意!!!
         self.mapper.addMapping(self.callerEdit, CALLER)
         self.mapper.addMapping(self.startDateTime, STARTTIME)
         self.mapper.addMapping(self.endDateTime, ENDTIME)
