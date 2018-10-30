@@ -399,8 +399,7 @@ class LogDelegate(QSqlRelationalDelegate):  # LogDelegate::日志_委托
         if index.column() == DATE:
             model.setData(index, editor.date())
         else:
-            QSqlRelationalDelegate.setModelData(self, editor, model,
-                                                index)
+            QSqlRelationalDelegate.setModelData(self, editor, model, index)
 
 
 class MainForm(QDialog):
@@ -517,7 +516,7 @@ class MainForm(QDialog):
             record = self.assetModel.record(index.row())    #record::记录(取得 行 记录对象.)
             # id = int(record.value("id"))
             id = int(record.value("id")) if not isinstance(record.value("id"), QPyNullVariant) else None  # todo
-            self.logModel.setFilter("assetid = {}".format(id))  #setFilter::设置过滤器.
+            self.logModel.setFilter("assetid = {}".format(id))  # setFilter::设置过滤器.
         else:
             self.logModel.setFilter("assetid = -1")
         self.logModel.reset()   # reset::重置(重置数据), workaround for Qt <= 4.3.3/SQLite bug

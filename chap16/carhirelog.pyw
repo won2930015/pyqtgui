@@ -9,7 +9,7 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import bisect   #bisect::二分模块(二分算法模块.)
+import bisect  # bisect::二分模块(二分算法模块.)
 import os
 import platform
 import sys
@@ -107,7 +107,7 @@ class CarHireModel(QAbstractTableModel):    # 汽车_出租_模型.
                 os.path.dirname(__file__), "surnames.txt.gz")).read()
         surnames = surname_data.decode("utf-8").splitlines()
         years = ("06 ", "56 ", "07 ", "57 ", "08 ", "58 ")
-        titles = ("Ms ", "Mr ", "Ms ", "Mr ", "Ms ", "Mr ", "Dr ")    # Mr::女士, Ms::先生, Dr::未知????
+        titles = ("Ms ", "Mr ", "Ms ", "Mr ", "Ms ", "Mr ", "Dr ")    # Mr::女士, Ms::先生, Dr::尊称????
         notetexts = ("Returned <font color=red><b>damaged</b></font>",  # notetexts::备注_文本, Returned damaged::返回 受损(车)
                 "Returned with <i>empty fuel tank</i>",                 # 返回 空油箱(车)
                 "Customer <b>complained</b> about the <u>engine</u>",  # Customer complained about the engine::客户 抱怨 发动机
@@ -161,7 +161,7 @@ class CarHireModel(QAbstractTableModel):    # 汽车_出租_模型.
         if role == Qt.BackgroundColorRole:
             palette = QApplication.palette()
             if index.column() in (LICENSE, MILEAGE, DAYS):
-                return palette.alternateBase()  # alternateBase::交替_底色(返回交替色底色?)
+                return palette.alternateBase()  # alternateBase::交替_底色(返回交替色中的_底色?)
             else:
                 return palette.base()   # base::底色
         return None
@@ -299,7 +299,7 @@ class MainForm(QMainWindow):
 
 app = QApplication(sys.argv)
 form = MainForm()
-rect = QApplication.desktop().availableGeometry()   #availableGeometry::可用_几何
+rect = QApplication.desktop().availableGeometry()   # availableGeometry::可用_几何
 form.resize(int(rect.width() * 0.7), int(rect.height() * 0.8))
 form.move(0, 0)
 form.show()

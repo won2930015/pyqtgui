@@ -17,7 +17,7 @@ from PyQt4.QtSql import *
 
 MAC = True
 try:
-    from PyQt4.QtGui import qt_mac_set_native_menubar   #qt_mac_设置_本地_菜单条
+    from PyQt4.QtGui import qt_mac_set_native_menubar   # qt_mac_设置_本地_菜单条
 except ImportError:
     MAC = False
 
@@ -46,7 +46,7 @@ class ReferenceDataDlg(QDialog):
         self.view.resizeColumnsToContents()
 
         buttonBox = QDialogButtonBox()
-        addButton = buttonBox.addButton("&Add", QDialogButtonBox.ActionRole)    #ActionRole::动作角色(作用)
+        addButton = buttonBox.addButton("&Add", QDialogButtonBox.ActionRole)    # ActionRole::动作角色(作用)
         deleteButton = buttonBox.addButton("&Delete", QDialogButtonBox.ActionRole)
         sortButton = buttonBox.addButton("&Sort", QDialogButtonBox.ActionRole)
         if not MAC:

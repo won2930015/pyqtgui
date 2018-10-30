@@ -23,16 +23,15 @@ from PyQt4.QtGui import *
 TIMESTAMPFORMAT = "yyyy-MM-dd hh:mm"
 
 
-class WaterQualityModel(QAbstractTableModel):   #WaterQualityModel::水_质_模型, AbstractTableModel::抽象_表_模型.
+class WaterQualityModel(QAbstractTableModel):   # WaterQualityModel::水_质_模型, AbstractTableModel::抽象_表_模型.
 
     def __init__(self, filename):
         super(WaterQualityModel, self).__init__()
         self.filename = filename
-        self.results = []   #结果列表
-
+        self.results = []   # 结果列表
 
     def load(self):
-        exception = None    #exception::错误
+        exception = None    # exception::错误
         fh = None
         try:
             if not self.filename:
