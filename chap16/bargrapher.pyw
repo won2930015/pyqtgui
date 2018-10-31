@@ -15,6 +15,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
+# List模型示列?
 class BarGraphModel(QAbstractListModel):
 
     def __init__(self):
