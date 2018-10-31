@@ -261,14 +261,14 @@ class WaterQualityView(QWidget):
                 break
 
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event):   # 注::当发射clicked信号时就会激发paintEvent事件.
         fm = QFontMetrics(self.font())
         self.selectedRow = event.y() // fm.height()  # 计数所在行.
         self.update()
         self.emit(SIGNAL("clicked(QModelIndex)"), self.model.index(self.selectedRow, 0))
 
 
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event):  # 注::当发射clicked信号时就会激发paintEvent事件.
         if self.model is None:
             return
         row = -1

@@ -190,14 +190,14 @@ class TreeOfTableModel(QAbstractItemModel):
             return self.headers[section]
         return None
 
-
-    def index(self, row, column, parent):   # parent参数引用row_201 parent函数.
+    #返回index(索引对象)::树-模型,必须实现的函数.
+    def index(self, row, column, parent):   # parent参数,引用row_201 parent函数.
         assert self.root
         branch = self.nodeFromIndex(parent)
         assert branch is not None
         return self.createIndex(row, column, branch.childAtRow(row))  # 返回?行?列?对象的索引.
 
-
+    # 返回父节点(树-模型,必须实现的函数.)
     def parent(self, child):
         node = self.nodeFromIndex(child)
         if node is None:
