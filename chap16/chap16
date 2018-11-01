@@ -12,6 +12,6 @@
         serverinfo.pyw  继承QTreeView 应用示例.
             treeoftable.py 继承QAbstractItemModel 应用示例.
 
-    小结
+    小结::模型, 委托, 自定义视图+list控件的完整示例.
         bargrapher.pyw 续承QAbstractListModel 应用示例.
 
