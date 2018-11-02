@@ -18,14 +18,14 @@ class HelpForm(QDialog):
 
     def __init__(self, page, parent=None):
         super(HelpForm, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)  #setAttribute::设置_属性
-                                                #如果widget设置了Qt.WA_DeleteOnClose属性，widget将会被释放。
-                                                #不管widget是否可见，关闭事件都会传递给widget。即接收到QCloseEvent事件后，
-                                                #除了调用hide()方法将窗口隐藏，同时会调用deleteLater()方法将窗口释放掉，不会再占用资源。
-        self.setAttribute(Qt.WA_GroupLeader)    #p386
+        self.setAttribute(Qt.WA_DeleteOnClose)  # setAttribute::设置_属性
+        # 如果widget设置了Qt.WA_DeleteOnClose属性，widget将会被释放。
+        # 不管widget是否可见，关闭事件都会传递给widget。即接收到QCloseEvent事件后，
+        # 除了调用hide()方法将窗口隐藏，同时会调用deleteLater()方法将窗口释放掉，不会再占用资源。
+        self.setAttribute(Qt.WA_GroupLeader)    # P386
 
         backAction = QAction(QIcon(":/back.png"), self.tr("&Back"), self)
-        backAction.setShortcut(QKeySequence.Back)   #setShortcut::设置_快捷键
+        backAction.setShortcut(QKeySequence.Back)   # setShortcut::设置_快捷键
         homeAction = QAction(QIcon(":/home.png"), self.tr("&Home"), self)
         homeAction.setShortcut(self.tr("Home"))
         self.pageLabel = QLabel()
@@ -38,18 +38,18 @@ class HelpForm(QDialog):
 
         layout = QVBoxLayout()
         layout.addWidget(toolBar)
-        layout.addWidget(self.textBrowser, 1)   #第二参数::stretch:伸展(表示控件的伸展方式.)
+        layout.addWidget(self.textBrowser, 1)   # 第二参数::stretch:伸展(表示控件的伸展方式.)
         self.setLayout(layout)
 
         self.connect(backAction, SIGNAL("triggered()"),
-                     self.textBrowser, SLOT("backward()"))  #backward--QTextBrowser的内置方法???
+                     self.textBrowser, SLOT("backward()"))  # backward--QTextBrowser的内置方法???
         self.connect(homeAction, SIGNAL("triggered()"),
                      self.textBrowser, SLOT("home()"))
         self.connect(self.textBrowser, SIGNAL("sourceChanged(QUrl)"),
                      self.updatePageTitle)
 
-        self.textBrowser.setSearchPaths([":/"]) #setSearchPaths::设置_搜索_路径.p386
-        self.textBrowser.setSource(QUrl(page))  #setSource::设置_源
+        self.textBrowser.setSearchPaths([":/"])  # setSearchPaths::设置_搜索_路径.p386
+        self.textBrowser.setSource(QUrl(page))  # setSource::设置_源
         self.resize(400, 600)
         self.setWindowTitle(self.tr("{} Help").format(QApplication.applicationName()))
 

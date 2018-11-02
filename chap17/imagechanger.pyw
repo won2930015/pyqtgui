@@ -11,6 +11,7 @@
 #相关列程   6-imagechanger.pyw,
 #         12-pagedesignet.pyw/multipedes.pyw(动画),
 #         13-printing.pyw,pythoneditor.pyw(python文本编辑器)
+#         P391 .翻译相关步骤.
 
 import os
 import platform
@@ -59,7 +60,7 @@ class MainWindow(QMainWindow):
         status = self.statusBar()   #创建 状态条.
         status.setSizeGripEnabled(False) #设置_尽寸_调整_启用==False
         status.addPermanentWidget(self.sizeLabel)   #addPermanentWidget::加入_永久_控件
-        self.statusBar().showMessage(self.tr("Ready"), 5000)
+        self.statusBar().showMessage(self.tr("Ready"), 5000)  # P388: .trUtf8("读...")
 
         fileNewAction = self.createAction(self.tr("&New..."),
                 self.fileNew, QKeySequence.New, "filenew",
