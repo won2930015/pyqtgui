@@ -35,31 +35,31 @@ class MainWindow(QMainWindow):
         self.image = QImage()
         self.dirty = False
         self.filename = None
-        self.mirroredvertically = False     #镜像_垂直
-        self.mirroredhorizontally = False   #镜像_水平
+        self.mirroredvertically = False     # 镜像_垂直
+        self.mirroredhorizontally = False   # 镜像_水平
 
-        self.imageLabel = QLabel()  #用于装载图像.
+        self.imageLabel = QLabel()   # 用于装载图像.
         self.imageLabel.setMinimumSize(200, 200)
         self.imageLabel.setAlignment(Qt.AlignCenter)
-        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu) #setContextMenuPolicy::设置_上下文_菜单_策略, ActionsContextMenu::动作_上下文_菜单.
+        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)  # setContextMenuPolicy::设置_上下文_菜单_策略, ActionsContextMenu::动作_上下文_菜单.
         self.setCentralWidget(self.imageLabel)
 
-        logDockWidget = QDockWidget("Log", self)    #QDockWidget::船坞控件
+        logDockWidget = QDockWidget("Log", self)    # QDockWidget::船坞控件
         logDockWidget.setObjectName("LogDockWidget")
-        logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea|    #setAllowedAreas::设置_允许_区域
+        logDockWidget.setAllowedAreas(Qt.LeftDockWidgetArea|    # etAllowedAreas::设置_允许_区域
                                       Qt.RightDockWidgetArea)
         self.listWidget = QListWidget()
         logDockWidget.setWidget(self.listWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, logDockWidget)   #自带内置方法.
+        self.addDockWidget(Qt.RightDockWidgetArea, logDockWidget)   # 自带内置方法.
 
-        self.printer = None #创建 打印器 变量.
+        self.printer = None  # 创建 打印器 变量.
 
         self.sizeLabel = QLabel()
-        self.sizeLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)#setFrameStyle::设置_框架_样式,
-                                                                      # QFrame.StyledPanel::可变_面板,QFrame.Sunken::凹陷的
-        status = self.statusBar()   #创建 状态条.
-        status.setSizeGripEnabled(False) #设置_尽寸_调整_启用==False
-        status.addPermanentWidget(self.sizeLabel)   #addPermanentWidget::加入_永久_控件
+        self.sizeLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)  # setFrameStyle::设置_框架_样式,
+                                                                        # QFrame.StyledPanel::可变_面板,QFrame.Sunken::凹陷的
+        status = self.statusBar()   # 创建 状态条.
+        status.setSizeGripEnabled(False)  # 设置_尽寸_调整_启用==False
+        status.addPermanentWidget(self.sizeLabel)   # addPermanentWidget::加入_永久_控件
         self.statusBar().showMessage(self.tr("Ready"), 5000)  # P388: .trUtf8("读...")
 
         fileNewAction = self.createAction(self.tr("&New..."),
@@ -80,56 +80,56 @@ class MainWindow(QMainWindow):
         fileQuitAction = self.createAction(self.tr("&Quit"),
                 self.close, self.tr("Ctrl+Q"), "filequit",
                 self.tr("Close the application"))
-        editInvertAction = self.createAction(self.tr("&Invert"),    #editInvertAction::编缉_反相_动作
+        editInvertAction = self.createAction(self.tr("&Invert"),    # editInvertAction::编缉_反相_动作
                 self.editInvert, self.tr("Ctrl+I"), "editinvert",
                 self.tr("Invert the image's colors"), True,
                 "toggled(bool)")
-        editSwapRedAndBlueAction = self.createAction(   #编辑_互换_红|蓝_动作
+        editSwapRedAndBlueAction = self.createAction(   # 编辑_互换_红|蓝_动作
                 self.tr("Sw&ap Red and Blue"),
                 self.editSwapRedAndBlue, self.tr("Ctrl+A"), "editswap",
                 self.tr("Swap the image's red and blue "
                         "color components"), True, "toggled(bool)")
-        editZoomAction = self.createAction(self.tr("&Zoom..."), #editZoomAction::编辑_缩放_动作
+        editZoomAction = self.createAction(self.tr("&Zoom..."),  # editZoomAction::编辑_缩放_动作
                 self.editZoom, self.tr("Alt+Z"), "editzoom",
                 self.tr("Zoom the image"))
-        editResizeAction = self.createAction(self.tr("&Resize..."), #editResizeAction ::编辑_调整尺寸_动作
+        editResizeAction = self.createAction(self.tr("&Resize..."),  # editResizeAction ::编辑_调整尺寸_动作
                 self.editResize, self.tr("Ctrl+R"), "editresize",
                 self.tr("Resize the image"))
-        mirrorGroup = QActionGroup(self)    #mirrorGroup::镜像_组.
-        editUnMirrorAction = self.createAction(self.tr("&Unmirror"),    #editUnMirrorAction::编辑_取消_镜像_动作
+        mirrorGroup = QActionGroup(self)    # mirrorGroup::镜像_组.
+        editUnMirrorAction = self.createAction(self.tr("&Unmirror"),    # editUnMirrorAction::编辑_取消_镜像_动作
                 self.editUnMirror, self.tr("Ctrl+U"), "editunmirror",
                 self.tr("Unmirror the image"), True, "toggled(bool)")
         mirrorGroup.addAction(editUnMirrorAction)
-        editMirrorHorizontalAction = self.createAction( #editMirrorHorizontalAction::编辑_镜像_水平_动作
+        editMirrorHorizontalAction = self.createAction(  # editMirrorHorizontalAction::编辑_镜像_水平_动作
                 self.tr("Mirror &Horizontally"),
                 self.editMirrorHorizontal, self.tr("Ctrl+H"),
                 "editmirrorhoriz",
                 self.tr("Horizontally mirror the image"), True,
                 "toggled(bool)")
         mirrorGroup.addAction(editMirrorHorizontalAction)
-        editMirrorVerticalAction = self.createAction(   #editMirrorVerticalAction::编辑_镜像_垂直_动作
+        editMirrorVerticalAction = self.createAction(   # editMirrorVerticalAction::编辑_镜像_垂直_动作
                 self.tr("Mirror &Vertically"), self.editMirrorVertical,
                 self.tr("Ctrl+V"), "editmirrorvert",
                 self.tr("Vertically mirror the image"), True,
                 "toggled(bool)")
         mirrorGroup.addAction(editMirrorVerticalAction)
-        editUnMirrorAction.setChecked(True)     #setChecked::设置_选中 ==True
-        helpAboutAction = self.createAction(    #helpAboutAction::关于_帮助_动作
+        editUnMirrorAction.setChecked(True)     # setChecked::设置_选中 ==True
+        helpAboutAction = self.createAction(    # helpAboutAction::关于_帮助_动作
                 self.tr("&About Image Changer"), self.helpAbout)
-        helpHelpAction = self.createAction(self.tr("&Help"),    #helpHelpAction::帮助_帮助_动作 ???
+        helpHelpAction = self.createAction(self.tr("&Help"),    # helpHelpAction::帮助_帮助_动作 ???
                 self.helpHelp, QKeySequence.HelpContents)
 
         self.fileMenu = self.menuBar().addMenu(self.tr("&File"))
         self.fileMenuActions = (fileNewAction, fileOpenAction,
                 fileSaveAction, fileSaveAsAction, None,
                 filePrintAction, fileQuitAction)
-        self.connect(self.fileMenu, SIGNAL("aboutToShow()"),    #关于_显示_时.
+        self.connect(self.fileMenu, SIGNAL("aboutToShow()"),    # 关于_显示_时.
                      self.updateFileMenu)
         editMenu = self.menuBar().addMenu(self.tr("&Edit"))
         self.addActions(editMenu, (editInvertAction,
                 editSwapRedAndBlueAction, editZoomAction,
                 editResizeAction))
-        mirrorMenu = editMenu.addMenu(QIcon(":/editmirror.png"),    #加入子菜单::设置图标, 子菜单名.
+        mirrorMenu = editMenu.addMenu(QIcon(":/editmirror.png"),    # 加入子菜单::设置图标, 子菜单名.
                 self.tr("&Mirror"))
         self.addActions(mirrorMenu, (editUnMirrorAction, editMirrorHorizontalAction, editMirrorVerticalAction))
         helpMenu = self.menuBar().addMenu(self.tr("&Help"))
@@ -145,11 +145,11 @@ class MainWindow(QMainWindow):
                 editMirrorVerticalAction, editMirrorHorizontalAction))
         self.zoomSpinBox = QSpinBox()
         self.zoomSpinBox.setRange(1, 400)
-        self.zoomSpinBox.setSuffix(" %")    #setSuffix::设置_后缀
+        self.zoomSpinBox.setSuffix(" %")    # setSuffix::设置_后缀
         self.zoomSpinBox.setValue(100)
         self.zoomSpinBox.setToolTip(self.tr("Zoom the image"))
         self.zoomSpinBox.setStatusTip(self.zoomSpinBox.toolTip())
-        self.zoomSpinBox.setFocusPolicy(Qt.NoFocus) #设置_焦点_策略
+        self.zoomSpinBox.setFocusPolicy(Qt.NoFocus)  # 设置_焦点_策略
         self.connect(self.zoomSpinBox,
                      SIGNAL("valueChanged(int)"), self.showImage)
         editToolbar.addWidget(self.zoomSpinBox)
@@ -158,19 +158,19 @@ class MainWindow(QMainWindow):
                 editSwapRedAndBlueAction, editUnMirrorAction,
                 editMirrorVerticalAction, editMirrorHorizontalAction))
 
-        self.resetableActions = ((editInvertAction, False),     #resetableActions::复位_动作
+        self.resetableActions = ((editInvertAction, False),     # resetableActions::复位_动作
                                  (editSwapRedAndBlueAction, False),
                                  (editUnMirrorAction, True))
 
         settings = QSettings()
-        self.recentFiles = settings.value("RecentFiles") or []  #最近_文件.
-        self.restoreGeometry(settings.value("MainWindow/Geometry",  #restoreGeometry::恢复_几何.
-                QByteArray()))  #没有时返回::QByteArray 类量对象.
-        self.restoreState(settings.value("MainWindow/State",    #restoreState::恢复_状态.
+        self.recentFiles = settings.value("RecentFiles") or []  # 最近_文件.
+        self.restoreGeometry(settings.value("MainWindow/Geometry",  # restoreGeometry::恢复_几何.
+                QByteArray()))  # 没有时返回::QByteArray 类量对象.
+        self.restoreState(settings.value("MainWindow/State",    # restoreState::恢复_状态.
                 QByteArray()))
         
         self.setWindowTitle(self.tr("Image Changer"))
-        self.updateFileMenu()   #更新_文件_菜单.
+        self.updateFileMenu()   # 更新_文件_菜单.
         QTimer.singleShot(0, self.loadInitialFile)
 
 
