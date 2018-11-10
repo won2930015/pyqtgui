@@ -200,9 +200,9 @@ class MainWindow(QMainWindow):
 
 
     def closeEvent(self, event):
-        if self.okToContinue(): #okToContinue::确认_继续(退出时保存各种状态)
+        if self.okToContinue():  # okToContinue::确认_继续(退出时保存各种状态)
             settings = QSettings()
-            settings.setValue("LastFile", self.filename)    #最后_文件名.
+            settings.setValue("LastFile", self.filename)    # 最后_文件名.
             settings.setValue("RecentFiles", self.recentFiles or [])
             settings.setValue("MainWindow/Geometry", self.saveGeometry())
             settings.setValue("MainWindow/State", self.saveState())
@@ -213,25 +213,25 @@ class MainWindow(QMainWindow):
     def okToContinue(self):
         if self.dirty:
             reply = QMessageBox.question(self,
-                            self.tr("Image Changer - Unsaved Changes"), #图像_改变- 未保存改变
-                            self.tr("Save unsaved changes?"),   #保存 未何存 改变 ?
+                            self.tr("Image Changer - Unsaved Changes"),  # 图像_改变- 未保存改变
+                            self.tr("Save unsaved changes?"),   # 保存 未何存 改变 ?
                             QMessageBox.Yes|QMessageBox.No|
                             QMessageBox.Cancel)
-            if reply == QMessageBox.Cancel: #取消操作.
+            if reply == QMessageBox.Cancel:  # 取消操作.
                 return False
             elif reply == QMessageBox.Yes:
                 return self.fileSave()
         return True
 
 
-    def loadInitialFile(self):  #装载_初始_文件.
+    def loadInitialFile(self):  # 装载_初始_文件.
         settings = QSettings()
         fname = settings.value("LastFile")
         if fname and QFile.exists(fname):
             self.loadFile(fname)
 
 
-    def updateStatus(self, message):    #更新_状态.
+    def updateStatus(self, message):  # 更新_状态.
         self.statusBar().showMessage(message, 5000)
         self.listWidget.addItem(message)
         if self.filename is not None:
@@ -241,12 +241,12 @@ class MainWindow(QMainWindow):
             self.setWindowTitle(self.tr("Image Changer - Unnamed[*]"))
         else:
             self.setWindowTitle(self.tr("Image Changer[*]"))
-        self.setWindowModified(self.dirty)  #setWindowModified::设置_窗口_修改 属性.
+        self.setWindowModified(self.dirty)  # setWindowModified::设置_窗口_修改 属性.
 
 
     def updateFileMenu(self):
-        self.fileMenu.clear()   #clear清除
-        self.addActions(self.fileMenu, self.fileMenuActions[:-1])   #加入 0至 n-1项
+        self.fileMenu.clear()   # clear清除
+        self.addActions(self.fileMenu, self.fileMenuActions[:-1])   # 加入 0至 n-1项
         current = self.filename
         recentFiles = []
         for fname in self.recentFiles:
@@ -263,7 +263,7 @@ class MainWindow(QMainWindow):
                              self.loadFile)
                 self.fileMenu.addAction(action)
         self.fileMenu.addSeparator()
-        self.fileMenu.addAction(self.fileMenuActions[-1])   #加入最后一项
+        self.fileMenu.addAction(self.fileMenuActions[-1])   # 加入最后一项
 
 
     def fileNew(self):
@@ -290,7 +290,7 @@ class MainWindow(QMainWindow):
         dir = (os.path.dirname(self.filename)
                if self.filename is not None else ".")
         formats = (["*.{}".format(format.data().decode("ascii").lower())
-                   for format in QImageReader.supportedImageFormats()]) #supportedImageFormats::支持_图像_格式.
+                   for format in QImageReader.supportedImageFormats()])  # supportedImageFormats::支持_图像_格式.
         fname = QFileDialog.getOpenFileName(self,
                     self.tr("Image Changer - Choose Image"), dir,
                     self.tr("Image files ({})").format(" ".join(formats)))
@@ -311,7 +311,7 @@ class MainWindow(QMainWindow):
             self.filename = None
             image = QImage(fname)
             if image.isNull():
-                message = self.tr("Failed to read {}").format(fname)    #Failed to read ::读_失败.
+                message = self.tr("Failed to read {}").format(fname)    # Failed to read ::读_失败.
             else:
                 self.addRecentFile(fname)
                 self.image = QImage()
@@ -327,11 +327,11 @@ class MainWindow(QMainWindow):
             self.updateStatus(message)
 
 
-    def addRecentFile(self, fname): #加入_最近_文件
+    def addRecentFile(self, fname):  # 加入_最近_文件
         if fname is None:
             return
         if fname not in self.recentFiles:
-            self.recentFiles = [fname] + self.recentFiles[:8]   #记录最近打开的8+1个文件.
+            self.recentFiles = [fname] + self.recentFiles[:8]  # 记录最近打开的8+1个文件.
 
 
     def fileSave(self):
@@ -354,15 +354,15 @@ class MainWindow(QMainWindow):
         if self.image.isNull():
             return True
         fname = self.filename if self.filename is not None else "."
-        formats = (["*.{}".format(format.data().decode("ascii").lower())    #生成:图像格式列表.
-                   for format in QImageWriter.supportedImageFormats()]) #supportedImageFormats::支持_图像_格式
+        formats = (["*.{}".format(format.data().decode("ascii").lower())  # 生成:图像格式列表.
+                   for format in QImageWriter.supportedImageFormats()])  # supportedImageFormats::支持_图像_格式
         fname = QFileDialog.getSaveFileName(self,
                         self.tr("Image Changer - Save Image"), fname,
                         self.tr("Image files ({})").format(" ".join(formats)))
         if fname:
             if "." not in fname:
                 fname += ".png"
-            self.addRecentFile(fname)   #加入_最近_文件
+            self.addRecentFile(fname)   # 加入_最近_文件
             self.filename = fname
             return self.fileSave()
         return False
@@ -385,7 +385,7 @@ class MainWindow(QMainWindow):
             painter.drawImage(0, 0, self.image)
 
 
-    def editInvert(self, on):   #编辑_反相.
+    def editInvert(self, on):   # 编辑_反相.
         if self.image.isNull():
             return
         self.image.invertPixels()
@@ -398,7 +398,7 @@ class MainWindow(QMainWindow):
     def editSwapRedAndBlue(self, on):
         if self.image.isNull():
             return
-        self.image = self.image.rgbSwapped()    #rgbSwapped::rbg调换
+        self.image = self.image.rgbSwapped()    # rgbSwapped::rbg调换
         self.showImage()
         self.dirty = True
         self.updateStatus(self.tr("Swapped Red and Blue") if on else
@@ -467,15 +467,15 @@ class MainWindow(QMainWindow):
                 self.updateStatus(self.tr("Resized to {}").format(size))
 
 
-    def showImage(self, percent=None):  #显示_图像
+    def showImage(self, percent=None):  # 显示_图像
         if self.image.isNull():
             return
-        if percent is None: #percent::百份比
+        if percent is None:  # percent::百份比
             percent = self.zoomSpinBox.value()
-        factor = percent / 100.0    #factor::系数
+        factor = percent / 100.0    # factor::系数
         width = self.image.width() * factor
         height = self.image.height() * factor
-        image = self.image.scaled(width, height, Qt.KeepAspectRatio)    #scale::比例,KeepAspectRatio::保持_纵横_比
+        image = self.image.scaled(width, height, Qt.KeepAspectRatio)    # scale::比例,KeepAspectRatio::保持_纵横_比
         self.imageLabel.setPixmap(QPixmap.fromImage(image))
 
 

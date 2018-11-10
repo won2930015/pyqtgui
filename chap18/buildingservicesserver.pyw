@@ -9,16 +9,16 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import bisect       #导入二分模块
-import collections  #导入集合模块
+import bisect       # 导入二分模块
+import collections  # 导入集合模块
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4.QtNetwork import *   #包含QTcpSocket(),QUdpSocket()等网络模块.
+from PyQt4.QtNetwork import *   # 包含QTcpSocket(),QUdpSocket()等网络模块.
 
-PORT = 9407         #端口号
-SIZEOF_UINT16 = 2   #2表示两字节
-MAX_BOOKINGS_PER_DAY = 5    #最大_预订_每_天[一天最大预订房间数]
+PORT = 9407         # 端口号
+SIZEOF_UINT16 = 2   # 2表示两字节(每字节8位)
+MAX_BOOKINGS_PER_DAY = 5    # 最大_预订_每_天[一天最大预订房间数]
 
 # Key = date, value = list of room IDs
 Bookings = collections.defaultdict(list)        #https://www.cnblogs.com/herbert/archive/2013/01/09/2852843.html
@@ -34,9 +34,9 @@ class Socket(QTcpSocket):
 
     def __init__(self, parent=None):
         super(Socket, self).__init__(parent)
-        self.connect(self, SIGNAL("readyRead()"), self.readRequest) #readyRead()::准备_读 信号
-        self.connect(self, SIGNAL("disconnected()"), self.deleteLater)  #disconnected()::断开 信号
-        self.nextBlockSize = 0  #下一_块_尺寸
+        self.connect(self, SIGNAL("readyRead()"), self.readRequest)  # readyRead()::准备_读 信号
+        self.connect(self, SIGNAL("disconnected()"), self.deleteLater)  # disconnected()::断开 信号
+        self.nextBlockSize = 0  # 下一_块_尺寸
 
 
     def readRequest(self):      # readRequest::读_请求
