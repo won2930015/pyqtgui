@@ -8,7 +8,7 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
-#=====单线程版=====
+# =====单线程版=====
 
 import sys
 from PyQt4.QtCore import *
@@ -18,7 +18,7 @@ from PyQt4.QtNetwork import *   # 包含QTcpSocket(),QUdpSocket()等网络模块
 MAC = "qt_mac_set_native_menubar" in dir()
 
 PORT = 9407     # 端口号
-SIZEOF_UINT16 = 2   # 2表示两字节(一字节8位).
+SIZEOF_UINT16 = 2   # 2表示两字节.
 
 
 class BuildingServicesClient(QWidget):  # 构建_服务_客户端
@@ -46,7 +46,7 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
 
         responseLabel = QLabel("Response")  # Response::响应
         self.responseLabel = QLabel()
-        self.responseLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)  #setFrameStyle::设置_框架_样式, StyledPanel::可变面板, Sunken::凹陷
+        self.responseLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)  # setFrameStyle::设置_框架_样式, StyledPanel::可变面板, Sunken::凹陷
 
         self.bookButton = QPushButton("&Book")  # Book::预订[这里解'预订',别一解是 '书']
         self.bookButton.setEnabled(False)
@@ -89,7 +89,6 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
 
         self.setWindowTitle("Building Services")
 
-
     def updateUi(self):  # 更新Ui
         enabled = False  # enabled::启用(ed::正在进行中)
         if (self.roomEdit.text() and
@@ -100,11 +99,9 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
         self.bookButton.setEnabled(enabled)
         self.unBookButton.setEnabled(enabled)
 
-
     def closeEvent(self, event):
         self.socket.close()  # 套接字.关闭
         event.accept()
-
 
     def book(self):
         self.issueRequest("BOOK", self.roomEdit.text(),  # issueRequest::发出_请求
@@ -115,8 +112,8 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
         self.issueRequest("UNBOOK", self.roomEdit.text(),
                           self.dateEdit.date())
 
-
-    def issueRequest(self, action, room, date): # issueRequest::发出_请求, action::动作, room::房号, date::日期
+    # issueRequest::发出_请求, action::动作, room::房号, date::日期
+    def issueRequest(self, action, room, date):
         self.request = QByteArray()  # request::请求, QByteArray()::字节_数组[PS:保存在内存的数据格式,能像其他IODevice一样进行读写操作]
         stream = QDataStream(self.request, QIODevice.WriteOnly)
         stream.setVersion(QDataStream.Qt_4_2)
@@ -131,15 +128,13 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
             self.socket.close()
         self.responseLabel.setText("Connecting to server...")
         self.socket.connectToHost("localhost", PORT)    # 执行connectToHost::连接_到_主机/宿主
-                                                        # 触发socket::connected信号[ROW:75↑],执行sendRequest()方法↓
-
+#                                                       # 触发socket::connected信号[ROW:75↑],执行sendRequest()方法↓
 
     def sendRequest(self):      # 当该方法完成时没有错误并且服务器没有关闭即会返回响应此时执行readResponse()否则执行serverHasStopped()/serverHasError()
         self.responseLabel.setText("Sending request...")
         self.nextBlockSize = 0
         self.socket.write(self.request)  # 向 套接字 写入 请求.
         self.request = None
-        
 
     def readResponse(self):     # 读_响应
         stream = QDataStream(self.socket)

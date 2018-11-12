@@ -22,8 +22,10 @@ MAX_BOOKINGS_PER_DAY = 5    # 最大_预订_每_天[一天最大预订房间数]
 
 # Key = date, value = list of room IDs
 Bookings = collections.defaultdict(list)        # https://www.cnblogs.com/herbert/archive/2013/01/09/2852843.html
-                                                # collections::集合, defaultdict::默认_字典(KEY:value对)
-                                                # 创建Bookings为一个字典列表. -.-????
+#                                               # collections::集合, defaultdict::默认_字典(KEY:value对)
+#                                               # 创建Bookings为一个字典列表. -.-????
+
+
 def printBookings():
     for key in sorted(Bookings):
         print(key, Bookings[key])
@@ -53,7 +55,7 @@ class Socket(QTcpSocket):
         date = QDate()          # 创建日期对象.
         if action in ("BOOK", "UNBOOK"):
             room = stream.readQString()     # 读取 房间号
-            stream >> date              #读取 日期
+            stream >> date              # 读取 日期
             bookings = Bookings.get(date.toPyDate())    # 获得给定日期[date]的预订清单, toPyDate::去_计算_日期.
             uroom = room    # uroom::房间副本[为什么要设置副本不太明白用意.]
         if action == "BOOK":
@@ -78,7 +80,6 @@ class Socket(QTcpSocket):
             self.sendError("Unrecognized request")  # 未识别的请求
         printBookings()
 
-
     def sendError(self, msg):
         reply = QByteArray()    # 答复
         stream = QDataStream(reply, QIODevice.WriteOnly)
@@ -89,7 +90,6 @@ class Socket(QTcpSocket):
         stream.device().seek(0)
         stream.writeUInt16(reply.size() - SIZEOF_UINT16)
         self.write(reply)
-
 
     def sendReply(self, action, room, date):
         reply = QByteArray()    # 答复
@@ -109,8 +109,7 @@ class TcpServer(QTcpServer):
     def __init__(self, parent=None):
         super(TcpServer, self).__init__(parent)
 
-
-    def incomingConnection(self, socketId):  # incomingConnection::进入_连接
+    def incomingConnection(self, socketId):  # incomingConnection::进入_连接 ,socketId::客户端传来的socket对象.
         socket = Socket(self)
         socket.setSocketDescriptor(socketId)    # 设置_套接字_描述符
         
