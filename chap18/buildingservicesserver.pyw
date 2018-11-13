@@ -17,7 +17,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtNetwork import *   # 包含QTcpSocket(),QUdpSocket()等网络模块.
 
 PORT = 9407         # 端口号
-SIZEOF_UINT16 = 2   # 2表示两字节(1字节8位)
+SIZEOF_UINT16 = 2   # 2表示两字节.
 MAX_BOOKINGS_PER_DAY = 5    # 最大_预订_每_天[一天最大预订房间数]
 
 # Key = date, value = list of room IDs

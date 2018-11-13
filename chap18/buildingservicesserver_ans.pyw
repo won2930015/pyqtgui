@@ -22,8 +22,10 @@ MAX_BOOKINGS_PER_DAY = 5    #最大_预订_每_天[一天最大预订房间数]
 
 # Key = date, value = list of room IDs
 Bookings = collections.defaultdict(list)        #https://www.cnblogs.com/herbert/archive/2013/01/09/2852843.html
-                                                #collections::集合, defaultdict::默认_字典(KEY:value对)
-                                                #创建Bookings为一个字典列表. -.-????
+#                                               #collections::集合, defaultdict::默认_字典(KEY:value对)
+#                                               #创建Bookings为一个字典列表. -.-????
+
+
 def printBookings():
     for key in sorted(Bookings):
         print(key, Bookings[key])
@@ -34,8 +36,8 @@ class Socket(QTcpSocket):
 
     def __init__(self, parent=None):
         super(Socket, self).__init__(parent)
-        self.connect(self, SIGNAL("readyRead()"), self.readRequest) #readyRead()::准备_读 信号
-        self.connect(self, SIGNAL("disconnected()"), self.deleteLater)  #disconnected()::断开 信号
+        self.connect(self, SIGNAL("readyRead()"), self.readRequest)  # readyRead()::准备_读 信号
+        self.connect(self, SIGNAL("disconnected()"), self.deleteLater)  # disconnected()::断开 信号
         self.nextBlockSize = 0  #下一_块_尺寸
 
 
@@ -50,29 +52,29 @@ class Socket(QTcpSocket):
         if self.bytesAvailable() < self.nextBlockSize:  #有效字节数值 与 读取的数值 不一致时 返回.
             return
 
-        action = stream.readQString()   #读取'动作[BOOK/UNBOOK]'
-        date = QDate()          #创建日期对象.
+        action = stream.readQString()   # 读取'动作[BOOK/UNBOOK]'
+        date = QDate()          # 创建日期对象.
         if action in ("BOOK", "UNBOOK", "BOOKINGSONDATE",       #BOOKINGSONDATE::某一日期全部预订.
-                      "BOOKINGSFORROOM"):   #BOOKINGSFORROOM::特定房间的所有预订日期
-            room = stream.readQString()     #读取 房间号
-            stream >> date              #读取 日期
-            bookings = Bookings.get(date.toPyDate())    #获得给定日期[date]的预订清单, toPyDate::去_计算_日期.
-            uroom = room    #uroom::房间副本[为什么要设置副本不太明白用意.]
+                      "BOOKINGSFORROOM"):   # BOOKINGSFORROOM::特定房间的所有预订日期
+            room = stream.readQString()     # 读取 房间号
+            stream >> date              # 读取 日期
+            bookings = Bookings.get(date.toPyDate())    # 获得给定日期[date]的预订清单, toPyDate::去_计算_日期.
+            uroom = room    # uroom::房间副本[为什么要设置副本不太明白用意.]
         if action == "BOOK":
             if bookings is None:
-                bookings = Bookings[date.toPyDate()]    #如果是空列表的再次获得给定日期的预定清单列表.
-            if len(bookings) < MAX_BOOKINGS_PER_DAY:    #MAX_BOOKINGS_PER_DAY::最大_预订_每_天[一天最大预订房间数]
+                bookings = Bookings[date.toPyDate()]    # 如果是空列表的再次获得给定日期的预定清单列表.
+            if len(bookings) < MAX_BOOKINGS_PER_DAY:    # MAX_BOOKINGS_PER_DAY::最大_预订_每_天[一天最大预订房间数]
                 if uroom in bookings:
-                    self.sendError("Cannot accept duplicate booking")   #不能接受重复预订.
+                    self.sendError("Cannot accept duplicate booking")   # 不能接受重复预订.
                 else:
                     bisect.insort(bookings, uroom)
-                    self.sendReply(action, room, date)  #sendReply::发送_答复
+                    self.sendReply(action, room, date)  # sendReply::发送_答复
             else:
-                self.sendError("{} is fully booked".format(     #x年x日预订已满.
+                self.sendError("{} is fully booked".format(     # x年x日预订已满.
                                date.toString(Qt.ISODate)))
         elif action == "UNBOOK":
             if bookings is None or uroom not in bookings:
-                self.sendError("Cannot unbook nonexistent booking")     #不能取消不存在的预订.
+                self.sendError("Cannot unbook nonexistent booking")     # 不能取消不存在的预订.
             else:
                 bookings.remove(uroom)
                 self.sendReply(action, room, date)  #sendReply::发送_答复
@@ -83,7 +85,7 @@ class Socket(QTcpSocket):
             else:
                 self.sendError("there are no rooms booked on {}"
                         .format(date.toString(Qt.ISODate)))
-        elif action == "BOOKINGSFORROOM":       #BOOKINGSFORROOM::特定房间的所有预订日期
+        elif action == "BOOKINGSFORROOM":       # BOOKINGSFORROOM::特定房间的所有预订日期
             dates = []
             for date, bookings in Bookings.items():
                 if room in bookings:
@@ -96,8 +98,8 @@ class Socket(QTcpSocket):
                 stream.writeUInt16(0)
                 stream.writeQString(action)
                 stream.writeQString(room)
-                stream.writeInt32(len(dates))
-                for date in dates:
+                stream.writeInt32(len(dates))  # 写入房间预定日数
+                for date in dates:  # 写入所有预定的日期.
                     stream << QDate(date)
                 stream.device().seek(0)
                 stream.writeUInt16(reply.size() - SIZEOF_UINT16)
@@ -105,12 +107,12 @@ class Socket(QTcpSocket):
             else:
                 self.sendError("room {} is not booked".format(room))
         else:
-            self.sendError("Unrecognized request")  #未识别的请求
+            self.sendError("Unrecognized request")  # 未识别的请求
         printBookings()
 
 
     def sendError(self, msg):
-        reply = QByteArray()    #答复
+        reply = QByteArray()    # 答复
         stream = QDataStream(reply, QIODevice.WriteOnly)
         stream.setVersion(QDataStream.Qt_4_2)
         stream.writeUInt16(0)
@@ -122,7 +124,7 @@ class Socket(QTcpSocket):
 
 
     def sendReply(self, action, room, date):
-        reply = QByteArray()    #答复
+        reply = QByteArray()    # 答复
         stream = QDataStream(reply, QIODevice.WriteOnly)
         stream.setVersion(QDataStream.Qt_4_2)
         stream.writeUInt16(0)
