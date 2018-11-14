@@ -8,7 +8,7 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
-#=====单线程版=====
+# =====单线程版=====
 
 import sys
 from PyQt4.QtCore import *
@@ -48,9 +48,9 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
         self.responseLabel = QLabel()
         self.responseLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)  # setFrameStyle::设置_框架_样式, StyledPanel::可变面板, Sunken::凹陷
 
-        self.bookButton = QPushButton("&Book")  #Book::预订[这里解'预订',别一解是 '书']
+        self.bookButton = QPushButton("&Book")  # Book::预订[这里解'预订',别一解是 '书']
         self.bookButton.setEnabled(False)
-        self.unBookButton = QPushButton("&Unbook")  #Unbook::取消预订
+        self.unBookButton = QPushButton("&Unbook")  # Unbook::取消预订
         self.unBookButton.setEnabled(False)
         self.bookingsOnDateButton = QPushButton("Bookings &on Date?")
         self.bookingsForRoomButton = QPushButton("Bookings &for Room?")
@@ -100,23 +100,20 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
 
         self.setWindowTitle("Building Services")
 
-
     def updateUi(self):  # 更新Ui
         enabled = False  # enabled::启用(ed::时)
         if (self.roomEdit.text() and
             self.dateEdit.date() > QDate.currentDate()):
             enabled = True
-        if self.request is not None:    #request::请求
+        if self.request is not None:    # request::请求
             enabled = False
         self.bookButton.setEnabled(enabled)
         self.unBookButton.setEnabled(enabled)
         self.bookingsForRoomButton.setEnabled(enabled)
 
-
     def closeEvent(self, event):
         self.socket.close()  # 套接字.关闭
         event.accept()
-
 
     def book(self):
         self.issueRequest("BOOK", self.roomEdit.text(),  # issueRequest::发出_请求
@@ -136,7 +133,6 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
         self.issueRequest("BOOKINGSFORROOM",
                           self.roomEdit.text(), self.dateEdit.date())
 
-
     def issueRequest(self, action, room, date):  # issueRequest::发出_请求, action::动作, room::房号, date::日期
         self.request = QByteArray()  # request::请求, QByteArray()::字节_数组[PS:保存在内存的数据格式,能像其他IODevice一样进行读写操作]
         stream = QDataStream(self.request, QIODevice.WriteOnly)
@@ -144,23 +140,21 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
         stream.writeUInt16(0)   # P397② 写入'两字节无符号整数'.
         stream.writeQString(action)  # 写入 动作
         stream.writeQString(room)   # 写入 房号
-        stream << date      #加入 日期
+        stream << date      # 加入 日期
         stream.device().seek(0)  # 移动到stream开始位置,P398③
         stream.writeUInt16(self.request.size() - SIZEOF_UINT16)  # size()::返回值以字节为单位.P398④
-        self.updateUi()     #目的是将 BOOK/UNBOOK 两个按钮设置为不可用.
-        if self.socket.isOpen():    #isOpen()::是否打开[检查套接字是否已打开(上一次没有关闭)].P398⑤
+        self.updateUi()     # 目的是将 BOOK/UNBOOK 两个按钮设置为不可用.
+        if self.socket.isOpen():    # isOpen()::是否打开[检查套接字是否已打开(上一次没有关闭)].P398⑤
             self.socket.close()
         self.responseLabel.setText("Connecting to server...")
         self.socket.connectToHost("localhost", PORT)    # 执行connectToHost::连接_到_主机/宿主
 #                                                       # 触发socket::connected信号[ROW:75↑],执行sendRequest()方法↓
 
-
-    def sendRequest(self):      #当该方法完成时没有错误并且服务器没有关闭即会返回响应此时执行readResponse()否则执行serverHasStopped()/serverHasError()
+    def sendRequest(self):      # 当该方法完成时没有错误并且服务器没有关闭即会返回响应此时执行readResponse()否则执行serverHasStopped()/serverHasError()
         self.responseLabel.setText("Sending request...")
         self.nextBlockSize = 0
         self.socket.write(self.request)  # 向 套接字 写入 请求.
         self.request = None
-        
 
     def readResponse(self):     # 读_响应
         stream = QDataStream(self.socket)
@@ -192,21 +186,19 @@ class BuildingServicesClient(QWidget):  # 构建_服务_客户端
             elif action == "UNBOOK":
                 msg = "Unbooked room {} for {}".format(room,
                         date.toString(Qt.ISODate))
-            elif action == "BOOKINGSONDATE":        #BOOKINGSONDATE::某一日期全部预订.
+            elif action == "BOOKINGSONDATE":        # BOOKINGSONDATE::某一日期全部预订.
                 msg = "Rooms booked on {}: {}".format(
                         date.toString(Qt.ISODate), room)
-            elif action == "BOOKINGSFORROOM":       #BOOKINGSFORROOM::特定房间的所有预订日期
+            elif action == "BOOKINGSFORROOM":       # BOOKINGSFORROOM::特定房间的所有预订日期
                 msg = "Room {} is booked on: {}".format(room,
                         dates)
             self.responseLabel.setText(msg)
             self.updateUi()
             self.nextBlockSize = 0
 
-
     def serverHasStopped(self):
         self.responseLabel.setText("Error: Connection closed by server")
         self.socket.close()
-
 
     def serverHasError(self, error):
         self.responseLabel.setText("Error: {}".format(

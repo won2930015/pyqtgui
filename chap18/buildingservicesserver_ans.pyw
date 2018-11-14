@@ -23,7 +23,7 @@ MAX_BOOKINGS_PER_DAY = 5    # 最大_预订_每_天[一天最大预订房间数]
 # Key = date, value = list of room IDs
 Bookings = collections.defaultdict(list)        # https://www.cnblogs.com/herbert/archive/2013/01/09/2852843.html
 #                                               # collections::集合, defaultdict::默认_字典(KEY:value对)
-#                                               # 创建Bookings为一个字典列表. -.-????
+#                                               # 创建Bookings为一个字典列表. -.-???? P400
 
 
 def printBookings():
@@ -48,7 +48,7 @@ class Socket(QTcpSocket):
             if self.bytesAvailable() < SIZEOF_UINT16:   # bytesAvailable()::有效_字节 [返回 有效字节数值<SIZEOF_UINT16时 返回]
                 return
             self.nextBlockSize = stream.readUInt16()
-        if self.bytesAvailable() < self.nextBlockSize:  #有效字节数值 与 读取的数值 不一致时 返回.
+        if self.bytesAvailable() < self.nextBlockSize:  # 有效字节数值 与 读取的数值 不一致时 返回.
             return
 
         action = stream.readQString()   # 读取'动作[BOOK/UNBOOK]'
@@ -109,7 +109,6 @@ class Socket(QTcpSocket):
             self.sendError("Unrecognized request")  # 未识别的请求
         printBookings()
 
-
     def sendError(self, msg):
         reply = QByteArray()    # 答复
         stream = QDataStream(reply, QIODevice.WriteOnly)
@@ -120,7 +119,6 @@ class Socket(QTcpSocket):
         stream.device().seek(0)
         stream.writeUInt16(reply.size() - SIZEOF_UINT16)
         self.write(reply)
-
 
     def sendReply(self, action, room, date):
         reply = QByteArray()    # 答复
@@ -143,7 +141,7 @@ class TcpServer(QTcpServer):
     def incomingConnection(self, socketId):  # incomingConnection::进入_连接, socketId::客户端传来的socket对象.
         socket = Socket(self)
         socket.setSocketDescriptor(socketId)    # 设置_套接字_描述符
-        
+
 
 class BuildingServicesDlg(QPushButton):     # 构建_服务_窗口
 
@@ -166,7 +164,6 @@ class BuildingServicesDlg(QPushButton):     # 构建_服务_窗口
         font.setPointSize(24)
         self.setFont(font)
         self.setWindowTitle("Building Services Server")
-
 
     def loadBookings(self):
         # Generate fake data    创建伪数据
