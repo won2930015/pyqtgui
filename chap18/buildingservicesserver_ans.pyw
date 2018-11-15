@@ -58,7 +58,7 @@ class Socket(QTcpSocket):
             room = stream.readQString()     # 读取 房间号
             stream >> date              # 读取 日期
             bookings = Bookings.get(date.toPyDate())    # 获得给定日期[date]的预订清单, toPyDate::去_计算_日期.
-            uroom = room    # uroom::房间副本[为什么要设置副本不太明白用意.]
+            uroom = room    # uroom::房间副本[P402-1]
         if action == "BOOK":
             if bookings is None:
                 bookings = Bookings[date.toPyDate()]    # 如果是空列表的再次获得给定日期的预定清单列表.
@@ -138,7 +138,7 @@ class TcpServer(QTcpServer):
     def __init__(self, parent=None):
         super(TcpServer, self).__init__(parent)
 
-    def incomingConnection(self, socketId):  # incomingConnection::进入_连接, socketId::客户端传来的socket对象.
+    def incomingConnection(self, socketId):  # incomingConnection::连入_连接, socketId::客户端传来的socket对象.
         socket = Socket(self)
         socket.setSocketDescriptor(socketId)    # 设置_套接字_描述符
 
