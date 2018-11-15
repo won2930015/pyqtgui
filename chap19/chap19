@@ -4,3 +4,12 @@
     3.将当前工作完全转交给另一个程序进行处理,用py库的子进程模块(subprocess module)或PyQt的QProccess类.例:makepyqt.pyw
 
  pageindexer.pyw:一个主(GUI)线程 和一个次线程(secondary thread)
+
+支持多线和的类:
+    QMutex:互拆体
+    QReadWriteLock:读写锁
+    Qsemaphore:信号量
+
+19.1 创建线程服务器[多线程版]
+    buildingservicesclient.pyw
+    buildingservicesserver.pyw
