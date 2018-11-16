@@ -23,7 +23,7 @@ MAX_BOOKINGS_PER_DAY = 5    # 最大_预订_每_天[一天最大预订房间数]
 # Key = date, value = list of room IDs
 Bookings = collections.defaultdict(list)  # https://www.cnblogs.com/herbert/archive/2013/01/09/2852843.html
 #                                        # collections::集合, defaultdict(list)::默认_字典(KEY:value对),list::value值的默认类型是list.
-#                                        # 创建Bookings为一个字典列表. -.-????
+#                                        # 创建Bookings为一个字典列表. -.-???? P400 /P403
 
 
 def printBookings():
@@ -40,7 +40,7 @@ class Thread(QThread):
         super(Thread, self).__init__(parent)
         self.socketId = socketId
 
-    def run(self):
+    def run(self):  # run方法完成 触发 finished()信号.P409-1
         socket = QTcpSocket()
         if not socket.setSocketDescriptor(self.socketId):   # setSocketDescriptor::设置_套接字_描述符
             self.emit(SIGNAL("error(int)"), socket.error())
@@ -58,7 +58,7 @@ class Thread(QThread):
             if socket.bytesAvailable() < nextBlockSize:     # bytesAvailable::有效_字节 < 读取字节
                 if (not socket.waitForReadyRead(60000) or   # waitForReadyRead(60000)::在最多60秒的时间内,进行阻塞并接收数据.
                     socket.bytesAvailable() < nextBlockSize):
-                    self.sendError(socket, "Cannot read client data")   # 无法读客户端数据.
+                    self.sendError(socket, "Cannot read client data")   # 译文：无法读取客户端数据.
                     return
             action = stream.readQString()
             date = QDate()
@@ -66,10 +66,10 @@ class Thread(QThread):
                 room = stream.readQString()
                 stream >> date
                 try:
-                    Thread.lock.lockForRead()       # 锁定_为_读
-                    bookings = Bookings.get(date.toPyDate())    # 在多线程中Bookings为共享字典变量为防冲突读取前先加 读锁定.
+                    Thread.lock.lockForRead()       # 锁定_为_读,在多线程中Bookings为共享字典变量为防冲突读取前先加 读锁定.
+                    bookings = Bookings.get(date.toPyDate())    # .get()是方法
                 finally:
-                    Thread.lock.unlock()
+                    Thread.lock.unlock()  # P409-2
                 uroom = room
             if action == "BOOK":
                 newlist = False
@@ -82,7 +82,7 @@ class Thread(QThread):
                 if newlist:
                     try:
                         Thread.lock.lockForWrite()  # 锁定_为_写
-                        bookings = Bookings[date.toPyDate()]
+                        bookings = Bookings[date.toPyDate()]  # 注意:Bookings.get(date.toPyDate())是调用对象的get()方法.
                     finally:
                         Thread.lock.unlock()
                 error = None
@@ -166,11 +166,11 @@ class TcpServer(QTcpServer):
     def __init__(self, parent=None):
         super(TcpServer, self).__init__(parent)
 
-    def incomingConnection(self, socketId):  # incomingConnection::进入_连接
-        thread = Thread(socketId, self)
+    def incomingConnection(self, socketId):  # incomingConnection::连入_连接 P408-1
+        thread = Thread(socketId, self)  # 每当有新的连入连接时就会创建一个新的线程对象.
         self.connect(thread, SIGNAL("finished()"),      # finished::完成 -->Thread.run方法完成发射此信号
                      thread, SLOT("deleteLater()"))     # deleteLater::册除_后
-        thread.start()
+        thread.start()  # P408-2::开启线程必须调用.start() 绝不要调用.run()
 
 
 class BuildingServicesDlg(QPushButton):     # 构建_服务_窗口

@@ -23,7 +23,7 @@ MAX_BOOKINGS_PER_DAY = 5    # 最大_预订_每_天[一天最大预订房间数]
 # Key = date, value = list of room IDs
 Bookings = collections.defaultdict(list)        # https://www.cnblogs.com/herbert/archive/2013/01/09/2852843.html
 #                                               # collections::集合, defaultdict::默认_字典(KEY:value对)
-#                                               # 创建Bookings为一个字典列表. -.-???? P400
+#                                               # 创建Bookings为一个字典列表. -.-???? P400 /P403
 
 
 def printBookings():
