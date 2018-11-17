@@ -13,7 +13,7 @@
 #########################
 
 
-import html.entities        #entities::实体 ,将html实体转换成unicdoe字符.
+import html.entities        # entities::实体 ,将html实体转换成unicdoe字符.
 import os
 import re
 import sys
@@ -22,29 +22,29 @@ from PyQt4.QtCore import *
 
 class Walker(QThread):
 
-    COMMON_WORDS_THRESHOLD = 250    #共同_单词_阈值
+    COMMON_WORDS_THRESHOLD = 250    # 共同_单词_阈值
     MIN_WORD_LEN = 3
     MAX_WORD_LEN = 25
-    INVALID_FIRST_OR_LAST = frozenset("0123456789_")  #INVALID_FIRST_OR_LAST::无效_头_或_尾 ,创建不可变集合-->frozenset({'4', '2', '_', '1', '9', '7', '5', '3', '6', '8', '0'})
-    STRIPHTML_RE = re.compile(r"<[^>]*?>", re.IGNORECASE|re.MULTILINE)      #re.IGNORECASE::忽略大小写 ,re.MULTILINE::跨多行
-    ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")   #(exp)::匹配exp,并捕获文本到自动命名的组里 ,\w::匹配字母，数字，下划线 ,\d::匹配数字.
-    SPLIT_RE = re.compile(r"\W+", re.IGNORECASE|re.MULTILINE)       #\W+::匹配1至任意多个不是字母，数字，下划线 的字符
+    INVALID_FIRST_OR_LAST = frozenset("0123456789_")  # INVALID_FIRST_OR_LAST::无效_头_或_尾 ,创建不可变集合-->frozenset({'4', '2', '_', '1', '9', '7', '5', '3', '6', '8', '0'})
+    STRIPHTML_RE = re.compile(r"<[^>]*?>", re.IGNORECASE|re.MULTILINE)      # re.IGNORECASE::忽略大小写 ,re.MULTILINE::跨多行
+    ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")   # (exp)::匹配exp,并捕获文本到自动命名的组里 ,\w::匹配字母，数字，下划线 ,\d::匹配数字.
+    SPLIT_RE = re.compile(r"\W+", re.IGNORECASE|re.MULTILINE)       # \W+::匹配1至任意多个不是字母，数字，下划线 的字符
 
     def __init__(self, lock, parent=None):
         super(Walker, self).__init__(parent)
         self.lock = lock
         self.stopped = False
-        self.mutex = QMutex()   #QMutex::互斥体-->一般用于保护 私有变量 不被别的次线程读写.
+        self.mutex = QMutex()   # QMutex::互斥体-->一般用于保护 私有变量 不被别的次线程读写.
         self.path = None
-        self.completed = False  #completed::完整的
+        self.completed = False  # completed::完整的
 
 
     def initialize(self, path, filenamesForWords, commonWords):
         self.stopped = False
         self.path = path
-        self.filenamesForWords = filenamesForWords  #记录单词所属的文件(绝对路径+文件名).
-        self.commonWords = commonWords   #共同_单词
-        self.completed = False  #completed::完整的
+        self.filenamesForWords = filenamesForWords  # 记录单词所属的文件(绝对路径+文件名).
+        self.commonWords = commonWords   # 共同_单词
+        self.completed = False  # completed::完整的
 
 
     def stop(self):
@@ -66,19 +66,19 @@ class Walker(QThread):
     def run(self):
         self.processFiles(self.path)
         self.stop()
-        self.emit(SIGNAL("finished(bool)"), self.completed)     #finished::完成的.
+        self.emit(SIGNAL("finished(bool)"), self.completed)     # finished::完成的.
 
 
     def processFiles(self, path):
-        def unichrFromEntity(match):    #unichrFromEntity::统一字符从实体(从实体转变为统一字符) ,match::匹配
-            text = match.group(match.lastindex)     #lastindex::最后_索引
-            if text.isdigit():  #isdigit::is_数字-->是实体码点 时.
+        def unichrFromEntity(match):    # unichrFromEntity::统一字符从实体(从实体转变为统一字符) ,match::匹配
+            text = match.group(match.lastindex)     # lastindex::最后_索引
+            if text.isdigit():  # isdigit::is_数字-->是实体码点 时.
                 return chr(int(text))
-            u = html.entities.name2codepoint.get(text)  #entities::实体 ,name2codepoint::实体名称 转 实体码点 ,实体=='€ № ‰ ' ,将实体字符名 转换成对应的unicode16进制数值
-                                                        #http://blog.csdn.net/ownfire/article/details/53941723
+            u = html.entities.name2codepoint.get(text)  # entities::实体 ,name2codepoint::实体名称 转 实体码点 ,实体=='€ № ‰ ' ,将实体字符名 转换成对应的unicode16进制数值
+#                                                       # http://blog.csdn.net/ownfire/article/details/53941723
             return chr(u) if u is not None else ""
 
-        for root, dirs, files in os.walk(path): #os.walk(path)::遍历path文件夹下的所有文件
+        for root, dirs, files in os.walk(path):  # os.walk(path)::遍历path文件夹下的所有文件
             if self.isStopped():
                 return
             for name in [name for name in files
@@ -100,8 +100,8 @@ class Walker(QThread):
                         fh.close()
                 if self.isStopped():
                     return
-                text = self.STRIPHTML_RE.sub("", text)
-                text = self.ENTITY_RE.sub(unichrFromEntity, text)
+                text = self.STRIPHTML_RE.sub("", text)  # 将"<>"替换成 ""
+                text = self.ENTITY_RE.sub(unichrFromEntity, text)  # 将html实体字符 替换成 unicode字符
                 text = text.lower()
                 for word in self.SPLIT_RE.split(text):
                     if (self.MIN_WORD_LEN <= len(word) <=

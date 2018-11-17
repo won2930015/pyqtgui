@@ -13,3 +13,7 @@
 19.1 创建线程服务器[多线程版]
     buildingservicesclient.pyw
     buildingservicesserver.pyw <--QReadWriteLock应用.
+
+
+
+    walker.py ::注意正则表达式的应用.

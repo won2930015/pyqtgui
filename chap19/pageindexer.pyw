@@ -9,11 +9,11 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import collections      #导入_集合模块
+import collections  # 导入_集合模块
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import walker #导入次线程 walker
+import walker  # 导入次线程 walker
 
 
 class Form(QDialog):
@@ -24,7 +24,7 @@ class Form(QDialog):
         self.fileCount = 0
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
-        self.lock = QReadWriteLock()    #读写锁用于保护共享数据.主线程读保护,次线程写保护.
+        self.lock = QReadWriteLock()    # 读写锁用于保护共享数据.主线程读保护,次线程写保护.
         self.path = QDir.homePath()
 
         pathLabel = QLabel("Indexing path:")
@@ -48,7 +48,7 @@ class Form(QDialog):
 
         filesIndexedLabel = QLabel("Files indexed")
         self.filesIndexedLCD = QLCDNumber()
-        self.filesIndexedLCD.setSegmentStyle(QLCDNumber.Flat)   #setSegmentStyle::设置_ 线段_标式 ,Flat::扁平的
+        self.filesIndexedLCD.setSegmentStyle(QLCDNumber.Flat)   #setSegmentStyle::设置_ 线段_样式 ,Flat::扁平的
 
         wordsIndexedLabel = QLabel("Words indexed")
         self.wordsIndexedLCD = QLCDNumber()
