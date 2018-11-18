@@ -29,10 +29,10 @@ class Form(QDialog):
 
         pathLabel = QLabel("Indexing path:")
         self.pathLabel = QLabel()
-        self.pathLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   #StyledPanel::可变面板 ,Sunken::凹陷
+        self.pathLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   # StyledPanel::可变面板 ,Sunken::凹陷
 
         self.pathButton = QPushButton("Set &Path...")
-        self.pathButton.setAutoDefault(False)   #设置_自动_默认
+        self.pathButton.setAutoDefault(False)   # 设置_自动_默认
 
         findLabel = QLabel("&Find word:")
         self.findEdit = QLineEdit()
@@ -48,7 +48,7 @@ class Form(QDialog):
 
         filesIndexedLabel = QLabel("Files indexed")
         self.filesIndexedLCD = QLCDNumber()
-        self.filesIndexedLCD.setSegmentStyle(QLCDNumber.Flat)   #setSegmentStyle::设置_ 线段_样式 ,Flat::扁平的
+        self.filesIndexedLCD.setSegmentStyle(QLCDNumber.Flat)   # setSegmentStyle::设置_ 线段_样式 ,Flat::扁平的
 
         wordsIndexedLabel = QLabel("Words indexed")
         self.wordsIndexedLCD = QLCDNumber()
@@ -60,14 +60,14 @@ class Form(QDialog):
 
         self.statusLabel = QLabel("Click the 'Set Path' "
                                   "button to start indexing")
-        self.statusLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)    #setFrameStyle::设置_框架_样式
+        self.statusLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)    # setFrameStyle::设置_框架_样式
 
         topLayout = QHBoxLayout()
         topLayout.addWidget(pathLabel)
-        topLayout.addWidget(self.pathLabel, 1)  #1::代表可扩展.
+        topLayout.addWidget(self.pathLabel, 1)  # 1::代表可扩展.
         topLayout.addWidget(self.pathButton)
         topLayout.addWidget(findLabel)
-        topLayout.addWidget(self.findEdit, 1)   #1::代表可扩展.
+        topLayout.addWidget(self.findEdit, 1)   # 1::代表可扩展.
 
         leftLayout = QVBoxLayout()
         leftLayout.addWidget(filesLabel)
@@ -97,19 +97,18 @@ class Form(QDialog):
         layout.addWidget(self.statusLabel)
         self.setLayout(layout)
 
-        self.walker = walker.Walker(self.lock, self)    #创建walker次线程对象.
-        self.connect(self.walker, SIGNAL("indexed(QString)"), self.indexed) #每历遍完一个文件,触发此信号.
-        self.connect(self.walker, SIGNAL("finished(bool)"), self.finished)  #历遍完所有文件触发此信号.(此例是单线程版所以只有一个walker实例)
+        self.walker = walker.Walker(self.lock, self)    # 创建walker次线程对象.
+        self.connect(self.walker, SIGNAL("indexed(QString)"), self.indexed)  # 每历遍完一个文件,触发此信号.
+        self.connect(self.walker, SIGNAL("finished(bool)"), self.finished)  # 历遍完所有文件触发此信号.(此例是单线程版所以只有一个walker实例)
         self.connect(self.pathButton, SIGNAL("clicked()"), self.setPath)
-        self.connect(self.findEdit, SIGNAL("returnPressed()"), self.find)   #returnPressed::回车(输入)_按下
+        self.connect(self.findEdit, SIGNAL("returnPressed()"), self.find)   # returnPressed::回车(输入)_按下
         self.setWindowTitle("Page Indexer")
-
 
     def setPath(self):
         self.pathButton.setEnabled(False)
         if self.walker.isRunning():
             self.walker.stop()
-            self.walker.wait()  #wait::等候--> 锁定到线程结束运行为止.即:run()方法返回才解锁.
+            self.walker.wait()  # wait::等候--> 锁定到线程结束运行为止.即:run()方法返回才解锁.
         path = QFileDialog.getExistingDirectory(self,
                     "Choose a Path to Index", self.path)
         if not path:
@@ -117,7 +116,7 @@ class Form(QDialog):
                                      "button to start indexing")
             self.pathButton.setEnabled(True)
             return
-        self.path = QDir.toNativeSeparators(path)       #toNativeSeparators::to_本地化_分隔符-->将默认的'/'分隔符转换成windows的'\'分隔符.
+        self.path = QDir.toNativeSeparators(path)       # toNativeSeparators::to_本地化_分隔符-->将默认的'/'分隔符转换成windows的'\'分隔符.
         self.findEdit.setFocus()
         self.pathLabel.setText(self.path)
         self.statusLabel.clear()
@@ -127,8 +126,7 @@ class Form(QDialog):
         self.commonWords = set()
         self.walker.initialize(self.path,
                 self.filenamesForWords, self.commonWords)
-        self.walker.start() #start::启动次线程walker.
-
+        self.walker.start()  # start::启动次线程walker.
 
     def find(self):
         word = self.findEdit.text()
@@ -139,7 +137,7 @@ class Form(QDialog):
         self.filesListWidget.clear()
         word = word.lower()
         if " " in word:
-            word = word.split()[0]  #如果词组有空白字符分隔,查找空白字符前的单词.
+            word = word.split()[0]  # 如果词组有空白字符分隔,查找空白字符前的单词.
         try:
             self.lock.lockForRead()
             found = word in self.commonWords
@@ -156,9 +154,9 @@ class Form(QDialog):
             self.lock.unlock()
         if not files:
             self.statusLabel.setText(
-                    "No indexed file contains the word '{}'".format(word))  #没有索引文件包含这单词{}.
+                    "No indexed file contains the word '{}'".format(word))  # 没有索引文件包含这单词{}.
             return
-        files = [QDir.toNativeSeparators(name) for name in      #toNativeSeparators::to_本地化_分隔符-->将默认的'/'转换成winodows的'\'.
+        files = [QDir.toNativeSeparators(name) for name in      # toNativeSeparators::to_本地化_分隔符-->将默认的'/'转换成winodows的'\'.
                  sorted(files, key=str.lower)]
         self.filesListWidget.addItems(files)
         self.statusLabel.setText(
@@ -166,7 +164,7 @@ class Form(QDialog):
                 len(files), word))
 
 
-    def indexed(self, fname):   #每历遍完一个文件执行此方法.
+    def indexed(self, fname):   # 每历遍完一个文件执行此方法.
         self.statusLabel.setText(fname)
         self.fileCount += 1
         if self.fileCount % 25 == 0:

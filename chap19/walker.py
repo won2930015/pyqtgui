@@ -9,7 +9,7 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 ##########################
-########  次线程  ########
+#         次线程         #
 #########################
 
 
@@ -26,7 +26,7 @@ class Walker(QThread):
     MIN_WORD_LEN = 3
     MAX_WORD_LEN = 25
     INVALID_FIRST_OR_LAST = frozenset("0123456789_")  # INVALID_FIRST_OR_LAST::无效_头_或_尾 ,创建不可变集合-->frozenset({'4', '2', '_', '1', '9', '7', '5', '3', '6', '8', '0'})
-    STRIPHTML_RE = re.compile(r"<[^>]*?>", re.IGNORECASE|re.MULTILINE)      # re.IGNORECASE::忽略大小写 ,re.MULTILINE::跨多行
+    STRIPHTML_RE = re.compile(r"<[^>]*?>", re.IGNORECASE | re.MULTILINE)      # re.IGNORECASE::忽略大小写 ,re.MULTILINE::跨多行
     ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")   # (exp)::匹配exp,并捕获文本到自动命名的组里 ,\w::匹配字母，数字，下划线 ,\d::匹配数字.
     SPLIT_RE = re.compile(r"\W+", re.IGNORECASE|re.MULTILINE)       # \W+::匹配1至任意多个不是字母，数字，下划线 的字符
 
@@ -38,14 +38,12 @@ class Walker(QThread):
         self.path = None
         self.completed = False  # completed::完整的
 
-
     def initialize(self, path, filenamesForWords, commonWords):
         self.stopped = False
         self.path = path
         self.filenamesForWords = filenamesForWords  # 记录单词所属的文件(绝对路径+文件名).
         self.commonWords = commonWords   # 共同_单词
         self.completed = False  # completed::完整的
-
 
     def stop(self):
         try:
@@ -54,7 +52,6 @@ class Walker(QThread):
         finally:
             self.mutex.unlock()
 
-
     def isStopped(self):
         try:
             self.mutex.lock()
@@ -62,15 +59,13 @@ class Walker(QThread):
         finally:
             self.mutex.unlock()
 
-
     def run(self):
         self.processFiles(self.path)
         self.stop()
         self.emit(SIGNAL("finished(bool)"), self.completed)     # finished::完成的.
 
-
     def processFiles(self, path):
-        def unichrFromEntity(match):    # unichrFromEntity::统一字符从实体(从实体转变为统一字符) ,match::匹配
+        def unichrFromEntity(match):    # unichrFromEntity::统一字符从实体(从实体转变为统一字符) ,match::匹配(匹配结果对象)
             text = match.group(match.lastindex)     # lastindex::最后_索引
             if text.isdigit():  # isdigit::is_数字-->是实体码点 时.
                 return chr(int(text))
