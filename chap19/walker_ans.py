@@ -39,9 +39,8 @@ class Walker(QThread):
         self.filenamesForWords = filenamesForWords
         self.commonWords = commonWords
         self.stopped = False
-        self.mutex = QMutex()   #QMutex::互斥体-->一般用于保护 私有变量 不被别的次线程读写.
-        self.completed = False  #completed::完整的
-
+        self.mutex = QMutex()   # QMutex::互斥体-->一般用于保护 私有变量 不被别的次线程读写.
+        self.completed = False  # completed::完整的
 
     def stop(self):
         try:
@@ -50,7 +49,6 @@ class Walker(QThread):
         finally:
             self.mutex.unlock()
 
-
     def isStopped(self):
         try:
             self.mutex.lock()
@@ -58,21 +56,19 @@ class Walker(QThread):
         finally:
             self.mutex.unlock()
 
-
     def run(self):
         self.processFiles()
         self.stop()
-        self.emit(SIGNAL("finished(bool,int)"), self.completed,      #finished::完成的.
+        self.emit(SIGNAL("finished(bool,int)"), self.completed,      # finished::完成的.
                   self.index)
 
-
     def processFiles(self):
-        def unichrFromEntity(match):    #unichrFromEntity::统一字符从实体(从实体转变为统一字符) ,match::匹配
-            text = match.group(match.lastindex)     #lastindex::最后_索引
-            if text.isdigit():  #isdigit::is_数字-->是实体码点 时.
+        def unichrFromEntity(match):    # unichrFromEntity::统一字符从实体(从实体转变为统一字符) ,match::匹配
+            text = match.group(match.lastindex)     # lastindex::最后_索引
+            if text.isdigit():  # isdigit::is_数字-->是实体码点 时.
                 return chr(int(text))
-            u = html.entities.name2codepoint.get(text)  #entities::实体 ,name2codepoint::实体名称 转 实体码点 ,实体=='€ № ‰ ' ,将实体字符名 转换成对应的unicode16进制数值
-                                                        #http://blog.csdn.net/ownfire/article/details/53941723
+            u = html.entities.name2codepoint.get(text)  # entities::实体 ,name2codepoint::实体名称 转 实体码点 ,实体=='€ № ‰ ' ,将实体字符名 转换成对应的unicode16进制数值
+#                                                       # http://blog.csdn.net/ownfire/article/details/53941723
             return chr(u) if u is not None else ""
 
         for fname in self.files:
@@ -84,7 +80,7 @@ class Walker(QThread):
                 fh = open(fname, "r", encoding="utf-8",
                           errors="ignore")
                 text = fh.read()
-            except EnvironmentError as e:       #EnvironmentError::环境_错误
+            except EnvironmentError as e:       # EnvironmentError::环境_错误
                 sys.stderr.write("Error: {}\n".format(e))
                 continue
             finally:

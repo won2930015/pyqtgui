@@ -9,19 +9,19 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
-import collections      #导入_集合模块
+import collections      # 导入_集合模块
 import sys
 import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import walker_ans as walker #导入次线程 walker
+import walker_ans as walker  # 导入次线程 walker
 
 
-def isAlive(qobj):  #is_活着的
+def isAlive(qobj):  # is_活着的
     import sip
     try:
-        sip.unwrapinstance(qobj)    #unwrapinstance::解_包_实例.::解包对象得到指针(实例的引用).
-    except RuntimeError:        #RuntimeError::运行时错误.
+        sip.unwrapinstance(qobj)    # unwrapinstance::解_包_实例.::解包对象得到指针(实例的引用).
+    except RuntimeError:        # RuntimeError::运行时错误.
         return False
     return True
 
@@ -35,15 +35,15 @@ class Form(QDialog):
         self.fileCount = 0
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
-        self.lock = QReadWriteLock()    #读写锁用于保护共享数据.主线程读保护,次线程写保护.
+        self.lock = QReadWriteLock()    # 读写锁用于保护共享数据.主线程读保护,次线程写保护.
         self.path = QDir.homePath()
 
         pathLabel = QLabel("Indexing path:")
         self.pathLabel = QLabel()
-        self.pathLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   #StyledPanel::可变面板 ,Sunken::凹陷
+        self.pathLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)   # StyledPanel::可变面板 ,Sunken::凹陷
 
         self.pathButton = QPushButton("Set &Path...")
-        self.pathButton.setAutoDefault(False)   #设置_自动_默认
+        self.pathButton.setAutoDefault(False)   # 设置_自动_默认
 
         findLabel = QLabel("&Find word:")
         self.findEdit = QLineEdit()
@@ -59,7 +59,7 @@ class Form(QDialog):
 
         filesIndexedLabel = QLabel("Files indexed")
         self.filesIndexedLCD = QLCDNumber()
-        self.filesIndexedLCD.setSegmentStyle(QLCDNumber.Flat)   #setSegmentStyle::设置_ 线段_标式 ,Flat::扁平的
+        self.filesIndexedLCD.setSegmentStyle(QLCDNumber.Flat)   # setSegmentStyle::设置_ 线段_标式 ,Flat::扁平的
 
         wordsIndexedLabel = QLabel("Words indexed")
         self.wordsIndexedLCD = QLCDNumber()
@@ -71,14 +71,14 @@ class Form(QDialog):
 
         self.statusLabel = QLabel("Click the 'Set Path' "
                                   "button to start indexing")
-        self.statusLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)    #setFrameStyle::设置_框架_样式
+        self.statusLabel.setFrameStyle(QFrame.StyledPanel | QFrame.Sunken)    # setFrameStyle::设置_框架_样式
 
         topLayout = QHBoxLayout()
         topLayout.addWidget(pathLabel)
-        topLayout.addWidget(self.pathLabel, 1)  #1::代表可扩展.
+        topLayout.addWidget(self.pathLabel, 1)  # 1::代表可扩展.
         topLayout.addWidget(self.pathButton)
         topLayout.addWidget(findLabel)
-        topLayout.addWidget(self.findEdit, 1)   #1::代表可扩展.
+        topLayout.addWidget(self.findEdit, 1)   # 1::代表可扩展.
 
         leftLayout = QVBoxLayout()
         leftLayout.addWidget(filesLabel)
@@ -89,7 +89,7 @@ class Form(QDialog):
         rightLayout.addWidget(self.commonWordsListWidget)
 
         middleLayout = QHBoxLayout()
-        middleLayout.addLayout(leftLayout, 1)   #1::代表可扩展.
+        middleLayout.addLayout(leftLayout, 1)   # 1::代表可扩展.
         middleLayout.addLayout(rightLayout)
 
         bottomLayout = QHBoxLayout()
@@ -114,8 +114,7 @@ class Form(QDialog):
         self.connect(self.findEdit, SIGNAL("returnPressed()"), self.find)
         self.setWindowTitle("Page Indexer")
 
-
-    def stopWalkers(self):  #停止所有线程.
+    def stopWalkers(self):  # 停止所有次线程.
         for walker in self.walkers:
             if isAlive(walker) and walker.isRunning():
                 walker.stop()
@@ -125,11 +124,10 @@ class Form(QDialog):
         self.walkers = []
         self.completed = []
 
-
     def setPath(self):
         self.stopWalkers()
         self.pathButton.setEnabled(False)
-        path = QFileDialog.getExistingDirectory(self,       #getExistingDirectory::获得_存在_目录
+        path = QFileDialog.getExistingDirectory(self,       # getExistingDirectory::获得_存在_目录
                     "Choose a Path to Index", self.path)
         if not path:
             self.statusLabel.setText("Click the 'Set Path' "
@@ -137,47 +135,46 @@ class Form(QDialog):
             self.pathButton.setEnabled(True)
             return
         self.statusLabel.setText("Scanning directories...")
-        QApplication.processEvents() # Needed for Windows   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)
-        self.path = QDir.toNativeSeparators(path)       #toNativeSeparators::to_本地化_分隔符-->将默认的'/'分隔符转换成windows的'\'分隔符.
+        QApplication.processEvents()  # Needed for Windows   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)
+        self.path = QDir.toNativeSeparators(path)       # toNativeSeparators::to_本地化_分隔符-->将默认的'/'分隔符转换成windows的'\'分隔符.
         self.findEdit.setFocus()
         self.pathLabel.setText(self.path)
         self.statusLabel.clear()
         self.filesListWidget.clear()
         self.fileCount = 0
-        self.filenamesForWords = collections.defaultdict(set)   #创建字典value为set().
+        self.filenamesForWords = collections.defaultdict(set)   # 创建默认字典value为set(集).
         self.commonWords = set()
-        nofilesfound = True     #nofilesfound::没_文件_找到
+        nofilesfound = True     # nofilesfound::没_文件_找到
         files = []
         index = 0
-        for root, dirs, fnames in os.walk(self.path):   #os.walk(self.path)::历遍path下所有文件夹|文件.
+        for root, dirs, fnames in os.walk(self.path):   # os.walk(self.path)::历遍path下所有文件夹|文件.
             for name in [name for name in fnames
                          if name.endswith((".htm", ".html"))]:
                 files.append(os.path.join(root, name))
-                if len(files) == 1000:      #文件每达1000个建立一个线程.
+                if len(files) == 1000:      # 文件每达1000个建立一个线程.
                     self.processFiles(index, files[:])
                     files = []
                     index += 1
                     nofilesfound = False
-        if files:   #不足1000个文件也用一个线程处理.
+        if files:   # 不足1000个文件也用一个线程处理.
             self.processFiles(index, files[:])
             nofilesfound = False
         if nofilesfound:
             self.finishedIndexing()
             self.statusLabel.setText(
-                    "No HTML files found in the given path")    #给出的路径没有找到HTML文件.
-
+                    "No HTML files found in the given path")    # 给出的路径没有找到HTML文件.
 
     def processFiles(self, index, files):
         thread = walker.Walker(index, self.lock, files,
                 self.filenamesForWords, self.commonWords, self)
-        self.connect(thread, SIGNAL("indexed(QString,int)"), self.indexed)  #walker每历遍一个文件触发一次些信号.
-        self.connect(thread, SIGNAL("finished(bool,int)"), self.finished)   #walker完成所有文件历遍时角发此信号.(这里一个walker代表了一个线程)
+        self.connect(thread, SIGNAL("indexed(QString,int)"), self.indexed)  # walker每历遍一个文件触发一次些信号.
+        self.connect(thread, SIGNAL("finished(bool,int)"), self.finished)   # walker完成所有文件历遍时角发此信号.(这里一个walker代表了一个线程)
         self.connect(thread, SIGNAL("finished()"),
-                     thread, SLOT("deleteLater()")) #触发deleteLater槽::册除完成的线程节省内存.
+                     thread, SLOT("deleteLater()"))  # 触发deleteLater槽::册除完成的线程节省内存.
         self.walkers.append(thread)
         self.completed.append(False)
         thread.start()
-        thread.wait(300) # Needed for Windows ,wait(300)::等待(300豪秒)
+        thread.wait(300)  # Needed for Windows ,wait(300)::等待(300豪秒)
 
 
     def find(self):
@@ -197,7 +194,7 @@ class Form(QDialog):
             self.mutex.unlock()
         word = word.lower()
         if " " in word:
-            word = word.split()[0]  #如果词组有空白字符分隔,查找空白字符前的单词.
+            word = word.split()[0]   # 如果词组有空白字符分隔,查找空白字符前的单词.
         try:
             self.lock.lockForRead()
             found = word in self.commonWords
@@ -220,23 +217,22 @@ class Form(QDialog):
             try:
                 self.mutex.lock()
                 self.statusLabel.setText("No indexed file contains "
-                        "the word '{}'".format(word))           #没有索引文件包含这单词{}.
+                        "the word '{}'".format(word))           # 没有索引文件包含这单词{}.
             finally:
                 self.mutex.unlock()
             return
-        files = [QDir.toNativeSeparators(name) for name in      #toNativeSeparators::to_本地化_分隔符-->将默认的'/'转换成winodows的'\'.
+        files = [QDir.toNativeSeparators(name) for name in      # toNativeSeparators::to_本地化_分隔符-->将默认的'/'转换成winodows的'\'.
                  sorted(files, key=str.lower)]
         try:
             self.mutex.lock()
             self.filesListWidget.addItems(files)
             self.statusLabel.setText(
-                    "{} indexed files contain the word '{}'".format(        #{}个索引文件包含单词{}.
+                    "{} indexed files contain the word '{}'".format(        # {}个索引文件包含单词{}.
                     len(files), word))
         finally:
             self.mutex.unlock()
 
-
-    def indexed(self, fname, index):    #walker每历遍完一个文件时执行此函数.
+    def indexed(self, fname, index):    # walker每历遍完一个文件时执行此函数.
         try:
             self.mutex.lock()
             self.statusLabel.setText(fname)
@@ -271,12 +267,11 @@ class Form(QDialog):
             finally:
                 self.mutex.unlock()
 
-
-    def finished(self, completed, index):       #walker历遍完所文件时执行此函数.
-        done = False        #done::已完成
+    def finished(self, completed, index):       # walker历遍完所文件时执行此函数.
+        done = False        # done::已完成
         if self.walkers:
             self.completed[index] = True
-            if all(self.completed):     #all(x)参数x对象的所有元素不为0、''、False或者x为空对象，则返回True，否则返回False
+            if all(self.completed):     # all(x)参数x对象的所有元素不为0、''、False或者x为空对象，则返回True，否则返回False
                 try:
                     self.mutex.lock()
                     self.statusLabel.setText("Finished")
@@ -293,14 +288,12 @@ class Form(QDialog):
         if done:
             self.finishedIndexing()
 
-
     def reject(self):
         if not all(self.completed):
             self.stopWalkers()
             self.finishedIndexing()
         else:
             self.accept()
-
 
     def closeEvent(self, event=None):
         self.stopWalkers()
@@ -311,7 +304,7 @@ class Form(QDialog):
         self.wordsIndexedLCD.display(len(self.filenamesForWords))
         self.commonWordsLCD.display(len(self.commonWords))
         self.pathButton.setEnabled(True)
-        QApplication.processEvents() # Needed for Windows   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)
+        QApplication.processEvents()  # Needed for Windows   ,processEvents::进程_事件 ,空闲时交还进程的控制权(这样软件界面不会假死.可响应其他事件.)
 
 
 app = QApplication(sys.argv)
