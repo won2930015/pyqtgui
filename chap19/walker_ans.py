@@ -9,11 +9,11 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 ##########################
-########  次线程  ########
+#         次线程         #
 #########################
 
 
-import html.entities        #entities::实体 ,将html实体转换成unicdoe字符.
+import html.entities        # entities::实体 ,将html实体转换成unicdoe字符.
 import os
 import re
 import sys
@@ -22,13 +22,13 @@ from PyQt4.QtCore import *
 
 class Walker(QThread):
 
-    COMMON_WORDS_THRESHOLD = 250    #共同_单词_阈值
+    COMMON_WORDS_THRESHOLD = 250    # 共同_单词_阈值
     MIN_WORD_LEN = 3
     MAX_WORD_LEN = 25
-    INVALID_FIRST_OR_LAST = frozenset("0123456789_")  #INVALID_FIRST_OR_LAST::无效_头_或_尾 ,创建不可变集合-->frozenset({'4', '2', '_', '1', '9', '7', '5', '3', '6', '8', '0'})
-    STRIPHTML_RE = re.compile(r"<[^>]*?>", re.IGNORECASE|re.MULTILINE)      #re.IGNORECASE::忽略大小写 ,re.MULTILINE::跨多行
-    ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")   #(exp)::匹配exp,并捕获文本到自动命名的组里 ,\w::匹配字母，数字，下划线 ,\d::匹配数字.
-    SPLIT_RE = re.compile(r"\W+", re.IGNORECASE|re.MULTILINE)       #\W+::匹配1至任意多个不是字母，数字，下划线 的字符
+    INVALID_FIRST_OR_LAST = frozenset("0123456789_")  # INVALID_FIRST_OR_LAST::无效_头_或_尾 ,创建不可变集合-->frozenset({'4', '2', '_', '1', '9', '7', '5', '3', '6', '8', '0'})
+    STRIPHTML_RE = re.compile(r"<[^>]*?>", re.IGNORECASE|re.MULTILINE)      # re.IGNORECASE::忽略大小写 ,re.MULTILINE::跨多行
+    ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")   # (exp)::匹配exp,并捕获文本到自动命名的组里 ,\w::匹配字母，数字，下划线 ,\d::匹配数字.
+    SPLIT_RE = re.compile(r"\W+", re.IGNORECASE | re.MULTILINE)       # \W+::匹配1至任意多个不是字母，数字，下划线 的字符
 
     def __init__(self, index, lock, files, filenamesForWords,
                  commonWords, parent=None):
