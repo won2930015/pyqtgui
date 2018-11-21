@@ -112,8 +112,8 @@ class Form(QDialog):
         self.pathButton.setEnabled(False)
         if self.walker.isRunning():
             self.walker.stop()
-            self.walker.wait()  # wait::等候--> 锁定到线程结束运行为止.即:run()方法返回才解锁.
-        path = QFileDialog.getExistingDirectory(self,
+            self.walker.wait()  # wait::等候--> 锁定到线程结束运行为止.即:run()方法返回才解锁. P414-1
+        path = QFileDialog.getExistingDirectory(self,   #P414-2
                     "Choose a Path to Index", self.path)
         if not path:
             self.statusLabel.setText("Click the 'Set Path' "

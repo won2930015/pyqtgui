@@ -36,7 +36,7 @@ class Form(QDialog):
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
         self.lock = QReadWriteLock()    # 读写锁用于保护共享数据.主线程读保护,次线程写保护.
-        self.path = QDir.homePath()
+        self.path = QDir.homePath()  # 返回系统主目录(windows 是C:\Documents and Settings\Administrator\)
 
         pathLabel = QLabel("Indexing path:")
         self.pathLabel = QLabel()
@@ -127,7 +127,7 @@ class Form(QDialog):
     def setPath(self):
         self.stopWalkers()
         self.pathButton.setEnabled(False)
-        path = QFileDialog.getExistingDirectory(self,       # getExistingDirectory::获得_存在_目录
+        path = QFileDialog.getExistingDirectory(self,       # getExistingDirectory::获得_存在_目录 P414-2
                     "Choose a Path to Index", self.path)
         if not path:
             self.statusLabel.setText("Click the 'Set Path' "
