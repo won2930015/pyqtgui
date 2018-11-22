@@ -73,7 +73,7 @@ class Walker(QThread):
 #                                                       # http://blog.csdn.net/ownfire/article/details/53941723
             return chr(u) if u is not None else ""
 
-        for root, dirs, files in os.walk(path):  # os.walk(path)::遍历path文件夹下的所有文件
+        for root, dirs, files in os.walk(path):  # os.walk(path)::遍历path文件夹下的所有文件/P421
             if self.isStopped():
                 return
             for name in [name for name in files
@@ -96,7 +96,7 @@ class Walker(QThread):
                 if self.isStopped():
                     return
                 text = self.STRIPHTML_RE.sub("", text)  # 将"<>"替换成 ""
-                text = self.ENTITY_RE.sub(unichrFromEntity, text)  # 将html实体字符 替换成 unicode字符
+                text = self.ENTITY_RE.sub(unichrFromEntity, text)  # 将html实体字符 替换成 unicode字符 P421-1
                 text = text.lower()
                 for word in self.SPLIT_RE.split(text):
                     if (self.MIN_WORD_LEN <= len(word) <=

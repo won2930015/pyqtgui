@@ -126,7 +126,7 @@ class Form(QDialog):
         self.commonWords = set()
         self.walker.initialize(self.path,
                 self.filenamesForWords, self.commonWords)
-        self.walker.start()  # start::启动次线程walker.
+        self.walker.start()  # start::启动次线程walker. P419:调用.start()时会随之调用.run()
 
     def find(self):
         word = self.findEdit.text()

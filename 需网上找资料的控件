@@ -1,0 +1,5 @@
+
+上网找资料.
+QCompleter(文本补齐)
+QFileSystemWatcher(监控文件系统中文件和目录所发生的变化)
+QSystemTrayIcon(在系统栏上放一个带弹出菜单的图标)

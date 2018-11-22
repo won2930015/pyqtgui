@@ -5,7 +5,7 @@
 
  pageindexer.pyw:一个主(GUI)线程 和一个次线程(secondary thread)
 
-支持多线和的类:
+支持多线和的类: 主要作用是保护共享数据的读写.
     QMutex:互拆体
     QReadWriteLock:读写锁
     Qsemaphore:信号量
@@ -14,6 +14,15 @@
     buildingservicesclient.pyw
     buildingservicesserver.pyw <--QReadWriteLock应用.
 
-
-
     walker.py ::注意正则表达式的应用.
+
+19.2/3
+pageindexer.pyw/walker.py : 单次线程的应用
+pageindexer_26.pyw/walker_26.py :  QMutexLocker(self.mutex) / QReadLocker(self.lock) 的应用
+pageindexer_ans.pyw/walker_ans.py : 多个次线程的应用(在低配置电脑(双核)运行太慢注意)
+
+
+上网找资料.
+QCompleter(文本补齐)
+QFileSystemWatcher(监控文件系统中文件和目录所发生的变化)
+QSystemTrayIcon(在系统栏上放一个带弹出菜单的图标)
