@@ -31,8 +31,8 @@ class Length(object):
                    m=1.0, meter=1.0, meters=1.0, metre=1.0, metres=1.0,
                    km=0.001, kilometer=0.001, kilometers=0.001,
                    kilometre=0.001, kilometres=0.001)
-    convert["in"] = 39.37
-    numbers = frozenset("0123456789.eE")
+    convert["in"] = 39.37  # in 是py关键字需单独输入.
+    numbers = frozenset("0123456789.eE")  # 固定不变集.
 
 
     def __init__(self, length=None):
@@ -81,10 +81,10 @@ class Length(object):
                     break
             else:
                 raise ValueError("need an amount and a unit")
-            self.__amount /= Length.convert[unit]       #将单位转换成 米(M)储存.
+            self.__amount /= Length.convert[unit]       # 将单位转换成 米(M)储存.
 
 
-    def set(self, length):  #设置长度
+    def set(self, length):  # 设置长度
         """Sets the length to the new given length
 
         >>> x = Length("3m")
@@ -97,7 +97,7 @@ class Length(object):
         self.__init__(length)
 
 
-    def to(self, unit): #转换单位
+    def to(self, unit):  # 转换单位
         """Returns the length as a float in the given unit.
 
         >>> x = Length("10mi")
@@ -116,7 +116,7 @@ class Length(object):
         return self.__amount * Length.convert[unit]
 
 
-    def copy(self): #复制
+    def copy(self):  # 复制
         """Returns a unique copy of the length
 
         >>> x = Length("2m")
@@ -139,7 +139,7 @@ class Length(object):
 
 
     @staticmethod
-    def units():    #units::返回所有单位.
+    def units():    # units::返回所有单位.
         return Length.convert.keys()
 
 
@@ -197,7 +197,7 @@ class Length(object):
         return "{0:.3f}m".format(self.__amount)
 
 
-    def __add__(self, other):
+    def __add__(self, other):  # Y=Y+X
         """
         >>> x = Length("10mi")
         >>> y = Length("10KM")
@@ -212,7 +212,7 @@ class Length(object):
         return Length("{0:f}m".format((self.__amount + other.__amount)))
 
 
-    def __iadd__(self, other):
+    def __iadd__(self, other):   # y += x
         """
         >>> x = Length("3.5mi")
         >>> y = Length("200m")
@@ -228,7 +228,7 @@ class Length(object):
         return self
 
 
-    def __sub__(self, other):
+    def __sub__(self, other):  # Y=Y-1
         """
         >>> Length("1km") - Length("100m")
         Length('900.000000m')
@@ -240,7 +240,7 @@ class Length(object):
         return Length("{0:f}m".format(self.__amount - other.__amount))
 
 
-    def __isub__(self, other):
+    def __isub__(self, other):  # Y-=1
         """
         >>> x = Length("1km")
         >>> x -= Length("150m")
@@ -272,7 +272,7 @@ class Length(object):
         return Length("{0:f}m".format(self.__amount * other))
 
 
-    def __rmul__(self, other):
+    def __rmul__(self, other):  # 右乘 :当乘数没有实现__mul__()方法时使用.
         """
         >>> x = Length("350m")
         >>> 3 * x
@@ -292,7 +292,7 @@ class Length(object):
         return self
 
 
-    def __truediv__(self, other):
+    def __truediv__(self, other):  # 实数除法,不支持浮点数.
         """
         >>> x = Length("360m")
         >>> x / 3
@@ -338,7 +338,7 @@ class Length(object):
         return int(round(self.__amount))
 
 
-    def __round__(self):
+    def __round__(self):   # 四舍五入
         return self.__int__()
 
 

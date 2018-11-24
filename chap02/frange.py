@@ -73,7 +73,7 @@ def gfrange(arg0, arg1=None, arg2=None):
         stop = arg0
     # Return each value on demand
     while start < (stop - (inc / 2.0)):
-        yield start #<<<<生成器
+        yield start  #<<<<生成器
         start += inc
 
 

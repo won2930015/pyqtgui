@@ -12,7 +12,7 @@
 """Provides the Rectangle example classes.
 """
 
-class Rectangle(object):        #使用java范式定义的类
+class Rectangle(object):       # 使用java范式定义的类
 
     def __init__(self, width, height):
         self.width = width
@@ -42,14 +42,14 @@ class Rectangle(object):        #使用java范式定义的类
     def __lt__(self, other):
         return self.area() < other.area()
 
-    def __nonzero__(self):
+    def __nonzero__(self):   # 非零?nonzero方法用于将类转换为布尔值。通常在用类进行判断和将类转换成布尔值时调用。比如语句if A: print 'foo'中就会调用A.nonzero()来判断。
         return self.width or self.height
 
     def __repr__(self):
         return "Rectangle({}, {})".format(self.width, self.height)
 
 
-class Rectangle(object):    #用property(属性)函数,定义只读属性area
+class Rectangle(object):    # 用property(属性)函数,定义只读属性area
 
     def __init__(self, width, height):
         self.width = width
@@ -75,7 +75,7 @@ class Rectangle(object):    #用property(属性)函数,定义只读属性area
         return "Rectangle({}, {})".format(self.width, self.height)
 
 
-class Rectangle(object):    #用property(属性)函数,定义 只读属性 area(), 读写属性 height(), width()
+class Rectangle(object):    # 用property(属性)函数,定义 只读属性 area(), 读写属性 height(), width()
 
     def __init__(self, width, height):
         self.__width = width

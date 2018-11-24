@@ -12,12 +12,12 @@
 """Provides the Item example classes.
 """
 
-class Item(object):  #项
+class Item(object):  # 项
 
     def __init__(self, artist, title, year=None):
-        self.__artist = artist  #artist::艺术家
-        self.__title = title    #title::标题
-        self.__year = year      #year::年代
+        self.__artist = artist  # artist::艺术家
+        self.__title = title    # title::标题
+        self.__year = year      # year::年代
 
 
     def artist(self):
@@ -51,7 +51,7 @@ class Item(object):  #项
         return "{} by {}{}".format(self.__title, self.__artist, year)
 
 
-class Painting(Item):   #油画
+class Painting(Item):   # 油画
 
     def __init__(self, artist, title, year=None):
         super(Painting, self).__init__(artist, title, year)
