@@ -29,12 +29,12 @@ class Form(QDialog):
         super(Form, self).__init__(parent)
 
         self.numberFormatDlg = None
-        self.format = dict(thousandsseparator=",", decimalmarker=".",  # thousandsseparator::千位分隔符号 ,decimalmarker::小数点标识
-                decimalplaces=2, rednegatives=False)  # decimalplaces::小数保留位数 ,rednegatives::开启红名
+        self.format = dict(thousandsseparator=",", decimalmarker=".",  # thousands_separator:千位分隔符号,decimal_marker:小数点标识
+                decimalplaces=2, rednegatives=False)  # decimal_places::小数保留位数 ,red_negatives::红名否定
         self.numbers = {}
         for x in range(self.X_MAX):
             for y in range(self.Y_MAX):
-                self.numbers[(x, y)] = (10000 * random.random()) - 5000  #生成60*26的随机数值表
+                self.numbers[(x, y)] = (10000 * random.random()) - 5000  # 生成26*60的随机数值表
 
         self.table = QTableWidget()
         formatButton1 = QPushButton("Set Number Format... (&Modal)")
@@ -62,7 +62,7 @@ class Form(QDialog):
 
 
     def refreshTable(self):
-        '''更新_表'''
+        """更新_表"""
 
         self.table.clear()
         self.table.setColumnCount(self.X_MAX)  # 设置_列
@@ -72,7 +72,7 @@ class Form(QDialog):
         for x in range(self.X_MAX):
             for y in range(self.Y_MAX):
                 fraction, whole = math.modf(self.numbers[(x, y)])  # fraction::分数, whole::整数 ,modf()::浮点数分解函数
-                sign = "-" if whole < 0 else ""  # 整数小于的加 -号.
+                sign = "-" if whole < 0 else ""  # sign:符号, 整数是负数时加 -号.
                 whole = "{}".format(int(math.floor(abs(whole))))  # 向下取整::math.floor(3.9999)==3
                 digits = []
                 for i, digit in enumerate(reversed(whole)):  # 遍历整数部份加入千位分隔符.
@@ -95,7 +95,7 @@ class Form(QDialog):
 
 
     def setNumberFormat1(self):
-        '''应用模态弹出窗设置表格数据的显示样式'''
+        """应用模态弹出窗设置表格数据的显示样式"""
         dialog = numberformatdlg1.NumberFormatDlg(self.format, self)
         if dialog.exec_():  # 使用模态方式弹出标准对话框.
             self.format = dialog.numberFormat()  # 返回标准对话框的设置内容.
@@ -103,7 +103,7 @@ class Form(QDialog):
 
 
     def setNumberFormat2(self):
-        '''非模态弹出窗口+提交后更新'''
+        """非模态弹出窗口+提交后更新"""
         dialog = numberformatdlg2.NumberFormatDlg(self.format, self)
         self.connect(dialog, SIGNAL("changed"), self.refreshTable)
         dialog.show()

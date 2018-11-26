@@ -15,7 +15,7 @@ from PyQt4.QtGui import *
 
 
 class NumberFormatDlg(QDialog):
-    '''模态窗口+提交后验证方式.'''
+    """模态窗口+提交后验证方式."""
 
     def __init__(self, format, parent=None):
         super(NumberFormatDlg, self).__init__(parent)

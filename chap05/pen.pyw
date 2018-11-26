@@ -122,7 +122,7 @@ class Form(QDialog):
         layout.addLayout(buttonLayout, 2, 0, 1, 3)
 
         form = QDialog()  # 创建对话框实例.
-        form.setLayout(layout)  # 设置布局
+        form.setLayout(layout)  # 设置布局.<---注意!
         self.connect(okButton, SIGNAL("clicked()"),
                      form, SLOT("accept()"))
         self.connect(cancelButton, SIGNAL("clicked()"),

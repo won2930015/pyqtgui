@@ -1,5 +1,5 @@
 第5章 对话框
-pen.pyw::简易窗口
+pen.pyw::简易窗口 : 创建窗口的两种方法
 numbers.pyw:标准窗口
 
 

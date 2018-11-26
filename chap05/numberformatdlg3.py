@@ -14,7 +14,7 @@ from PyQt4.QtGui import *
 
 
 class NumberFormatDlg(QDialog):
-    '''实现智能对话框,数据动态更新.'''
+    """实现智能对话框,数据动态更新."""
 
     def __init__(self, format, callback, parent=None):
         super(NumberFormatDlg, self).__init__(parent)
@@ -79,7 +79,7 @@ class NumberFormatDlg(QDialog):
 
 
     def apply(self):
-        '''小数位数/显示红名,数据变更时将动态更新数据表'''
+        """小数位数/显示红名,数据变更时将动态更新数据表"""
 
         self.format["thousandsseparator"] = self.thousandsEdit.text()
         self.format["decimalmarker"] = self.decimalMarkerEdit.text()
