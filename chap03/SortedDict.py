@@ -18,6 +18,7 @@ An alternative version is provided with the examples for my book,
 """
 
 
+# 分类_字典
 class SortedDict(object):
     """A dictionary that is ordered by key
     
@@ -103,7 +104,6 @@ class SortedDict(object):
             dictionary[key] = value
         return dictionary
 
-
     def getAt(self, index):
         """Returns the index-th item's value
 
@@ -121,7 +121,6 @@ class SortedDict(object):
         """
         return self.__dict[self.__keys[index]]
 
-
     def setAt(self, index, value):
         """Sets the index-th item's value to the given value
 
@@ -137,7 +136,6 @@ class SortedDict(object):
         IndexError: list index out of range
         """
         self.__dict[self.__keys[index]] = value
-
 
     def copy(self):
         """Returns a shallow copy of this SortedDict
@@ -402,7 +400,6 @@ class SortedDict(object):
         i = bisect.bisect_left(self.__keys, key)
         del self.__keys[i]
 
-
     def __getitem__(self, key):
         """Returns the value of the item with the given key
 
@@ -417,7 +414,6 @@ class SortedDict(object):
         KeyError: 'z'
         """
         return self.__dict[key]
-
 
     def __setitem__(self, key, value):
         """If key is in the dictionary, sets its value to value;
@@ -435,7 +431,6 @@ class SortedDict(object):
         if key not in self.__dict:
             bisect.insort_left(self.__keys, key)
         self.__dict[key] = value
-
 
     def __repr__(self):
         """Returns an eval()-able string representation of the
@@ -458,7 +453,6 @@ class SortedDict(object):
         for key in self.__keys:
             pieces.append("{0!r}: {1!r}".format(key, self.__dict[key]))
         return "SortedDict({{{0}}})".format(", ".join(pieces))
-
 
 
 if __name__ == "__main__":

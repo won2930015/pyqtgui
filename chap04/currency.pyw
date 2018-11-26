@@ -49,24 +49,22 @@ class Form(QDialog):
                 SIGNAL("valueChanged(double)"), self.updateUi)
         self.setWindowTitle("Currency")
 
-
     def updateUi(self):
         to = self.toComboBox.currentText()
         from_ = self.fromComboBox.currentText()
         amount = ((self.rates[from_] / self.rates[to]) *
                   self.fromSpinBox.value())
-        self.toLabel.setText("{0:.2f}".format(amount))  #以某种货币为计算单位.
+        self.toLabel.setText("{0:.2f}".format(amount))  # 以某种货币为计算单位.
 
-
-    def getdata(self): # Idea taken from the Python Cookbook
+    def getdata(self):   # Idea taken from the Python Cookbook
         self.rates = {}
         try:
             date = "Unknown"
             data = urllib.request.urlopen("http://www.bankofcanada.ca"
-                    "/en/markets/csv/exchange_eng.csv").read()  #  读网上汇率数据,文件已失效!
-            for line in data.decode("utf-8", "replace").split("\n"):  # 如果遇到Unicode 错误应用replace(忽略)策略
+                    "/en/markets/csv/exchange_eng.csv").read()  # 读网上汇率数据,文件已失效!
+            for line in data.decode("utf-8", "replace").split("\n"):  # 如果遇到Unicode 错误应用replace(替换)策略
                 line = line.rstrip()
-                if not line or line.startswith(("#", "Closing ")):  #跳过"#", "Closing "这些行.
+                if not line or line.startswith(("#", "Closing ")):  # 跳过"#", "Closing "这些行.
                     continue
                 fields = line.split(",")
                 if line.startswith("Date "):

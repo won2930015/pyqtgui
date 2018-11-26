@@ -1,16 +1,19 @@
 3.1
 
 3.2
-rectangle.py  : property(fget=_width, fset=_setWidth) Ó¦ÓÃ
-balloon.py   : @staticmethod ¾²Ì¬·½·¨µÄÓ¦ÓÃ.²»Ğè´«µİ²ÎÊı,¿ÉÔÚÀàÖĞµ÷ÓÃ.
-length.py   : ÄÚ²¿ÊôĞÔÊµÏÖÁĞ³Ì.
-ordereddict.py : ×Ô¶¨ÒåµÄÅÅĞò×Öµä,°üº¬ÁËÄÚÖÃ·½·¨ÊµÏÖ¼° ¾²Ì¬·½·¨/Àà·½·¨µÄÊ¹ÓÃ.
+rectangle.py  : property(fget=_width, fset=_setWidth) åº”ç”¨
+balloon.py   : @staticmethod é™æ€æ–¹æ³•çš„åº”ç”¨.ä¸éœ€ä¼ é€’å‚æ•°,å¯åœ¨ç±»ä¸­è°ƒç”¨.
+length.py   : å†…éƒ¨å±æ€§å®ç°åˆ—ç¨‹.
+ordereddict.py : è‡ªå®šä¹‰çš„æ’åºå­—å…¸,åŒ…å«äº†å†…ç½®æ–¹æ³•å®ç°åŠ é™æ€æ–¹æ³•/ç±»æ–¹æ³•çš„ä½¿ç”¨.
 
 3.3
 item.py
+dimension.py : å¤šæ€åŠå¤šé‡ç»§æ‰¿.
 
 3.4
 
-Ğ¡½á
+å°ç»“
+stack.py : å †å¯¹è±¡
+tribool.py
 
-Á·Ï°Ìâ
+ç»ƒä¹ é¢˜

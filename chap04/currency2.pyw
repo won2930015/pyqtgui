@@ -10,7 +10,7 @@
 # the GNU General Public License for more details.
 
 import locale
-locale.setlocale(locale.LC_ALL, "")
+locale.setlocale(locale.LC_ALL, "")  # todo::https://blog.csdn.net/imnisen1992/article/details/53333212
 
 import sys
 import urllib.request
@@ -50,16 +50,14 @@ class Form(QDialog):
                 SIGNAL("valueChanged(double)"), self.updateUi)
         self.setWindowTitle("Currency")
 
-
     def updateUi(self):
         to = self.toComboBox.currentText()
         from_ = self.fromComboBox.currentText()
         amount = ((self.rates[from_] / self.rates[to]) * 
                   self.fromSpinBox.value())
-        self.toLabel.setText(locale.format("%0.2f", amount, True))
+        self.toLabel.setText(locale.format("%0.2f", amount, True))  # 用本地化格式显示金额.
 
-
-    def getdata(self): # Idea taken from the Python Cookbook
+    def getdata(self):  # Idea taken from the Python Cookbook
         self.rates = {}
         try:
             date = "Unknown"

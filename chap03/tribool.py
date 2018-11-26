@@ -34,18 +34,14 @@ class Tribool(object):
         if value is not None:
             self.__value = bool(value)
 
-
     def __str__(self):
         return str(self.__value)
-
 
     def __repr__(self):
         return "Tribool({})".format(self.__value)
 
-
     def __hash__(self):
         return super(Tribool, self).__hash__()
-
 
     def __eq__(self, other):
         """
@@ -62,7 +58,6 @@ class Tribool(object):
         True
         """
         return self.__value == other.__value
-
 
     def __lt__(self, other):
         """
@@ -86,7 +81,6 @@ class Tribool(object):
             otherValue = -1
         return selfValue < otherValue
 
-
     def __bool__(self):
         """
         >>> a = Tribool()
@@ -101,8 +95,7 @@ class Tribool(object):
         """
         return self.__value == True
 
-
-    def __invert__(self):
+    def __invert__(self):  # 取非
         """
         >>> a = Tribool()
         >>> print(~a)
@@ -117,7 +110,6 @@ class Tribool(object):
         if self.__value is not None:
             return not self.__value
         return None
-
 
     def __and__(self, other):
         """
@@ -144,7 +136,6 @@ class Tribool(object):
         if self.__value == False or other.__value == False:
             return Tribool(False)
         return Tribool()
-
 
     def __or__(self, other):
         """

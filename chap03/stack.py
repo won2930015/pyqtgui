@@ -25,7 +25,6 @@ class Stack(object):
         """
         self.__items = []
 
-
     def pop(self):
         """Returns and removes the stack's most recent (right-most) item
 
@@ -47,7 +46,6 @@ class Stack(object):
             raise EmptyStackError
         return self.__items.pop()
 
-
     def top(self):
         """Returns the stack's most recent (right-most) item
 
@@ -65,7 +63,6 @@ class Stack(object):
             raise EmptyStackError
         return self.__items[-1]
 
-
     def push(self, item):
         """Pushes the given item onto (right-end of) the stack
 
@@ -76,7 +73,6 @@ class Stack(object):
         [1, 2]
         """
         self.__items.append(item)
-
 
     def __len__(self):
         """Returns the number of items in the stack
@@ -91,7 +87,6 @@ class Stack(object):
         3
         """
         return len(self.__items)
-
 
     def __str__(self):
         """Returns a string representation of the stack's contents from
@@ -111,7 +106,6 @@ class Stack(object):
         # for x in self.__items:
         #     pieces.append("{0!r}".format(x))
         # return "[{}]".format(", ".join(pieces))
-
 
 
 if __name__ == "__main__":

@@ -18,10 +18,10 @@ from PyQt4.QtGui import *
 class Form(QDialog):
 
     def __init__(self, parent=None):
-        '''将两个以上的信号连接到同一槽的三种方法
+        """将两个以上的信号连接到同一槽的三种方法
         1.偏函数
         2.匿名函数
-        3.self.sender()'''
+        3.self.sender()"""
 
         super(Form, self).__init__(parent)
         button1 = QPushButton("One")

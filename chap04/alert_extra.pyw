@@ -32,7 +32,7 @@ except ValueError:
     message = "Usage: alert.pyw HH:MM [optional message]" # 24hr clock
 
 while QTime.currentTime() < due:
-    time.sleep(20) # 20 seconds
+    time.sleep(20)  # 20 seconds
 
 font = QFont("Helvetica", 36, QFont.Bold)
 fm = QFontMetrics(font)
@@ -47,8 +47,8 @@ painter.end()
 label = QLabel()
 label.setPixmap(pixmap)
 label.setMask(pixmap.createMaskFromColor(Qt.white))
-label.setWindowFlags(Qt.SplashScreen|Qt.FramelessWindowHint)
+label.setWindowFlags(Qt.SplashScreen | Qt.FramelessWindowHint)
 label.show()
-QTimer.singleShot(60000, app.quit) # 1 minute
+QTimer.singleShot(60000, app.quit)  # 1 minute
 app.exec_()
 

@@ -8,9 +8,9 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
+##########################
+#     主线程 P415 脚注    #
 #########################
-#######  主线程  ########
-########################
 
 import collections      # 导入_集合模块
 import sys
@@ -198,9 +198,8 @@ class Form(QDialog):
         self.walker.stop()
         self.walker.wait()
 
-
     def finishedIndexing(self):
-        self.walker.wait()
+        self.walker.wait()   # P415
         self.filesIndexedLCD.display(self.fileCount)
         self.wordsIndexedLCD.display(len(self.filenamesForWords))
         self.commonWordsLCD.display(len(self.commonWords))

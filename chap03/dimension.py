@@ -12,48 +12,40 @@
 """Provides the Dimension example classes.
 """
 
-class Dimension(object):    #规格
+
+class Dimension(object):    # 规格
 
     def area(self):
         raise NotImplementedError("Dimension.area()")
-
 
     def volume(self):
         raise NotImplementedError("Dimension.volume()")
 
 
-
 class Item(object):
 
     def __init__(self, artist, title, year=None):
-        self.__artist = artist  #艺术家
-        self.__title = title    #标题
-        self.__year = year      #年代
+        self.__artist = artist  # 艺术家
+        self.__title = title    # 标题
+        self.__year = year      # 年代
 
-
-    def artist(self):   ##艺术家
+    def artist(self):   # 艺术家
         return self.__artist
-
 
     def setArtist(self, artist):
         self.__artist = artist
 
-
-    def title(self):    #标题
+    def title(self):    # 标题
         return self.__title
-
 
     def setTitle(self, title):
         self.__title = title
 
-
-    def year(self): #年代
+    def year(self):  # 年代
         return self.__year
-
 
     def setYear(self, year):
         self.__year = year
-
 
     def __str__(self):
         year = ""
@@ -62,7 +54,7 @@ class Item(object):
         return "{} by {}{}".format(self.__title, self.__artist, year)
 
 
-class Painting(Item, Dimension):    #多重继承
+class Painting(Item, Dimension):    # 多重继承
 
     def __init__(self, artist, title, year=None, width=None,
                  height=None):
@@ -81,26 +73,23 @@ class Painting(Item, Dimension):    #多重继承
         return None
 
 
-class Sculpture(Item, Dimension):   #多重继承
+class Sculpture(Item, Dimension):   # 多重继承
 
     def __init__(self, artist, title, year=None, material=None):
         super(Sculpture, self).__init__(artist, title, year)
         self.__material = material
 
-
-    def material(self): #材料
+    def material(self):  # 材料
         return self.__material
-
 
     def setMaterial(self, material):
         self.__material = material
-
 
     def __str__(self):
         material = ""
         if self.__material is not None:
             material = " ({})".format(self.__material)
-        return "{1}{2}".format(super(Sculpture, self).__str__(), material)  #调用基类__str__()方法.PS:这里不要调用str(self)会导至无限递归.
+        return "{1}{2}".format(super(Sculpture, self).__str__(), material)  # 调用基类__str__()方法.PS:这里不要调用str(self)会导至无限递归.
 
 
 if __name__ == "__main__":

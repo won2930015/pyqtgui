@@ -1,4 +1,14 @@
-alert.pyw
-Calculate.pyw
+alert.pyw  : 闹钟例程, PS:了解程序的事件循环.
+alert_extra.pyw  : 设置显示相关示例.
+Calculate.pyw  : 简版计算器,
+currency.pyw : 货币转换
+currency2.pyw : 本地化格式显示.
+signals.pyw : 信号,自种信号与槽使用方式.
+connections.pyw :连接程序,"""将两个以上的信号连接到同一槽的三种方法
+        1.偏函数
+        2.匿名函数
+        3.self.sender()"""
+习题:
+interest.pyw : 复利计算
 
 

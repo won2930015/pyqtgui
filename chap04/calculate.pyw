@@ -31,7 +31,6 @@ class Form(QDialog):
                      self.updateUi)
         self.setWindowTitle("Calculate")
 
-
     def updateUi(self):
         try:
             text = self.lineedit.text()

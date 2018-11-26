@@ -12,6 +12,7 @@
 """Provides the Item example classes.
 """
 
+
 class Item(object):  # 项
 
     def __init__(self, artist, title, year=None):
@@ -19,30 +20,23 @@ class Item(object):  # 项
         self.__title = title    # title::标题
         self.__year = year      # year::年代
 
-
     def artist(self):
         return self.__artist
-
 
     def setArtist(self, artist):
         self.__artist = artist
 
-
     def title(self):
         return self.__title
-
 
     def setTitle(self, title):
         self.__title = title
 
-
     def year(self):
         return self.__year
 
-
     def setYear(self, year):
         self.__year = year
-
 
     def __str__(self):
         year = ""
@@ -51,72 +45,61 @@ class Item(object):  # 项
         return "{} by {}{}".format(self.__title, self.__artist, year)
 
 
-class Painting(Item):   # 油画
+class Painting(Item):  # 油画
 
     def __init__(self, artist, title, year=None):
         super(Painting, self).__init__(artist, title, year)
 
 
-class Sculpture(Item):  #雕塑
+class Sculpture(Item):  # 雕塑
 
     def __init__(self, artist, title, year=None, material=None):
         super(Sculpture, self).__init__(artist, title, year)
-        self.__material = material  #material::材料
-
+        self.__material = material  # material::材料
 
     def material(self):
         return self.__material
 
-
     def setMaterial(self, material):
         self.__material = material
-
 
     def __str__(self):
         materialString = ""
         if self.__material is not None:
             materialString = " ({})".format(self.__material)
-        return "{}{}".format(super(Sculpture, self).__str__(),  #调用父类__str__()方法.注意:不能调用str(self)会导至无限递归
+        return "{}{}".format(super(Sculpture, self).__str__(),  # 调用父类__str__()方法.注意:不能调用str(self)会导至无限递归
                                materialString)
 
 
-class Dimension(object):    #Dimension::尺寸|规格
+class Dimension(object):    # Dimension::尺寸|规格
 
-    def __init__(self, width, height, depth=None):      #depth::深度
+    def __init__(self, width, height, depth=None):      # depth::深度
         self.__width = width
         self.__height = height
         self.__depth = depth
-
 
     def width(self):
         return self.__width
 
-
     def setWidth(self, width):
         self.__width = width
-
 
     def height(self):
         return self.__height
 
-
     def setHeight(self, height):
         self.__height = height
-
 
     def depth(self):
         return self.__depth
 
-
     def setDepth(self, depth):
         self.__depth = depth
 
+    def area(self):  # area::面积
+        raise NotImplemented        # NotImplemented::未执行 ???
 
-    def area(self): #area::面积
-        raise NotImplemented        #NotImplemented::未执行 ???
-
-
-    def volume(self):   #volume::体积
+    def volume(self):   # volume::体积
         raise NotImplemented
 
 

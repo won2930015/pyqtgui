@@ -15,7 +15,7 @@ from PyQt4.QtGui import *
 
 
 class Form(QDialog):
-    '''Dial控件value值 与 spinbox控件value值联动.'''
+    """Dial控件value值 与 spinbox控件value值联动."""
 
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
@@ -35,8 +35,8 @@ class Form(QDialog):
 
 
 class Form2(QDialog):
-    '''Dial控件value值 与 spinbox控件value值 联动.
-    控件,信号,控件,槽 形式.'''
+    """Dial控件value值 与 spinbox控件value值 联动.
+    控件,信号,控件,槽 形式."""
 
     def __init__(self, parent=None):
         super(Form2, self).__init__(parent)
@@ -58,7 +58,7 @@ class Form2(QDialog):
 
 
 class ZeroSpinBox(QSpinBox):
-    '''自定义spinbox,当value为0时发射atzero信号.'''
+    """自定义spinbox,当value为0时发射atzero信号."""
 
     zeros = 0
 
@@ -74,7 +74,7 @@ class ZeroSpinBox(QSpinBox):
 
 
 class Form3(QDialog):
-    '''显示zerospinbox value为0的次数.'''
+    """显示zerospinbox value为0的次数."""
 
     def __init__(self, parent=None):
         super(Form3, self).__init__(parent)
@@ -101,7 +101,7 @@ class Form3(QDialog):
 
 
 class Form4(QDialog):
-    '''当lineedit.text()内容改变时print(text)'''
+    """当lineedit.text()内容改变时print(text)"""
 
     def __init__(self, parent=None):
         super(Form4, self).__init__(parent)
@@ -116,28 +116,24 @@ class Form4(QDialog):
                      self.consoleEcho)
         self.setWindowTitle("Signals and Slots")
 
-
     def consoleEcho(self, text):
         print(text)
-        
 
 
 class TaxRate(QObject):
-    '''税率:当默认税率与自定义税率不一致时发射 rateChanged信号.'''
+    """税率:当默认税率与自定义税率不一致时发射 rateChanged信号."""
 
     def __init__(self):
         super(TaxRate, self).__init__()
         self.__rate = 17.5
 
-
     def rate(self):
         return self.__rate
-
 
     def setRate(self, rate):
         if rate != self.__rate:
             self.__rate = rate
-            self.emit(SIGNAL("rateChanged"), self.__rate)  #自定义短路信号.
+            self.emit(SIGNAL("rateChanged"), self.__rate)  # 自定义短路信号.
 
 
 def rateChanged(value):
@@ -157,7 +153,7 @@ elif sys.argv[1] == "4":
 if form is not None:
     form.show()
     app.exec_()
-else: # if sys.argv[1] == "5"
+else:  # if sys.argv[1] == "5"
     vat = TaxRate()
     vat.connect(vat, SIGNAL("rateChanged"), rateChanged)
     vat.setRate(17.5)    # No change will occur (new rate is the same)

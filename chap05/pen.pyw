@@ -90,7 +90,7 @@ class Form(QDialog):
 
 
     def setPenInline(self):
-        '''手工编写弹出式模态对话框'''
+        """手工编写弹出式模态对话框"""
 
         widthLabel = QLabel("&Width:")
         widthSpinBox = QSpinBox()
@@ -114,15 +114,15 @@ class Form(QDialog):
         buttonLayout.addWidget(okButton)
         buttonLayout.addWidget(cancelButton)
         layout = QGridLayout()
-        layout.addWidget(widthLabel, 0, 0)  #将控件加入到布局.
+        layout.addWidget(widthLabel, 0, 0)  # 将控件加入到布局.
         layout.addWidget(widthSpinBox, 0, 1)
         layout.addWidget(beveledCheckBox, 0, 2)
         layout.addWidget(styleLabel, 1, 0)
         layout.addWidget(styleComboBox, 1, 1, 1, 2)
         layout.addLayout(buttonLayout, 2, 0, 1, 3)
 
-        form = QDialog()  #创建对话框实例.
-        form.setLayout(layout)  #设置布局
+        form = QDialog()  # 创建对话框实例.
+        form.setLayout(layout)  # 设置布局
         self.connect(okButton, SIGNAL("clicked()"),
                      form, SLOT("accept()"))
         self.connect(cancelButton, SIGNAL("clicked()"),
@@ -137,7 +137,7 @@ class Form(QDialog):
 
 
     def setPenProperties(self):
-        '''用预定义简易窗口实现模态对话框'''
+        """用预定义简易窗口实现模态对话框"""
 
         dialog = PenPropertiesDlg(self)
         dialog.widthSpinBox.setValue(self.width)

@@ -20,7 +20,6 @@ An alternative version is provided with the examples for my book,
 """
 
 
-
 class OrderedDict(object):
     """A dictionary that is ordered by key
     
