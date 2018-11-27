@@ -32,7 +32,7 @@ class NumberFormatDlg(QDialog):
         self.decimalMarkerEdit.setMaxLength(1)  # 设置(字符)最大长度
         self.decimalMarkerEdit.setValidator(QRegExpValidator(  # 设置正则过滤器.
                 punctuationRe, self))
-        self.decimalMarkerEdit.setInputMask("X")  # 设置输入掩码::掩码"X"==任意字符
+        self.decimalMarkerEdit.setInputMask("X")  # 设置输入掩码::掩码"X"==任意字符,todo::https://blog.csdn.net/xgbing/article/details/7776422
         decimalPlacesLabel = QLabel("&Decimal places")
         self.decimalPlacesSpinBox = QSpinBox()
         decimalPlacesLabel.setBuddy(self.decimalPlacesSpinBox)
@@ -42,7 +42,7 @@ class NumberFormatDlg(QDialog):
         self.redNegativesCheckBox.setChecked(format["rednegatives"])
 
         self.format = format  # 将本地变量self.format绑定到参数format所指向的对象.
-        self.callback = callback  # ==主文件numbers.refreshTable()
+        self.callback = callback  # 绑定到主文件numbers.refreshTable() 函数.
 
         grid = QGridLayout()
         grid.addWidget(thousandsLabel, 0, 0)
@@ -64,7 +64,7 @@ class NumberFormatDlg(QDialog):
                 SIGNAL("toggled(bool)"), self.apply)
         self.setWindowTitle("Set Number Format (`Live')")
 
-
+    # 检查 与 修复
     def checkAndFix(self):
         thousands = self.thousandsEdit.text()
         decimal = self.decimalMarkerEdit.text()
@@ -85,6 +85,6 @@ class NumberFormatDlg(QDialog):
         self.format["decimalmarker"] = self.decimalMarkerEdit.text()
         self.format["decimalplaces"] = self.decimalPlacesSpinBox.value()
         self.format["rednegatives"] = self.redNegativesCheckBox.isChecked()
-        self.callback()  # ==主文件numbers.refreshTable()
+        self.callback()  # 绑定主文件 numbers.refreshTable()
 
 

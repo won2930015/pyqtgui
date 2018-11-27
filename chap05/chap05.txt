@@ -1,5 +1,9 @@
 第5章 对话框
 pen.pyw::简易窗口 : 创建窗口的两种方法
 numbers.pyw:标准窗口
+    简易窗口,标准窗口,智能窗口 示例:
+
+练习 stringlistdlg.py
+    QListWidget() 插入,删除,上移,下移操作示例.
 
 

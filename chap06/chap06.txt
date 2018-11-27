@@ -1,4 +1,8 @@
+第6章 主窗口
 imagechanger.pyw::主窗口
+    |
+    |--helpform.py
+    |--newimagedlg.py
 
 dockWin.py::关于浮动窗口的参考.
 

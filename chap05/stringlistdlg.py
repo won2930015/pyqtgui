@@ -52,7 +52,6 @@ class StringListDlg(QDialog):
         self.setLayout(layout)
         self.setWindowTitle("Edit {} List".format(self.name))
 
-
     def add(self):
         row = self.listWidget.currentRow()
         title = "Add {}".format(self.name)
@@ -60,17 +59,15 @@ class StringListDlg(QDialog):
         if ok and string:
             self.listWidget.insertItem(row, string)
 
-
     def edit(self):
         row = self.listWidget.currentRow()  # 返回当前 row(int.)
         item = self.listWidget.item(row)  # 取当前行
         if item is not None:
             title = "Edit {}".format(self.name)
             string, ok = QInputDialog.getText(self, title, title,
-                    QLineEdit.Normal, item.text())  # https://blog.csdn.net/liang19890820/article/details/52044639
+                    QLineEdit.Normal, item.text())  #  [QLineEdit.Normal],https://blog.csdn.net/liang19890820/article/details/52044639
             if ok and string:
                 item.setText(string)
-
 
     def remove(self):
         row = self.listWidget.currentRow()
@@ -85,7 +82,7 @@ class StringListDlg(QDialog):
             item = self.listWidget.takeItem(row)  # takeItem::拿走_项
             del item
 
-    #上移一行
+    # 上移一行
     def up(self):
         row = self.listWidget.currentRow()  # 获得当前行号
         if row >= 1:
@@ -93,7 +90,7 @@ class StringListDlg(QDialog):
             self.listWidget.insertItem(row - 1, item)
             self.listWidget.setCurrentItem(item)  # 设置为当前项.
 
-    #下移一行
+    # 下移一行
     def down(self):
         row = self.listWidget.currentRow()
         if row < self.listWidget.count() - 1:
@@ -101,10 +98,8 @@ class StringListDlg(QDialog):
             self.listWidget.insertItem(row + 1, item)
             self.listWidget.setCurrentItem(item)
 
-
     def reject(self):
         self.accept()
-
 
     def accept(self):
         self.stringlist = []
