@@ -30,7 +30,7 @@ class Form(QDialog):
 
         self.numberFormatDlg = None
         self.format = dict(thousandsseparator=",", decimalmarker=".",  # thousands_separator:千位分隔符号,decimal_marker:小数点标识
-                decimalplaces=2, rednegatives=False)  # decimal_places::小数保留位数 ,red_negatives::红名否定
+                decimalplaces=2, rednegatives=False)  # decimal_places::小数保留位数 ,red_negatives::红名否定,True==开启红名
         self.numbers = {}
         for x in range(self.X_MAX):
             for y in range(self.Y_MAX):
@@ -62,7 +62,7 @@ class Form(QDialog):
 
 
     def refreshTable(self):
-        """更新_表"""
+        """刷新_表"""
 
         self.table.clear()
         self.table.setColumnCount(self.X_MAX)  # 设置_列
@@ -91,7 +91,7 @@ class Form(QDialog):
                                       Qt.AlignVCenter)
                 if sign and self.format["rednegatives"]:  # 开启负数红名时执行.
                     item.setBackgroundColor(Qt.red)
-                self.table.setItem(y, x, item)
+                self.table.setItem(y, x, item)  # setItem(row_count, 0, item)/(行, 例, 项对象)
 
 
     def setNumberFormat1(self):
