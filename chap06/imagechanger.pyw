@@ -266,7 +266,7 @@ class MainWindow(QMainWindow):
             self.image = dialog.image()
             self.filename = None
             self.dirty = True
-            self.showImage()
+            self.showImage()  # ROW-436
             self.sizeLabel.setText("{} x {}".format(self.image.width(),
                                                       self.image.height()))
             self.updateStatus("Created new image")
@@ -372,7 +372,7 @@ class MainWindow(QMainWindow):
                                 size.height())
             painter.drawImage(0, 0, self.image)
 
-
+    # 反相
     def editInvert(self, on):
         if self.image.isNull():
             return
