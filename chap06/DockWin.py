@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
+
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import sys
 
-QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))
+QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))   # 设定使用编码为utf8
 
 
 class MainWidget(QMainWindow):
@@ -19,7 +19,7 @@ class MainWidget(QMainWindow):
 
         # 停靠窗口1
         dock1 = QDockWidget(self.tr("停靠窗口1"), self)
-        dock1.setFeatures(QDockWidget.DockWidgetMovable)
+        dock1.setFeatures(QDockWidget.DockWidgetMovable)  # Features:特点
         dock1.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         te1 = QTextEdit(self.tr("窗口1,可在Main Window的左部和右部停靠，不可浮动，不可关闭"))
         dock1.setWidget(te1)
@@ -39,8 +39,8 @@ class MainWidget(QMainWindow):
         dock4.setWidget(widget4)
         self.addDockWidget(Qt.RightDockWidgetArea, dock4)
 
-        self.tabifyDockWidget(dock2, dock4)
-        dock2.raise_()
+        self.tabifyDockWidget(dock2, dock4)  # tabifyDockWidget: 定位_停靠_控件(合并停靠窗口2/4)
+        dock2.raise_()  # raise_:上升(停靠窗口2上升为显示窗口)
 
         # 停靠窗口3
         dock3 = QDockWidget(self.tr("停靠窗口3"), self)

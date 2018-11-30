@@ -1,10 +1,19 @@
 第6章 主窗口
+dockWin.py::关于停靠窗口的书外参考.
+
 imagechanger.pyw::主窗口
+    |   图形打印以及image对象的相关操作.
+    |--helpform.py
+    |--newimagedlg.py
+    |--resources.qrc :资源文件P129
+
+imagechanger_ans.pyw
     |
     |--helpform.py
     |--newimagedlg.py
+    |--resizedlg.py
+    |--resources.qrc :资源文件P129
 
-dockWin.py::关于浮动窗口的参考.
 
 关于图形与打印:
 第 6章:imagechanger.pyw    视口打印图形

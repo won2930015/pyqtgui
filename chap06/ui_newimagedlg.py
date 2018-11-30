@@ -41,7 +41,7 @@ class Ui_NewImageDlg(object):
         self.colorLabel.setFrameShape(QtGui.QFrame.StyledPanel)
         self.colorLabel.setFrameShadow(QtGui.QFrame.Raised)
         self.colorLabel.setText(_fromUtf8(""))
-        self.colorLabel.setScaledContents(True)
+        self.colorLabel.setScaledContents(True)  # ScaledContents:除去_内容
         self.colorLabel.setObjectName(_fromUtf8("colorLabel"))
         self.gridlayout.addWidget(self.colorLabel, 3, 1, 1, 1)
         self.label_3 = QtGui.QLabel(NewImageDlg)
@@ -82,11 +82,11 @@ class Ui_NewImageDlg(object):
         self.label.setBuddy(self.widthSpinBox)
         self.label_2.setBuddy(self.heightSpinBox)
 
-        self.retranslateUi(NewImageDlg)
+        self.retranslateUi(NewImageDlg)  # retranslate Ui:重译_Ui Row 94
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), NewImageDlg.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), NewImageDlg.reject)
         QtCore.QMetaObject.connectSlotsByName(NewImageDlg)
-        NewImageDlg.setTabOrder(self.widthSpinBox, self.heightSpinBox)
+        NewImageDlg.setTabOrder(self.widthSpinBox, self.heightSpinBox)  # setTabOrder:设置_Tab_顺序
         NewImageDlg.setTabOrder(self.heightSpinBox, self.brushComboBox)
         NewImageDlg.setTabOrder(self.brushComboBox, self.colorButton)
         NewImageDlg.setTabOrder(self.colorButton, self.buttonBox)

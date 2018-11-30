@@ -122,7 +122,6 @@ class MainWindow(QMainWindow):
         editToolbar = self.addToolBar("Edit")  # 创建edit工具条(默认可在主窗口上下左右停靠.)
         editToolbar.setObjectName("EditToolBar")  # 设置工具栏对象名称,用于保存工具栏状态.
 
-
         self.addActions(editToolbar, (editInvertAction,
                 editSwapRedAndBlueAction, editUnMirrorAction,
                 editMirrorVerticalAction, editMirrorHorizontalAction))
@@ -343,7 +342,7 @@ class MainWindow(QMainWindow):
             return True
         fname = self.filename if self.filename is not None else "."
         formats = (["*.{}".format(format.data().decode("ascii").lower())
-                for format in QImageWriter.supportedImageFormats()])
+                for format in QImageWriter.supportedImageFormats()])  # supportedImageFormats:支持图像格式.
         fname = QFileDialog.getSaveFileName(self,
                 "Image Changer - Save Image", fname,
                 "Image files ({})".format(" ".join(formats)))
