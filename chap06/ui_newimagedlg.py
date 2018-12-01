@@ -86,7 +86,7 @@ class Ui_NewImageDlg(object):
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), NewImageDlg.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), NewImageDlg.reject)
         QtCore.QMetaObject.connectSlotsByName(NewImageDlg)
-        NewImageDlg.setTabOrder(self.widthSpinBox, self.heightSpinBox)  # setTabOrder:设置_Tab_顺序
+        NewImageDlg.setTabOrder(self.widthSpinBox, self.heightSpinBox)  # setTabOrder:设置_Tab_顺序 P153
         NewImageDlg.setTabOrder(self.heightSpinBox, self.brushComboBox)
         NewImageDlg.setTabOrder(self.brushComboBox, self.colorButton)
         NewImageDlg.setTabOrder(self.colorButton, self.buttonBox)

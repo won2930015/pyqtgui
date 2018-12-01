@@ -1,0 +1,4 @@
+第7章 使用Qt设计师
+    findandreplacedlg.py
+        |--ui_findandreplacedlg.py
+        |--findandreplacedlg.ui     P153:ui -->py 文件.
