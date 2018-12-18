@@ -499,8 +499,28 @@ CTRL+SHIFT+I :快速查看定义
 CTRL+Q :查看定义文档
 CTRL+P :浏览参数
 ALT+Q :查看[函数|类]头定义
+
+SHIFT+SHIFT :汇总搜索
 Ctrl+Shift+N :搜索任意文件
 Ctrl+N :跳转到[类|文件]
 Ctrl+Alt+Shift+N :跳转到[类|函数|变量]
-CTRL+B :转到定义
+
+CTRL+F :查找
+CTRL+SHIFT+F :深层次查找
+
+CTRL+B|鼠标中键 :转到定义
 CTRL+ALT+B :跳转到引用
+
+ALT+F7|右键:查找引用|菜单:编辑→查找→... :查找引用
+Ctrl+F7:跳转到定义
+CTRL+ALT+F7 :列表显示引用
+CTRL+SHIFT+F7 :高亮显示引用
+
+CTRL+ ` :Switch...(开关)
+CTRL+TAB :Switcher(窗口开关)
+ALT+F1 :选择显示当前文件的IDE组件,Esc 键返回编辑框.
+
+CTRL+SHIFT+A :通过命令名(快捷键名)搜索命令
+Ctrl+Alt+Shift+T :重构代码
+
+Ctrl+Shift+Backspace :跳转到最后编辑位置
