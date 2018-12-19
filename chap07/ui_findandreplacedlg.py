@@ -16,11 +16,13 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
+
+    def _translate(context, text, disambig):  # todo:: disambig 字节顺大端? 字节顺序大端,小端.
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
+
 
 class Ui_FindAndReplaceDlg(object):
     def setupUi(self, FindAndReplaceDlg):
