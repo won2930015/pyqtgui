@@ -1,2 +1,5 @@
-第8章 数据处理和自定义文件格式
-    moviedata.py
+第8章 数据处理和自定义文件格式(PS.各种数据格式的保存和读取.)
+    mymovies.pyw
+        |---addeditmoviedlg.py
+        |---moviedata.py
+        |---qrc_resources.py
