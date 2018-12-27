@@ -8,9 +8,9 @@
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
-#---------------
+# ---------------
 # 扩展对话框示例.#
-#---------------
+# ---------------
 
 import sys
 from PyQt4.QtCore import *
@@ -38,18 +38,18 @@ class FindAndReplaceDlg(QDialog):  # 查找与替换窗口.
         self.wholeCheckBox = QCheckBox("Wh&ole words")
         self.wholeCheckBox.setChecked(True)             
         moreFrame = QFrame()
-        moreFrame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   #框架样式(面板|凹陷)
+        moreFrame.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)   # 框架样式(面板|凹陷)
         self.backwardsCheckBox = QCheckBox("Search &Backwards")
         self.regexCheckBox = QCheckBox("Regular E&xpression")
         self.ignoreNotesCheckBox = QCheckBox("Ignore foot&notes "
                                                    "and endnotes")
         line = QFrame()
-        line.setFrameStyle(QFrame.VLine|QFrame.Sunken)  #QFrame.VLine：纵线
+        line.setFrameStyle(QFrame.VLine|QFrame.Sunken)  # QFrame.VLine：纵线
         self.findButton = QPushButton("&Find")
         self.replaceButton = QPushButton("&Replace")
         closeButton = QPushButton("Close")
         moreButton = QPushButton("&More")
-        moreButton.setCheckable(True)    #设置为开关
+        moreButton.setCheckable(True)    # 设置为开关
         if not MAC:
             self.findButton.setFocusPolicy(Qt.NoFocus)
             self.replaceButton.setFocusPolicy(Qt.NoFocus)
@@ -84,7 +84,7 @@ class FindAndReplaceDlg(QDialog):  # 查找与替换窗口.
         self.setLayout(mainLayout)
 
         moreFrame.hide()
-        mainLayout.setSizeConstraint(QLayout.SetFixedSize)  #SizeConstraint:大小约束
+        mainLayout.setSizeConstraint(QLayout.SetFixedSize)  # SizeConstraint:尺寸约束
 
         self.connect(moreButton, SIGNAL("toggled(bool)"),
                      moreFrame, SLOT("setVisible(bool)"))
@@ -100,7 +100,7 @@ class FindAndReplaceDlg(QDialog):  # 查找与替换窗口.
 
 
     def findClicked(self):
-        self.emit(SIGNAL("find"), self.findLineEdit.text(), #发身自定义信号 及 附带的多个参数
+        self.emit(SIGNAL("find"), self.findLineEdit.text(),  # 发身自定义find信号 及text内容 和附带的多个参数
                 self.caseCheckBox.isChecked(),
                 self.wholeCheckBox.isChecked(),
                 self.backwardsCheckBox.isChecked(),
@@ -126,10 +126,10 @@ class FindAndReplaceDlg(QDialog):  # 查找与替换窗口.
 
 if __name__ == "__main__":
 
-    def find(what, *args):  #测试 find键 函数
+    def find(what, *args):  # 测试 find键 函数
         print("Find {} {}".format(what, [x for x in args]))
 
-    def replace(old, new, *args):   #测试 replace键 函数
+    def replace(old, new, *args):   # 测试 replace键 函数
         print("Replace {} with {} {}".format(
               old, new, [x for x in args]))
 

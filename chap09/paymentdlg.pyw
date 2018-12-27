@@ -35,7 +35,7 @@ class PaymentDlg(QDialog):
         self.amountSpinBox = QDoubleSpinBox()
         amountLabel.setBuddy(self.amountSpinBox)
         self.amountSpinBox.setRange(0, 5000.0)
-        self.amountSpinBox.setPrefix("$ ")       #前缀用$填充.
+        self.amountSpinBox.setPrefix("$ ")       # 前缀用$填充.
         self.amountSpinBox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
         self.paidCheckBox = QCheckBox("&Paid")
         checkNumLabel = QLabel("Check &No.:")
@@ -134,7 +134,7 @@ class PaymentDlg(QDialog):
         today = QDate.currentDate()
         enable = (bool(self.forenameLineEdit.text()) or
                   bool(self.surnameLineEdit.text()))
-        if enable:  ### TODO CHECK THE LOGIC!!!
+        if enable:  # TODO CHECK THE LOGIC!!!
             enable = (self.paidCheckBox.isChecked() or
                   (bool(self.checkNumLineEdit.text()) and
                    bool(self.accountNumLineEdit.text()) and
