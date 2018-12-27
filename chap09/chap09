@@ -1,6 +1,8 @@
+=(.py:QtDesigner, .pyw:代码创建)=start=
 1.PaymentDlg        tab标签页部件
 2.vehiclerentaldlg  堆叠窗口部件
 3.findandreplacedlg 扩展对话框
+================================end===
 4.newsreader        窗口切分条
 5.sditexteditor     SDI单文档界面
 6.texteditor /textedit       MDI多文档界面

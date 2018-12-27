@@ -26,7 +26,7 @@ class Ui_VehicleRentalDlg(object):
     def setupUi(self, VehicleRentalDlg):
         VehicleRentalDlg.setObjectName(_fromUtf8("VehicleRentalDlg"))
         VehicleRentalDlg.resize(206, 246)
-        self.gridlayout = QtGui.QGridLayout(VehicleRentalDlg)  #创建网格布局
+        self.gridlayout = QtGui.QGridLayout(VehicleRentalDlg)  # 创建网格布局
         self.gridlayout.setMargin(9)  # 设置边缘
         self.gridlayout.setSpacing(6)  # 设置间隔
         self.gridlayout.setObjectName(_fromUtf8("gridlayout"))
@@ -56,7 +56,7 @@ class Ui_VehicleRentalDlg(object):
         # ***创建堆叠控件***
         self.stackedWidget = QtGui.QStackedWidget(VehicleRentalDlg)  # 创建堆叠控件
         self.stackedWidget.setObjectName(_fromUtf8("stackedWidget"))
-        # 创建堆叠页面2
+        # <editor-fold desc="***堆叠页面2***">
         self.page_2 = QtGui.QWidget()
         self.page_2.setObjectName(_fromUtf8("page_2"))
         self.gridlayout1 = QtGui.QGridLayout(self.page_2)
@@ -87,7 +87,8 @@ class Ui_VehicleRentalDlg(object):
         self.seatsSpinBox.setObjectName(_fromUtf8("seatsSpinBox"))
         self.gridlayout1.addWidget(self.seatsSpinBox, 1, 1, 1, 1)
         self.stackedWidget.addWidget(self.page_2)
-        # 堆叠页面1
+        # </editor-fold>
+        # <editor-fold desc="***堆叠页面1***">
         self.page = QtGui.QWidget()
         self.page.setObjectName(_fromUtf8("page"))
         self.gridlayout2 = QtGui.QGridLayout(self.page)
@@ -114,7 +115,7 @@ class Ui_VehicleRentalDlg(object):
         self.volumeSpinBox.setObjectName(_fromUtf8("volumeSpinBox"))
         self.gridlayout2.addWidget(self.volumeSpinBox, 1, 1, 1, 1)
         self.stackedWidget.addWidget(self.page)
-        # ***堆叠设置结束***
+        # </editor-fold>
         self.gridlayout.addWidget(self.stackedWidget, 1, 0, 1, 1)
         self.hboxlayout1 = QtGui.QHBoxLayout()
         self.hboxlayout1.setMargin(0)
