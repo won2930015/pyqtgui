@@ -9,10 +9,19 @@
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 # the GNU General Public License for more details.
 
+
+
+# <editor-fold desc="两处错误..">
+# Object::connect: No such slot QMdiArea::setActiveSubWindow(QWidget*)
+#
+# AttributeError: 'QMdiSubWindow' object has no attribute 'isModified'
+# </editor-fold>
+
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-import textedit
+# import textedit
+from chap09 import textedit
 import qrc_resources
 
 
@@ -24,7 +33,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        self.mdi = QWorkspace()  # QWorkspace[已被QMdiArea代替]::工作空间. todo::http://www.kuqin.com/qtdocument/qworkspace.html#details
+        self.mdi = QMdiArea()  # QWorkspace[已被QMdiArea代替]::工作空间. todo::http://www.kuqin.com/qtdocument/qworkspace.html#details
         self.setCentralWidget(self.mdi)
 
         fileNewAction = self.createAction("&New", self.fileNew,
@@ -53,17 +62,17 @@ class MainWindow(QMainWindow):
                 "Paste in the clipboard's text")
         # 下一窗口 动作
         self.windowNextAction = self.createAction("&Next",
-                self.mdi.activateNextWindow, QKeySequence.NextChild)
+                self.mdi.activateNextSubWindow, QKeySequence.NextChild)
         # 上一窗口 动作
         self.windowPrevAction = self.createAction("&Previous",
-                self.mdi.activatePreviousWindow,
+                self.mdi.activatePreviousSubWindow,
                 QKeySequence.PreviousChild)
         # 层叠窗口(all)
         self.windowCascadeAction = self.createAction("Casca&de",
-                self.mdi.cascade)
+                self.mdi.cascadeSubWindows)
         # 平铺窗口(all)
         self.windowTileAction = self.createAction("&Tile",
-                self.mdi.tile)
+                self.mdi.tileSubWindows)
         # 还原窗口(all)
         self.windowRestoreAction = self.createAction("&Restore All",
                 self.windowRestoreAll)
@@ -71,15 +80,16 @@ class MainWindow(QMainWindow):
         self.windowMinimizeAction = self.createAction("&Iconize All",
                 self.windowMinimizeAll)
         # 排列图标 动作
-        self.windowArrangeIconsAction = self.createAction(
-                "&Arrange Icons", self.mdi.arrangeIcons)
+        # self.windowArrangeIconsAction = self.createAction(
+        #         "&Arrange Icons", self.mdi.arrangeIcons)
         # 关闭窗口 动作
         self.windowCloseAction = self.createAction("&Close",
-                self.mdi.closeActiveWindow, QKeySequence.Close)
+                self.mdi.closeActiveSubWindow, QKeySequence.Close)
 
         self.windowMapper = QSignalMapper(self)  # todo::https://blog.csdn.net/noricky/article/details/81240147
-        self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
-                     self.mdi, SLOT("setActiveWindow(QWidget*)"))
+        self.connect(self.windowMapper, SIGNAL("mapped(QMdiSubWindow*)"),
+                     self.mdi, SLOT("setActiveSubWindow(QMdiSubWindow*)"))
+
         # 文件菜单
         fileMenu = self.menuBar().addMenu("&File")
         self.addActions(fileMenu, (fileNewAction, fileOpenAction,
@@ -117,7 +127,7 @@ class MainWindow(QMainWindow):
         status.showMessage("Ready", 5000)
 
         self.updateWindowMenu()
-        self.setWindowTitle("Text Editor")
+        self.setWindowTitle("Text Editor[QMdiArea]")
         QTimer.singleShot(0, self.loadFiles)  # 单singleShot，表示它只会触发一次，发出一次信号，然后来执行槽函数。
                                               # todo::https://blog.csdn.net/fanyun_01/article/details/73162626
 
@@ -149,8 +159,8 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         failures = []
-        for textEdit in self.mdi.windowList():
-            if textEdit.isModified():
+        for textEdit in self.mdi.subWindowList():
+            if textEdit.widget.isModified():
                 try:
                     textEdit.save()
                 except IOError as e:
@@ -168,11 +178,11 @@ class MainWindow(QMainWindow):
         settings.setValue("MainWindow/Geometry", self.saveGeometry())  # 保存几何
         settings.setValue("MainWindow/State", self.saveState())  # 保存状态
         files = []
-        for textEdit in self.mdi.windowList():
-            if not textEdit.filename.startswith("Unnamed"):
+        for textEdit in self.mdi.subWindowList():
+            if not textEdit.widget.filename.startswith("Unnamed"):
                 files.append(textEdit.filename)
         settings.setValue("CurrentFiles", files)  # 保存最近打开文件.
-        self.mdi.closeAllWindows()
+        self.mdi.closeAllSubWindows()
 
 
     def loadFiles(self):
@@ -192,7 +202,7 @@ class MainWindow(QMainWindow):
 
     def fileNew(self):
         textEdit = textedit.TextEdit()
-        self.mdi.addWindow(textEdit)
+        self.mdi.addSubWindow(textEdit)
         textEdit.show()
 
 
@@ -200,9 +210,10 @@ class MainWindow(QMainWindow):
         filename = QFileDialog.getOpenFileName(self,
                 "Text Editor -- Open File")
         if filename:
-            for textEdit in self.mdi.windowList():
-                if textEdit.filename == filename:
-                    self.mdi.setActiveWindow(textEdit)
+            for textEdit in self.mdi.subWindowList():
+                if textEdit.widget.filename == filename:
+                # if textEdit.filename == filename:
+                    self.mdi.setActiveSubWindow(textEdit)
                     break
             else:
                 self.loadFile(filename)
@@ -218,12 +229,12 @@ class MainWindow(QMainWindow):
             textEdit.close()
             del textEdit
         else:
-            self.mdi.addWindow(textEdit)
+            self.mdi.addSubWindow(textEdit)
             textEdit.show()
 
 
     def fileSave(self):
-        textEdit = self.mdi.activeWindow()
+        textEdit = self.mdi.activeSubWindow()
         if textEdit is None or not isinstance(textEdit, QTextEdit):
             return True
         try:
@@ -236,7 +247,7 @@ class MainWindow(QMainWindow):
 
 
     def fileSaveAs(self):
-        textEdit = self.mdi.activeWindow()
+        textEdit = self.mdi.activeSubWindow()
         if textEdit is None or not isinstance(textEdit, QTextEdit):
             return
         filename = QFileDialog.getSaveFileName(self,
@@ -250,8 +261,8 @@ class MainWindow(QMainWindow):
 
     def fileSaveAll(self):
         errors = []
-        for textEdit in self.mdi.windowList():
-            if textEdit.isModified():
+        for textEdit in self.mdi.subWindowList():
+            if textEdit.widget.isModified():
                 try:
                     textEdit.save()
                 except EnvironmentError as e:
@@ -263,10 +274,10 @@ class MainWindow(QMainWindow):
 
     # 复制
     def editCopy(self):
-        textEdit = self.mdi.activeWindow()
-        if textEdit is None or not isinstance(textEdit, QTextEdit):
+        textEdit = self.mdi.activeSubWindow()
+        if textEdit is None or not isinstance(textEdit.widget(), QTextEdit):
             return
-        cursor = textEdit.textCursor()
+        cursor = textEdit.widget().textCursor()
         text = cursor.selectedText()
         if text:
             clipboard = QApplication.clipboard()
@@ -274,10 +285,10 @@ class MainWindow(QMainWindow):
 
     # 剪切
     def editCut(self):
-        textEdit = self.mdi.activeWindow()
-        if textEdit is None or not isinstance(textEdit, QTextEdit):
+        textEdit = self.mdi.activeSubWindow()
+        if textEdit is None or not isinstance(textEdit.widget(), QTextEdit):
             return
-        cursor = textEdit.textCursor()
+        cursor = textEdit.widget().textCursor()
         text = cursor.selectedText()
         if text:
             cursor.removeSelectedText()
@@ -286,20 +297,20 @@ class MainWindow(QMainWindow):
 
     # 粘贴
     def editPaste(self):
-        textEdit = self.mdi.activeWindow()
-        if textEdit is None or not isinstance(textEdit, QTextEdit):
+        textEdit = self.mdi.activeSubWindow()
+        if textEdit is None or not isinstance(textEdit.widget(), QTextEdit):
             return
         clipboard = QApplication.clipboard()
-        textEdit.insertPlainText(clipboard.text())
+        textEdit.widget().insertPlainText(clipboard.text())
 
     # 还原窗口(all)
     def windowRestoreAll(self):
-        for textEdit in self.mdi.windowList():
+        for textEdit in self.mdi.subWindowList():
             textEdit.showNormal()
 
     # 最小化窗口(all)
     def windowMinimizeAll(self):
-        for textEdit in self.mdi.windowList():
+        for textEdit in self.mdi.subWindowList():
             textEdit.showMinimized()
 
     # 更新窗口菜单
@@ -309,9 +320,15 @@ class MainWindow(QMainWindow):
                 self.windowPrevAction, self.windowCascadeAction,
                 self.windowTileAction, self.windowRestoreAction,
                 self.windowMinimizeAction,
-                self.windowArrangeIconsAction, None,
+                None,
                 self.windowCloseAction))
-        textEdits = self.mdi.windowList()
+        # self.addActions(self.windowMenu, (self.windowNextAction,
+        #         self.windowPrevAction, self.windowCascadeAction,
+        #         self.windowTileAction, self.windowRestoreAction,
+        #         self.windowMinimizeAction,
+        #         self.windowArrangeIconsAction, None,
+        #         self.windowCloseAction))
+        textEdits = self.mdi.subWindowList()
         if not textEdits:
             return
         self.windowMenu.addSeparator()

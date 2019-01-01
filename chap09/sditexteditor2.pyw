@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, filename="", parent=None):
         super(MainWindow, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)  # 窗口销毁时删除引用的内存.
+        self.setAttribute(Qt.WA_DeleteOnClose)  # WA_DeleteOnClose::窗口销毁时删除引用的内存.
         MainWindow.Instances.add(self)
 
         self.editor = QTextEdit()
@@ -106,8 +106,7 @@ class MainWindow(QMainWindow):
     @staticmethod  # todo::https://blog.csdn.net/GeekLeee/article/details/52624742
     def updateInstances(qobj):
         MainWindow.Instances = (set([window for window
-                in MainWindow.Instances if isAlive(window)]))
-
+                in MainWindow.Instances if isAlive(window)]))  # 自定义函数↓row_244
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
                      tip=None, checkable=False, signal="triggered()"):

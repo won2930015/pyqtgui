@@ -10,8 +10,10 @@
 # the GNU General Public License for more details.
 
 import sys
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+
 import qrc_resources
 
 
@@ -34,7 +36,7 @@ class MainWindow(QMainWindow):
         self.mainSplitter.addWidget(self.messageSplitter)
         self.setCentralWidget(self.mainSplitter)
 
-        #设置 垂直,水平切分条(分离器)的分配比例
+        # 设置 垂直,水平切分条(分离器)的分配比例
         self.mainSplitter.setStretchFactor(0, 1)  # setStretchFactor:设置可伸缩因素
         self.mainSplitter.setStretchFactor(1, 3)
         self.messageSplitter.setStretchFactor(0, 1)
@@ -54,7 +56,6 @@ class MainWindow(QMainWindow):
         status.showMessage("Ready", 5000)
         self.setWindowTitle("News Reader")
         self.generateFakeData()
-
 
     def createMenusAndToolbars(self):
         fileMenu = self.menuBar().addMenu("&File")
@@ -85,7 +86,6 @@ class MainWindow(QMainWindow):
             editToolbar.addAction(action)
             editMenu.addAction(action)
 
-
     def closeEvent(self, event):
         if self.okToContinue():
             # 保存 窗口/切分条 的尺寸配置.
@@ -97,10 +97,8 @@ class MainWindow(QMainWindow):
         else:
             event.ignore()
 
-
     def okToContinue(self):
         return True
-
     
     def generateFakeData(self):
         for group in ("ada", "apl", "asm.*", "asm370", "awk", "basic.*",

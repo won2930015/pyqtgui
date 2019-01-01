@@ -10,8 +10,10 @@
 # the GNU General Public License for more details.
 
 import sys
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+
 import qrc_resources
 
 
@@ -25,7 +27,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, filename="", parent=None):
         super(MainWindow, self).__init__(parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)  # WA_DeleteOnClose::关闭时删除引用的内存?
+        self.setAttribute(Qt.WA_DeleteOnClose)  # WA_DeleteOnClose::窗口销毁时删除引用的内存.
         MainWindow.Instances.add(self)
 
         self.editor = QTextEdit()
@@ -102,12 +104,10 @@ class MainWindow(QMainWindow):
         else:
             self.loadFile()
 
-
     @staticmethod  # todo::https://blog.csdn.net/GeekLeee/article/details/52624742
     def updateInstances(qobj):
         MainWindow.Instances = (set([window for window
-                in MainWindow.Instances if isAlive(window)]))
-
+                in MainWindow.Instances if isAlive(window)]))  # 自定义函数↓row_244
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
                      tip=None, checkable=False, signal="triggered()"):
@@ -125,7 +125,6 @@ class MainWindow(QMainWindow):
             action.setCheckable(True)
         return action
 
-
     def addActions(self, target, actions):
         for action in actions:
             if action is None:
@@ -133,24 +132,20 @@ class MainWindow(QMainWindow):
             else:
                 target.addAction(action)
 
-
     def closeEvent(self, event):
         if (self.editor.document().isModified() and
             QMessageBox.question(self,
                 "SDI Text Editor - Unsaved Changes",
                 "Save unsaved changes in {}?".format(self.filename),
-                QMessageBox.Yes|QMessageBox.No) ==
+                QMessageBox.Yes | QMessageBox.No) == 
                 QMessageBox.Yes):
             self.fileSave()
-
 
     def fileQuit(self):
         QApplication.closeAllWindows()
 
-
     def fileNew(self):
         MainWindow().show()
-
 
     def fileOpen(self):
         filename = QFileDialog.getOpenFileName(self,
@@ -162,7 +157,6 @@ class MainWindow(QMainWindow):
                 self.loadFile()
             else:
                 MainWindow(filename).show()
-
 
     def loadFile(self):
         fh = None
@@ -184,7 +178,6 @@ class MainWindow(QMainWindow):
         self.editor.document().setModified(False)
         self.setWindowTitle("SDI Text Editor - {}".format(
                 QFileInfo(self.filename).fileName()))
-
 
     def fileSave(self):
         if self.filename.startswith("Unnamed"):
@@ -208,7 +201,6 @@ class MainWindow(QMainWindow):
                 fh.close()
         return True
 
-
     def fileSaveAs(self):
         filename = QFileDialog.getSaveFileName(self,
                 "SDI Text Editor -- Save File As", self.filename,
@@ -220,7 +212,6 @@ class MainWindow(QMainWindow):
             return self.fileSave()
         return False
 
-
     def fileSaveAll(self):
         count = 0
         for window in MainWindow.Instances:
@@ -231,14 +222,12 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage("Saved {} of {} files".format(
                 count, len(MainWindow.Instances)), 5000)
 
-
     def updateWindowMenu(self):
         self.windowMenu.clear()
         for window in MainWindow.Instances:
             if isAlive(window):
                 self.windowMenu.addAction(window.windowTitle(),
                         self.raiseWindow)
-
 
     def raiseWindow(self):
         action = self.sender()  # 传送被触发对象到action
