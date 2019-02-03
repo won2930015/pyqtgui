@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
+
+from PyQt4.QtGui import QFileDialog
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -68,7 +70,8 @@ class MainWindow(QMainWindow):
         self.windowCloseAction = self.createAction("&Close",
                 self.mdi.closeActiveSubWindow, QKeySequence.Close)
 
-        self.windowMapper = QSignalMapper(self)
+        self.windowMapper = QSignalMapper(self)  # todo::https://blog.csdn.net/noricky/article/details/81240147
+                                                 # https://www.cnblogs.com/findumars/p/8035496.html
         # self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
         #              self.mdi, SLOT("setActiveWindow(QWidget*)"))
         self.windowMapper.mapped.connect(self.mdi.setActiveSubWindow)
@@ -174,7 +177,7 @@ class MainWindow(QMainWindow):
     def loadFiles(self):
         try:
             if len(sys.argv) > 1:
-                for filename in sys.argv[1:31]: # Load at most 30 files
+                for filename in sys.argv[1:31]:  # Load at most 30 files
                     filename = str(filename)
                     if QFileInfo(filename).isFile():
                         self.loadFile(filename)
@@ -187,7 +190,8 @@ class MainWindow(QMainWindow):
                 cfiles=settings.value("CurrentFiles")
                 if cfiles != None:
                     files = list(settings.value("CurrentFiles"))
-                else:files=[]
+                else:
+                    files=[]
                 for filename in files:
                     filename = str(filename)
                     if QFile.exists(filename):
