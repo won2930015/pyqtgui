@@ -529,3 +529,4 @@ CTRL+ALT+A: 添加到版本控制
 CTRL+K: 提交(托管)
 CTRL+T: 更新项目
 ALT+`: 弹出VCS Operations窗口(VCS操作窗口)
+Alt+Shift+C 快速查看您最近对项目的更改。

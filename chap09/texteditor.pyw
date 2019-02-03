@@ -78,6 +78,7 @@ class MainWindow(QMainWindow):
                 self.mdi.closeActiveWindow, QKeySequence.Close)
 
         self.windowMapper = QSignalMapper(self)  # todo::https://blog.csdn.net/noricky/article/details/81240147
+                                                 # https://www.cnblogs.com/findumars/p/8035496.html
         self.connect(self.windowMapper, SIGNAL("mapped(QWidget*)"),
                      self.mdi, SLOT("setActiveWindow(QWidget*)"))
         # 文件菜单

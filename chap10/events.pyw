@@ -80,9 +80,10 @@ class Widget(QWidget):
             painter.drawText(self.rect(), Qt.AlignBottom|Qt.AlignHCenter,
                              self.message)
             # QTimer.singleShot(5000, self.message.clear)  # 单singleShot:第二参数必需是 可调用的 或是方法函数.
-            QTimer.singleShot(5000, self.sss)  # 单singleShot:第二参数必需是 可调用的 或是方法函数.
+            QTimer.singleShot(5000, self.message_clear)  # 单singleShot:第二参数必需是 可调用的 或是方法函数.
             QTimer.singleShot(5000, self.update)
-    def sss(self):
+
+    def message_clear(self):
         self.message = ""
 
     def resizeEvent(self, event):
