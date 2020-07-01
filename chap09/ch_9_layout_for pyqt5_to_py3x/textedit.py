@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 
-from PyQt4.QtCore import QFileInfo
+# from PyQt4.QtCore import QFileInfo
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *

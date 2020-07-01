@@ -7,7 +7,7 @@
 # version 3 of the License, or (at your option) any later version. It is
 # provided for educational purposes and is distributed in the hope that
 # it will be useful, but WITHOUT ANY WARRANTY; without even the implied
-# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPhttps://www.jianshu.com/p/b627671ca1f3OSE. See
 # the GNU General Public License for more details.
 
 import sys

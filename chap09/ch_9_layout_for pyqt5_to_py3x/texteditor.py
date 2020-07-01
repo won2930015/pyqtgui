@@ -2,7 +2,7 @@
 
 import sys
 
-from PyQt4.QtGui import QFileDialog
+# from PyQt4.QtGui import QFileDialog
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        self.mdi = QMdiArea() #声明一个工作区,Qt5使用maiarea代替workspace，可以通过设置scrollbarsenabled来使其拥有比窗口更大的工作空间
+        self.mdi = QMdiArea()  #声明一个工作区,Qt5使用maiarea代替workspace，可以通过设置scrollbarsenabled来使其拥有比窗口更大的工作空间
         # 通过背景刷可以设置背景颜色
         self.setCentralWidget(self.mdi)
 
@@ -310,7 +310,7 @@ class MainWindow(QMainWindow):
         for textEdit in self.mdi.subWindowList():
             textEdit=textEdit.widget()
             if textEdit.isModified():
-                try:
+                try:  
                     textEdit.save()
                 except EnvironmentError as e:
                     errors.append("{0}: {1}".format(textEdit.filename, e))

@@ -55,7 +55,7 @@ class ShipContainer(object):
         self.countries = set()  # countries::国家们(集)
 
     def ship(self, identity):  # identity::身份
-        return self.ships.get(identity)
+        return self.ships.get(identity)  # 根据ID号返回对应的ship对象.
 
     def addShip(self, ship):  # 加入_船
         self.ships[id(ship)] = ship
@@ -172,7 +172,7 @@ class ShipTableModel(QAbstractTableModel):
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)| Qt.ItemIsEditable)
 
     #  P324
-    def data(self, index, role=Qt.DisplayRole):  # DisplayRole::显示_角色
+    def data(self, index, role=Qt.DisplayRole):  # index:是TableItem对象,DisplayRole::显示_角色(显示数据)
         if (not index.isValid() or not (0 <= index.row() < len(self.ships))):
             return None
         ship = self.ships[index.row()]
@@ -192,7 +192,7 @@ class ShipTableModel(QAbstractTableModel):
             if column == TEU:
                 return int(Qt.AlignRight|Qt.AlignVCenter)
             return int(Qt.AlignLeft|Qt.AlignVCenter)
-        elif role == Qt.TextColorRole and column == TEU:  # 文本_色_角色
+        elif role == Qt.TextColorRole and column == TEU:  # 文本_颜色_角色
             if ship.teu < 80000:
                 return QColor(Qt.black)
             elif ship.teu < 100000:
@@ -201,7 +201,7 @@ class ShipTableModel(QAbstractTableModel):
                 return QColor(Qt.blue)
             else:
                 return QColor(Qt.red)
-        elif role == Qt.BackgroundColorRole:  # BackgroundColorRole::背景_色_角色
+        elif role == Qt.BackgroundColorRole:  # BackgroundColorRole::背景_颜色_角色
             if ship.country in ("Bahamas", "Cyprus", "Denmark",
                     "France", "Germany", "Greece"):
                 return QColor(250, 230, 250)
@@ -371,7 +371,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
     def sizeHint(self, option, index):  # option::项(包含项的所有状态)
         fm = option.fontMetrics  # 选项.字体度量对象
         if index.column() == TEU:
-            return QSize(fm.width("9,999,999"), fm.height())
+            return QSize(fm.width("9,999,999"), fm.height())   # 设置列的宽高.
         if index.column() == DESCRIPTION:
             text = index.model().data(index)
             document = QTextDocument()
