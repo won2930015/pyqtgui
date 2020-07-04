@@ -53,6 +53,7 @@ class MainForm(QDialog):
         buttonLayout.addWidget(exportButton)
         buttonLayout.addStretch()
         buttonLayout.addWidget(quitButton)
+
         splitter = QSplitter(Qt.Horizontal)
         vbox = QVBoxLayout()
         vbox.addWidget(tableLabel1)
@@ -60,12 +61,14 @@ class MainForm(QDialog):
         widget = QWidget()
         widget.setLayout(vbox)
         splitter.addWidget(widget)
+
         vbox = QVBoxLayout()
         vbox.addWidget(tableLabel2)
         vbox.addWidget(self.tableView2)
         widget = QWidget()
         widget.setLayout(vbox)
         splitter.addWidget(widget)
+
         layout = QVBoxLayout()
         layout.addWidget(splitter)
         layout.addLayout(buttonLayout)
@@ -100,7 +103,7 @@ class MainForm(QDialog):
         self.model.sortByName()
         self.resizeColumns()
 
-    def resizeColumns(self):    # 调整列宽
+    def resizeColumns(self):    # 调整所有列的列宽
         self.tableView1.resizeColumnsToContents()
         self.tableView2.resizeColumnsToContents()
 
@@ -151,7 +154,7 @@ class MainForm(QDialog):
             return
         row = index.row()
         name = self.model.data(
-                    self.model.index(row, ships.NAME))
+                    self.model.index(row, ships.NAME))  # self.model.index(行, 列, 父对象)
         owner = self.model.data(
                     self.model.index(row, ships.OWNER))
         country = self.model.data(

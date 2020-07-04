@@ -56,7 +56,7 @@ class ShipTableModel(QAbstractTableModel):  # 船_表_模型::继承于QAbstract
 
     def sortByName(self):  # 按名字排序
         self.ships = sorted(self.ships)
-        self.reset()
+        self.reset()  # 重置::数据_重置/更新.
 
 
     def sortByTEU(self):    # 采用 封装-排序-解封 方法排序
@@ -139,15 +139,15 @@ class ShipTableModel(QAbstractTableModel):  # 船_表_模型::继承于QAbstract
             return None
         if orientation == Qt.Horizontal:    # 列表头(栏目)
             if section == NAME:
-                return "Name"
+                return "Name|名称"
             elif section == OWNER:
-                return "Owner"
+                return "Owner|所有者"
             elif section == COUNTRY:
-                return "Country"
+                return "Country|国家"
             elif section == DESCRIPTION:
-                return "Description"
+                return "Description|描述"
             elif section == TEU:
-                return "TEU"
+                return "TEU|标准箱"
         return int(section + 1)  # 行表头(序号)
 
     def rowCount(self, index=QModelIndex()):  # rowCount::行数, ModelIndex::模型_索引
@@ -260,8 +260,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
     def __init__(self, parent=None):
         super(ShipDelegate, self).__init__(parent)
 
-
-    def paint(self, painter, option, index):    # painter::绘画器,option::模型表_项(各种状态选项), index::模型表索引对象
+    def paint(self, painter, option, index):  # painter::绘画器,option::模型表_项(各种状态选项), index::模型表索引对象
         if index.column() == DESCRIPTION:
             text = index.model().data(index)
             palette = QApplication.palette()   # palette::调色板
@@ -303,7 +302,7 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
             spinbox = QSpinBox(parent)
             spinbox.setRange(0, 200000)
             spinbox.setSingleStep(1000)  # 设置单步(1000)
-            spinbox.setAlignment(Qt.AlignRight|Qt.AlignVCenter)
+            spinbox.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
             return spinbox
         elif index.column() == OWNER:
             combobox = QComboBox(parent)
@@ -333,10 +332,10 @@ class ShipDelegate(QStyledItemDelegate):  # 船_委托
     def commitAndCloseEditor(self):
         editor = self.sender()
         if isinstance(editor, (QTextEdit, QLineEdit)):
-            self.emit(SIGNAL("commitData(QWidget*)"), editor)
+            self.emit(SIGNAL("commitData(QWidget*)"), editor)  # setModelData(self, editor, model, index),接收数据.
             self.emit(SIGNAL("closeEditor(QWidget*)"), editor)
 
-    # 定义各栏设置数据的方式.P333-1
+    # 定义各栏设置数据的方式.P333-1 ,设置委托控件的数据.
     def setEditorData(self, editor, index):
         text = index.model().data(index, Qt.DisplayRole)
         if index.column() == TEU:   # TEU栏

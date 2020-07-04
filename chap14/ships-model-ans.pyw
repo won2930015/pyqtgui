@@ -22,7 +22,7 @@ class MainForm(QDialog):
     def __init__(self, parent=None):
         super(MainForm, self).__init__(parent)
 
-        self.model = ships.ShipTableModel("ships.dat")  # 创建模型.
+        self.model = ships_ans.ShipTableModel("ships.dat")  # 创建模型.
 
         tableLabel1 = QLabel("Table &1")
         self.tableView1 = QTableView()  # 纯视图 必须与外部模型配合使用.P313-2
@@ -102,7 +102,7 @@ class MainForm(QDialog):
         for tableView in (self.tableView1, self.tableView2):
             for column in (ships_ans.NAME, ships_ans.OWNER, ships_ans.COUNTRY,
                            ships_ans.TEU):
-                tableView.resizeColumnToContents(column)
+                tableView.resizeColumnToContents(column)  # 调指定列的列宽
 
     def reject(self):
         self.accept()
