@@ -18,24 +18,26 @@ import qrc_resources
 
 MAC = "qt_mac_set_native_menubar" in dir()
 
+# ID,来电者,开始时间,结束时间,事由,结果
 ID, CALLER, STARTTIME, ENDTIME, TOPIC, OUTCOMEID = range(6)
-DATETIME_FORMAT = "yyyy-MM-dd hh:mm"
+DATETIME_FORMAT = "yyyy-MM-dd hh:mm"  # 时间格式
 
-
-def createFakeData():   # 创建伪数据.
+# 创建伪数据
+def createFakeData():
     import random
 
     print("Dropping tables...")
-    query = QSqlQuery()
-    query.exec_("DROP TABLE calls")  # DROP TABLE::丢弃_表
-    query.exec_("DROP TABLE outcomes")
-    QApplication.processEvents()
+    query = QSqlQuery()  # 创建查询器
+    query.exec_("DROP TABLE calls")  # 删除来电表 calls表
+    query.exec_("DROP TABLE outcomes")  # 删除结果表 outcomes表
+    QApplication.processEvents()  # 执行进程事件,防界面假死.
 
-    print("Creating tables...")
+    print("Creating tables...")  # 创建表...
+    # 创建结果表
     query.exec_("""CREATE TABLE outcomes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
                 name VARCHAR(40) NOT NULL)""")
-
+    # 创建来电表
     query.exec_("""CREATE TABLE calls (
                 id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
                 caller VARCHAR(40) NOT NULL,
@@ -44,6 +46,7 @@ def createFakeData():   # 创建伪数据.
                 topic VARCHAR(80) NOT NULL,
                 outcomeid INTEGER NOT NULL,
                 FOREIGN KEY (outcomeid) REFERENCES outcomes)""")
+    # 执行进程事,防界面假死.
     QApplication.processEvents()
 
     print("Populating tables...")
@@ -52,9 +55,9 @@ def createFakeData():   # 创建伪数据.
         query.exec_("INSERT INTO outcomes (name) VALUES ('{}')".format(
                     name))
     topics = ("Complaint", "Information request", "Off topic",
-              "Information supplied", "Complaint", "Complaint")
-    now = QDateTime.currentDateTime()
-    query.prepare("INSERT INTO calls (caller, starttime, endtime, "
+              "Information supplied", "Complaint", "Complaint")  # 事由
+    now = QDateTime.currentDateTime()  # 当前时间
+    query.prepare("INSERT INTO calls (caller, starttime, endtime, "  # prepare::预查询.P338
                   "topic, outcomeid) VALUES (:caller, :starttime, "
                   ":endtime, :topic, :outcomeid)")
     for name in ('Joshan Cockerall', 'Ammanie Ingham',
@@ -194,23 +197,24 @@ class PhoneLogDlg(QDialog):
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
+        # 创建表模型
         self.model = QSqlRelationalTableModel(self)  # 创建 SQL_关系_表_模型 P344-1
         self.model.setTable("calls")
         self.model.setRelation(OUTCOMEID, QSqlRelation("outcomes", "id", "name"))  # <<---TODO::注意!!!P344-2
         self.model.setSort(STARTTIME, Qt.AscendingOrder)    # AscendingOrder::升序排序
         self.model.select()
 
-        # P342
-        self.mapper = QDataWidgetMapper(self)  # 数据_控件_映射
-        self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置_提交_政策,ManualSubmit::手动_提交
-        self.mapper.setModel(self.model)
-        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))  # <<--TODO::注意!!!
-        self.mapper.addMapping(self.callerEdit, CALLER)
+        # 设置映射P342
+        self.mapper = QDataWidgetMapper(self)  # 创建 数据_控件_映射 对象.
+        self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置提交规则(手动_提交)
+        self.mapper.setModel(self.model)  # 设置_模型(self.model).
+        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))  # 设置_项_委托(sql关系委托_对象)TODO::注意!!!
+        self.mapper.addMapping(self.callerEdit, CALLER)  # callerEdit控件关联calls表的CALLER列.
         self.mapper.addMapping(self.startDateTime, STARTTIME)
         self.mapper.addMapping(self.endDateTime, ENDTIME)
         self.mapper.addMapping(topicEdit, TOPIC)
 
-        relationModel = self.model.relationModel(OUTCOMEID)  # <<---注意!!! relationModel::关系模型(创建关系模型)
+        relationModel = self.model.relationModel(OUTCOMEID)  # todo:创建 关系模型_对象
 
         self.outcomeComboBox.setModel(relationModel)  # <<---注意!!!
         self.outcomeComboBox.setModelColumn(relationModel.fieldIndex("name"))  # <<---注意!!! P345-5.显示的列设为'name'
@@ -295,11 +299,11 @@ def main():
 
     splash = None
     if create:
-        app.setOverrideCursor(QCursor(Qt.WaitCursor))
+        app.setOverrideCursor(QCursor(Qt.WaitCursor))  # 设置重载光标
         splash = QLabel()
         pixmap = QPixmap(":/phonelogsplash.png")
         splash.setPixmap(pixmap)
-        splash.setMask(pixmap.createHeuristicMask())  # createHeuristicMask:: 创建_启发式_掩码
+        splash.setMask(pixmap.createHeuristicMask())  # 设置图片蒙版
         splash.setWindowFlags(Qt.SplashScreen)  # SplashScreen::泼开_屏幕(在屏幕上泼开),setWindowFlags::设置_窗口_标记(设置在屏幕上采用的动作)
         rect = app.desktop().availableGeometry()  # availableGeometry::可用_几何.
         splash.move((rect.width() - pixmap.width()) / 2,
@@ -313,7 +317,7 @@ def main():
     if create:
         splash.close()
         app.processEvents()
-        app.restoreOverrideCursor()
+        app.restoreOverrideCursor()  # 光标恢愎
     sys.exit(app.exec_())
 
 main()

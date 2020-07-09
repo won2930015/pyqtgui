@@ -48,6 +48,7 @@ def createFakeData():
                 FOREIGN KEY (outcomeid) REFERENCES outcomes)""")
     # 执行进程事,防界面假死.
     QApplication.processEvents()
+
     print("Populating tables...")
     for name in ("Resolved", "Unresolved", "Calling back", "Escalate",
                  "Wrong number"):
@@ -56,7 +57,7 @@ def createFakeData():
     topics = ("Complaint", "Information request", "Off topic",
               "Information supplied", "Complaint", "Complaint")  # 事由
     now = QDateTime.currentDateTime()  # 当前时间
-    query.prepare("INSERT INTO calls (caller, starttime, endtime, "  # prepar:准备,序先创建缓存.
+    query.prepare("INSERT INTO calls (caller, starttime, endtime, "  # prepare::预查询.P338
                   "topic, outcomeid) VALUES (:caller, :starttime, "
                   ":endtime, :topic, :outcomeid)")
     for name in ('Joshan Cockerall', 'Ammanie Ingham',
@@ -80,7 +81,7 @@ def createFakeData():
         start = now.addDays(-random.randint(1, 30)).addSecs(-random.randint(60 * 5, 60 * 60 * 2))
         # start = now.addSecs(-random.randint(60 * 5, 60 * 60 * 2))
         end = start.addSecs(random.randint(20, 60 * 13))
-        topic = random.choice(topics)
+        topic = random.choice(topics)   # choice::选择(随机的.)
         outcomeid = int(random.randint(1, 5))
         query.bindValue(":caller", name)
         query.bindValue(":starttime", start)
@@ -88,7 +89,7 @@ def createFakeData():
         query.bindValue(":topic", topic)
         query.bindValue(":outcomeid", outcomeid)
         query.exec_()
-    QApplication.processEvents()
+    QApplication.processEvents()  # processEvents::进程_事件(将控制权交还给程序防止假死现象).
 
     print("Calls:")
     query.exec_("SELECT calls.id, calls.caller, calls.starttime, "
@@ -105,7 +106,7 @@ def createFakeData():
         outcome = query.value(6)  # 忽略calls.outcomeid, 直接返回outcomes.name.
         print("{0:02d}: {1} {2} - {3} {4} [{5}]".format(id, caller,
               starttime, endtime, topic, outcome))
-    QApplication.processEvents()
+    QApplication.processEvents()    # processEvents::进程_事件(将控制权交还给程序防止假死现象).
 
 
 class PhoneLogDlg(QDialog):
@@ -160,7 +161,7 @@ class PhoneLogDlg(QDialog):
             addButton.setFocusPolicy(Qt.NoFocus)
             deleteButton.setFocusPolicy(Qt.NoFocus)
 
-        fieldLayout = QGridLayout()
+        fieldLayout = QGridLayout()  # 创建网格布局.
         fieldLayout.addWidget(callerLabel, 0, 0)
         fieldLayout.addWidget(self.callerEdit, 0, 1, 1, 3)
         fieldLayout.addWidget(startLabel, 1, 0)
@@ -187,23 +188,23 @@ class PhoneLogDlg(QDialog):
         layout.addLayout(buttonLayout)
         self.setLayout(layout)
 
-        # 创建模型
+        # 创建表模型
         self.model = QSqlRelationalTableModel(self)  # 创建sql_关系_表_模型(用于对 数据进行 增删查改 操作)
         self.model.setTable("calls")
         self.model.setRelation(OUTCOMEID, QSqlRelation("outcomes", "id", "name"))  # 设置关系.
         self.model.setSort(STARTTIME, Qt.AscendingOrder)  # 升序排序
         self.model.select()
 
-        # 设置映射
+        # 设置映射P342
         self.mapper = QDataWidgetMapper(self)  # 创建 数据_控件_映射 对象.
         self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置提交规则(手动_提交)
         self.mapper.setModel(self.model)  # 设置_模型(self.model).
-        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))  # 设置_项_委托(sql关系委托_对象)
+        self.mapper.setItemDelegate(QSqlRelationalDelegate(self))  # 设置_项_委托(sql关系委托_对象)TODO::注意!!!
         self.mapper.addMapping(self.callerEdit, CALLER)
         self.mapper.addMapping(self.startDateTime, STARTTIME)
         self.mapper.addMapping(self.endDateTime, ENDTIME)
         self.mapper.addMapping(topicEdit, TOPIC)
-        relationModel = self.model.relationModel(OUTCOMEID)  # 创建 关系模型_对象
+        relationModel = self.model.relationModel(OUTCOMEID)  # todo:创建 关系模型_对象
         self.outcomeComboBox.setModel(relationModel)
         self.outcomeComboBox.setModelColumn(relationModel.fieldIndex("name"))
         self.mapper.addMapping(self.outcomeComboBox, OUTCOMEID)
@@ -255,7 +256,7 @@ class PhoneLogDlg(QDialog):
         row = self.mapper.currentIndex()
         self.model.removeRow(row)
         self.model.submitAll()
-        if row + 1 >= self.model.rowCount():
+        if row + 1 >= self.model.rowCount():  # 如果删除的是最后一条记录.
             row = self.model.rowCount() - 1
         self.mapper.setCurrentIndex(row)
 
@@ -291,13 +292,13 @@ def main():
 
     splash = None
     if create:
-        app.setOverrideCursor(QCursor(Qt.WaitCursor))
+        app.setOverrideCursor(QCursor(Qt.WaitCursor))  # 设置重载光标
         splash = QLabel()
         pixmap = QPixmap(":/phonelogsplash.png")
         splash.setPixmap(pixmap)
-        splash.setMask(pixmap.createHeuristicMask())
-        splash.setWindowFlags(Qt.SplashScreen)
-        rect = app.desktop().availableGeometry()
+        splash.setMask(pixmap.createHeuristicMask())  # 设置图片蒙版
+        splash.setWindowFlags(Qt.SplashScreen)  # SplashScreen::泼开_屏幕(在屏幕上泼开),setWindowFlags::设置_窗口_标记(设置在屏幕上采用的动作)
+        rect = app.desktop().availableGeometry()  # availableGeometry::可用_几何.
         splash.move((rect.width() - pixmap.width()) / 2,
                     (rect.height() - pixmap.height()) / 2)
         splash.show()

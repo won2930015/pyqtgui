@@ -22,16 +22,16 @@ try:
 except ImportError:
     MAC = False
 
-# ASSETID::资产ID, CATEGORYID:种类ID, DATE::日期, DESCRIPTION::描述, ROOM::房间, ACTIONID::动作ID
+
 ID = 0
-NAME = ASSETID = 1
-CATEGORYID = DATE = DESCRIPTION = 2
-ROOM = ACTIONID = 3
+NAME = ASSETID = 1  # ASSETID::资产ID,
+CATEGORYID = DATE = DESCRIPTION = 2  #CATEGORYID:分类ID, DATE::日期, DESCRIPTION::描述,
+ROOM = ACTIONID = 3  # ROOM::房间, ACTIONID::动作ID
 
 ACQUIRED = 1  # 取得
 
 
-def createFakeData():   # 创建伪数据.
+def createFakeData():  # 创建伪数据.
     import random
 
     print("Dropping tables...")  # 译文：删除表……
@@ -72,7 +72,7 @@ def createFakeData():   # 创建伪数据.
     query.exec_("INSERT INTO actions (name, description) "
                 "VALUES ('Acquired', 'When installed')")   # Acquired::取得
     query.exec_("INSERT INTO actions (name, description) "
-                "VALUES ('Broken', 'When failed and unusable')")    # Broken::损坏
+                "VALUES ('Broken', 'When failed and unusable')")  # Broken::损坏
     query.exec_("INSERT INTO actions (name, description) "
                 "VALUES ('Repaired', 'When back in service')")  # Repaired::修理
     query.exec_("INSERT INTO actions (name, description) "
