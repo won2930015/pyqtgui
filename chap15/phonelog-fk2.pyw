@@ -18,24 +18,26 @@ import qrc_resources
 
 MAC = "qt_mac_set_native_menubar" in dir()
 
+# ID,来电者,开始时间,结束时间,事由,结果
 ID, CALLER, STARTTIME, ENDTIME, TOPIC, OUTCOMEID = range(6)
-DATETIME_FORMAT = "yyyy-MM-dd hh:mm"
+DATETIME_FORMAT = "yyyy-MM-dd hh:mm"  # 时间格式
 
-
+# 创建伪数据
 def createFakeData():
     import random
 
     print("Dropping tables...")
-    query = QSqlQuery()
-    query.exec_("DROP TABLE calls")
-    query.exec_("DROP TABLE outcomes")
-    QApplication.processEvents()
+    query = QSqlQuery()  # 创建查询器
+    query.exec_("DROP TABLE calls")  # 删除来电表 calls表
+    query.exec_("DROP TABLE outcomes")  # 删除结果表 outcomes表
+    QApplication.processEvents()  # 执行进程事件,防界面假死.
 
-    print("Creating tables...")
+    print("Creating tables...")  # 创建表...
+    # 创建结果表
     query.exec_("""CREATE TABLE outcomes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
                 name VARCHAR(40) NOT NULL)""")
-
+    # 创建来电表
     query.exec_("""CREATE TABLE calls (
                 id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
                 caller VARCHAR(40) NOT NULL,
@@ -44,6 +46,7 @@ def createFakeData():
                 topic VARCHAR(80) NOT NULL,
                 outcomeid INTEGER NOT NULL,
                 FOREIGN KEY (outcomeid) REFERENCES outcomes)""")
+    # 执行进程事,防界面假死.
     QApplication.processEvents()
     print("Populating tables...")
     for name in ("Resolved", "Unresolved", "Calling back", "Escalate",
@@ -51,9 +54,9 @@ def createFakeData():
         query.exec_("INSERT INTO outcomes (name) VALUES ('{}')".format(
                     name))
     topics = ("Complaint", "Information request", "Off topic",
-              "Information supplied", "Complaint", "Complaint")
-    now = QDateTime.currentDateTime()
-    query.prepare("INSERT INTO calls (caller, starttime, endtime, "
+              "Information supplied", "Complaint", "Complaint")  # 事由
+    now = QDateTime.currentDateTime()  # 当前时间
+    query.prepare("INSERT INTO calls (caller, starttime, endtime, "  # prepar:准备,序先创建缓存.
                   "topic, outcomeid) VALUES (:caller, :starttime, "
                   ":endtime, :topic, :outcomeid)")
     for name in ('Joshan Cockerall', 'Ammanie Ingham',
