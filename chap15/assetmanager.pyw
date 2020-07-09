@@ -39,7 +39,7 @@ def createFakeData():  # 创建伪数据.
     query.exec_("DROP TABLE assets")    # 资产_表
     query.exec_("DROP TABLE logs")      # 日志_表
     query.exec_("DROP TABLE actions")   # 动作_表
-    query.exec_("DROP TABLE categories")  # 种类_表
+    query.exec_("DROP TABLE categories")  # 分类_表
     QApplication.processEvents()    # processEvents::进程_事件
 
     print("Creating tables...")  # 创建_表
@@ -139,7 +139,7 @@ def createFakeData():  # 创建伪数据.
                   ("Photocopier (8 ppm)", 3),
                   ("Shredder", 3))
     # 填充资产表和日志表
-    query.prepare("INSERT INTO assets (name, categoryid, room) "
+    query.prepare("INSERT INTO assets (name, categoryid, room) "  # prepare::预查询.P338
                   "VALUES (:name, :categoryid, :room)")
     logQuery = QSqlQuery()
     logQuery.prepare("INSERT INTO logs (assetid, date, actionid) "
@@ -322,7 +322,7 @@ class AssetDelegate(QSqlRelationalDelegate):  # AssetDelegate::资产_委托
     def paint(self, painter, option, index):
         myoption = QStyleOptionViewItem(option)  # 样式选项_视图_项:: 创建视图项 的样式选项对象.
         if index.column() == ROOM:
-            myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)
+            myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)  # |= :与,等于.
         QSqlRelationalDelegate.paint(self, painter, myoption, index)
 
     # 外键域列用QComboBox显示P356
@@ -339,8 +339,8 @@ class AssetDelegate(QSqlRelationalDelegate):  # AssetDelegate::资产_委托
         else:
             return QSqlRelationalDelegate.createEditor(self, parent,
                                                        option, index)
-
-    def setEditorData(self, editor, index):  # 从 资产模型表 读room(房间)域 数据填充到editor控件中.
+    # 从 资产模型表 读room(房间)域 数据填充到editor控件中.
+    def setEditorData(self, editor, index):
         if index.column() == ROOM:
             # text = index.model().data(index, Qt.DisplayRole)
             text = index.model().data(index, Qt.DisplayRole)
@@ -349,15 +349,15 @@ class AssetDelegate(QSqlRelationalDelegate):  # AssetDelegate::资产_委托
             editor.setText(text)
         else:
             QSqlRelationalDelegate.setEditorData(self, editor, index)
-
-    def setModelData(self, editor, model, index):   # 将editor数据填充到 资产模型表 中.
+    # 将editor数据填充到 资产模型表 中.
+    def setModelData(self, editor, model, index):
         if index.column() == ROOM:
             model.setData(index, editor.text())
         else:
             QSqlRelationalDelegate.setModelData(self, editor, model, index)
 
-
-class LogDelegate(QSqlRelationalDelegate):  # LogDelegate::日志_委托
+# LogDelegate::日志_委托
+class LogDelegate(QSqlRelationalDelegate):
 
     def __init__(self, parent=None):
         super(LogDelegate, self).__init__(parent)
@@ -368,7 +368,7 @@ class LogDelegate(QSqlRelationalDelegate):  # LogDelegate::日志_委托
             myoption.displayAlignment |= (Qt.AlignRight|Qt.AlignVCenter)
         QSqlRelationalDelegate.paint(self, painter, myoption, index)
 
-
+    # 在指定列上创建控件.
     def createEditor(self, parent, option, index):
         if index.column() == ACTIONID:  # 是actionid(动作id)列时...
             text = index.model().data(index, Qt.DisplayRole)
@@ -386,7 +386,7 @@ class LogDelegate(QSqlRelationalDelegate):  # LogDelegate::日志_委托
             return editor
         else:
             return QSqlRelationalDelegate.createEditor(self, parent, option, index)
-
+    # 将模型表数据 填充到 控件.
     def setEditorData(self, editor, index):
         if index.column() == DATE:
             str_date = index.model().data(index, Qt.DisplayRole)  # <<<日期转换失败.没法修改日期...
@@ -394,7 +394,7 @@ class LogDelegate(QSqlRelationalDelegate):  # LogDelegate::日志_委托
             editor.setDate(date)
         else:
             QSqlRelationalDelegate.setEditorData(self, editor, index)
-
+    # 将控件数据 填充到 模型表.
     def setModelData(self, editor, model, index):
         if index.column() == DATE:
             model.setData(index, editor.date())
