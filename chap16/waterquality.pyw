@@ -22,7 +22,7 @@ from PyQt4.QtGui import *
 
 TIMESTAMPFORMAT = "yyyy-MM-dd hh:mm"
 
-
+# 自定义表模型 用于 tableView 与 waterView 控件 row229
 class WaterQualityModel(QAbstractTableModel):   # WaterQualityModel::水_质_模型, AbstractTableModel::抽象_表_模型.
 
     def __init__(self, filename):
@@ -123,7 +123,7 @@ class WaterQualityModel(QAbstractTableModel):   # WaterQualityModel::水_质_模
     def columnCount(self, index=QModelIndex()):
         return 8
 
-
+# 自定义视图
 class WaterQualityView(QWidget):
 
     FLOWCHARS = (chr(0x21DC), chr(0x21DD), chr(0x21C9))  # FLOWCHARS::流_字符 '⇜', '⇝', '⇉'.
