@@ -165,10 +165,10 @@ class ShipTableModel(QAbstractTableModel):
         self.ships = sorted(self.ships, key=lambda x: (x.country, x.owner, x.name))
         self.reset()
 
-    def flags(self, index):  # 标志??? P325, P335
-        if not index.isValid():  # isValid::is_有效的(判断index是否有效(有数据))
-            return Qt.ItemIsEnabled
-                                # 如果index有效 就将项已有的标志↓与Qt.ItemIsEditable进行结合,返回.
+    def flags(self, index):  # 标志(控制项的读写) P325, P335
+        if not index.isValid():  # isValid::判断index是否有效(有数据).
+            return Qt.ItemIsEnabled  # 无效,返回Qt.ItemIsEnabled标志为只读.(没有Qt.ItemIsEditable标志为只读)
+                                     # 有效 就将项已有的标志↓与Qt.ItemIsEditable进行结合,使项可编辑.返回!
         return Qt.ItemFlags(QAbstractTableModel.flags(self, index)| Qt.ItemIsEditable)
 
     #  P324
