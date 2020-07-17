@@ -17,12 +17,12 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
-#::时间戳,    ::温度,     ::吸入流,   ::混浊度,   ::电导率,      ::凝结,      ::???, ::???
+#::时间戳,    ::温度,     ::吸入流,   ::混浊度,   ::电导率,      ::凝结,       ::原PH值,::絮状
 (TIMESTAMP, TEMPERATURE, INLETFLOW, TURBIDITY, CONDUCTIVITY, COAGULATION, RAWPH, FLOCCULATEDPH) = range(8)
 
 TIMESTAMPFORMAT = "yyyy-MM-dd hh:mm"
 
-
+# 自定义表模型 用于 tableView 与 waterView 控件 row229
 class WaterQualityModel(QAbstractTableModel):   # WaterQualityModel::水_质_模型, AbstractTableModel::抽象_表_模型.
 
     def __init__(self, filename):
@@ -100,7 +100,7 @@ class WaterQualityModel(QAbstractTableModel):   # WaterQualityModel::水_质_模
             if section == TIMESTAMP:
                 return "Timestamp"
             elif section == TEMPERATURE:
-                return "\u00B0" + "C"   # \u00B0:转义为unicode(唯一码)字符
+                return "\u00B0" + "C"   # todo \u00B0:转义为unicode(唯一码)字符
             elif section == INLETFLOW:
                 return "Inflow"
             elif section == TURBIDITY:
@@ -113,7 +113,7 @@ class WaterQualityModel(QAbstractTableModel):   # WaterQualityModel::水_质_模
                 return "Raw Ph"
             elif section == FLOCCULATEDPH:
                 return "Floc Ph"
-        return int(section + 1)   # 返回行的值.
+        return int(section + 1)   # 返回行的序号.
 
 
     def rowCount(self, index=QModelIndex()):
@@ -123,7 +123,7 @@ class WaterQualityModel(QAbstractTableModel):   # WaterQualityModel::水_质_模
     def columnCount(self, index=QModelIndex()):
         return 8
 
-
+# 自定义视图
 class WaterQualityView(QWidget):
 
     FLOWCHARS = (chr(0x21DC), chr(0x21DD), chr(0x21C9))  # FLOWCHARS::流_字符 '⇜', '⇝', '⇉'.

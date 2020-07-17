@@ -14,7 +14,7 @@ from PyQt4.QtGui import *
 import richtextlineedit
 
 
-class GenericDelegate(QStyledItemDelegate):  # 通用(泛型)委托
+class GenericDelegate(QStyledItemDelegate):  # 通用(泛型)委托,作为下列各类型委托的加载器.
 
     def __init__(self, parent=None):
         super(GenericDelegate, self).__init__(parent)
