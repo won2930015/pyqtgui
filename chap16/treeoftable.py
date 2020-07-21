@@ -14,7 +14,6 @@ from PyQt4.QtCore import *
 
 KEY, NODE = range(2)
 
-
 # 分支_节点
 class BranchNode(object):
 
