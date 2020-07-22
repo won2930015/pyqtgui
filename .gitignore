@@ -185,3 +185,10 @@ dmypy.json
 out
 gen
 chap14/ships.dat
+.idea/misc.xml
+.history/.gitignore_20200709185036
+.history/.gitignore_20200712193344
+.idea/misc.xml
+.idea/pyqtbook31.tar.iml
+.vscode/settings.json
+chap15/assets.db

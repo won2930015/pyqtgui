@@ -64,7 +64,7 @@ class CarHireLog(object):
     # 返回租出天数.
     def days(self):
         return (0 if not self.returned.isValid()
-                  else self.hired.daysTo(self.returned))    #daysTo::天数To ,返回 hired 至 returned的天数.
+                  else self.hired.daysTo(self.returned))    # daysTo::天数To ,返回 hired 至 returned的天数.
 
     # __hash__, __eq__, __lt__ 是实现排序算法的基础.
     # hash::散列|哈希
@@ -161,7 +161,7 @@ class CarHireModel(QAbstractTableModel):    # 汽车_出租_模型.
         if role == Qt.BackgroundColorRole:
             palette = QApplication.palette()
             if index.column() in (LICENSE, MILEAGE, DAYS):
-                return palette.alternateBase()  # alternateBase::交替_底色(返回交替色中的_底色?)
+                return palette.alternateBase()  # alternateBase::备用_底色(返回备用色中的_底色?)
             else:
                 return palette.base()   # base::底色
         return None

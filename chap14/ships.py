@@ -14,7 +14,7 @@ import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import richtextlineedit
-
+# 名称，所有者，国家/地区，描述，
 NAME, OWNER, COUNTRY, DESCRIPTION, TEU = range(5)
 
 MAGIC_NUMBER = 0x570C4
