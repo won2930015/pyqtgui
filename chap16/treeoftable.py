@@ -88,6 +88,7 @@ class LeafNode(object):  # 叶_节点
     def __len__(self):
         return len(self.fields)
 
+    # 返回从 根 到 该叶节点 的路径(包含叶节点).
     def asRecord(self):
         record = []     # 记录
         branch = self.parent    # branch::分支
@@ -157,7 +158,7 @@ class TreeOfTableModel(QAbstractItemModel):
             self.reset()
 
     def asRecord(self, index):
-        leaf = self.nodeFromIndex(index)    # leaf::叶(返回叶节点)
+        leaf = self.nodeFromIndex(index)    # leaf::叶(返回叶节点),nodeFromIndex:索引节点(从Index返回node?)
         if leaf is not None and isinstance(leaf, LeafNode):
             return leaf.asRecord()  # 返回从 根 到 该叶节点 的路径(包含节点).
         return []
