@@ -18,6 +18,7 @@ import qrc_resources
 
 MAC = "qt_mac_set_native_menubar" in dir()
 
+# ID,来电,开始时间,结束时间,来电主题
 ID, CALLER, STARTTIME, ENDTIME, TOPIC = range(5)
 DATETIME_FORMAT = "yyyy-MM-dd hh:mm"
 
@@ -88,7 +89,7 @@ def createFakeData():   # 创建伪数据.
 
 
 class PhoneLogDlg(QDialog):
-
+    # 第一个,前一个,后一个,最后一个
     FIRST, PREV, NEXT, LAST = range(4)
 
     def __init__(self, parent=None):
@@ -164,17 +165,17 @@ class PhoneLogDlg(QDialog):
         self.model = QSqlTableModel(self)   # 创建 Sql_表_模型 对象
         self.model.setTable("calls")
         self.model.setSort(STARTTIME, Qt.AscendingOrder)    # (栏目,排序方式= AscendingOrder::升序顺序)
-        self.model.select()
+        self.model.select()  # 填充模型(从表calls填充到模型.)
 
         # P342
         self.mapper = QDataWidgetMapper(self)  # 数据_控件_映射
         self.mapper.setSubmitPolicy(QDataWidgetMapper.ManualSubmit)  # 设置_提交_政策,ManualSubmit::手动_提交
         self.mapper.setModel(self.model)
-        self.mapper.addMapping(self.callerEdit, CALLER)  # 加入_映射
+        self.mapper.addMapping(self.callerEdit, CALLER)  # 加入_映射(将控件映射到表的列)
         self.mapper.addMapping(self.startDateTime, STARTTIME)
         self.mapper.addMapping(self.endDateTime, ENDTIME)
         self.mapper.addMapping(topicEdit, TOPIC)
-        self.mapper.toFirst()   #to第一|开始
+        self.mapper.toFirst()   # to第一个(返回开始位置.)
 
         self.connect(firstButton, SIGNAL("clicked()"),
                      lambda: self.saveRecord(PhoneLogDlg.FIRST))
@@ -191,13 +192,13 @@ class PhoneLogDlg(QDialog):
 
         self.setWindowTitle("Phone Log")
 
-
+    # 按'取消/Cancel'键时会执行此函数.
     def reject(self):
         self.accept()
 
 
     def accept(self):
-        self.mapper.submit()
+        self.mapper.submit()  # 手动执行提交.
         QDialog.accept(self)
 
         

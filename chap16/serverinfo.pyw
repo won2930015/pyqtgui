@@ -27,7 +27,7 @@ class ServerModel(treeoftable.TreeOfTableModel):
             if node is None:
                 return None
             if isinstance(node, treeoftable.BranchNode):
-                if index.column() != 0:
+                if index.column() != 0:  # 如果是分支节点column必定为0
                     return None
                 filename = node.toString().replace(" ", "_")
                 parent = node.parent.toString()

@@ -124,7 +124,7 @@ class TreeOfTableModel(QAbstractItemModel):
             for line in open(filename, "rU", encoding="utf-8"):  # rU 或 Ua 以读方式打开, 同时提供通用换行符支持 (PEP 278)
                 if not line:  # 如果是空行 跳过..
                     continue
-                self.addRecord(line.split(separator), False)
+                self.addRecord(line.split(separator), False)  # line对象是servers.txt中一行字符,经split分组后赋值给fields形参.
         except IOError as e:
             exception = e
         finally:
